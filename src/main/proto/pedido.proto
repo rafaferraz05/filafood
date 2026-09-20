@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package pedidos;
+
+option java_package = "br.edu.cesar.filafood.grpc";
+option java_multiple_files = true;
+
+service RestauranteService {
+    rpc EnviarPedido (PedidoRequest) returns (PedidoResponse);
+}
+
+message ItemPedido {
+    string nome = 1;
+    int32 quantidade = 2;
+}
+
+message PedidoRequest {
+    string pedido_id = 1;
+    string cliente = 2;
+    string endereco = 3;
+    repeated ItemPedido itens = 4;
+}
+
+message PedidoResponse {
+    bool recebido = 1;
+    string restaurante_id = 2;
+    string status = 3;
+}
