@@ -47,7 +47,7 @@ Outros riscos e decisões:
 - **Interrupção:** se um trabalhador for interrompido depois de reservar os itens, o pedido é cancelado e os itens são devolvidos ao estoque.
 - **Erros escondidos:** o programa guarda os `Future` dos clientes e chama `get()`, permitindo que uma falha seja propagada para a thread principal.
 - **Lista de restaurantes:** é preenchida antes do início dos clientes e não é alterada durante a simulação.
-- **Deadlock:** não existem duas travas sendo adquiridas uma dentro da outra. Portanto, o fluxo atual não cria espera circular.
+- **Deadlock:** o servidor central pode adquirir seu monitor e depois o monitor do restaurante ao encaminhar um pedido. Não existe o caminho inverso, do restaurante para o servidor central, portanto o fluxo atual não forma espera circular.
 - **Fila sem limite:** a `LinkedBlockingQueue` atual é ilimitada. Isso é suficiente para os oito pedidos da demonstração, mas uma versão real deveria limitar a capacidade para aplicar backpressure.
 - **Seleção da unidade:** nesta demonstração existe uma unidade por região. A menor fila já é considerada pelo servidor para permitir que outras unidades sejam adicionadas depois.
 
@@ -86,3 +86,10 @@ As dependências e o plugin do gRPC ainda não foram adicionados. Assim, esta pr
 A IA foi usada como copiloto para organizar a estrutura Maven, propor um protótipo mínimo e revisar riscos de concorrência. A equipe deve executar o programa, estudar cada classe e registrar dúvidas ou mudanças antes da apresentação.
 
 Os prompts, decisões aceitas ou adiadas e suas justificativas estão registrados em `DIARIO-IA.md`.
+
+## Evidências
+
+- [Captura da execução](evidencias/execucao-filafood.png)
+- [Diário de uso da IA](DIARIO-IA.md)
+
+![Execução do protótipo FilaFood](evidencias/execucao-filafood.png)

@@ -4,7 +4,7 @@ Este documento registra como a IA foi usada como copiloto no Projeto - Parte 1. 
 
 ## 1. Organização da entrega
 
-**Pedido feito à IA:** analisar a atividade, os slides e a rubrica e indicar o que precisava ser construído.
+**Pedido feito à IA:** analisar a atividade e a rubrica e auxiliar na definição do que precisava ser construído.
 
 **Sugestão recebida:** começar com um protótipo single-node em Java, depois acrescentar concorrência local e somente depois executar a comunicação gRPC.
 
@@ -24,32 +24,29 @@ Este documento registra como a IA foi usada como copiloto no Projeto - Parte 1. 
 
 ## 3. Configuração do ambiente
 
-**Pedido feito à IA:** ajudar desde GitHub, Git e Eclipse e corrigir os erros de configuração.
+**Pedido feito à IA:** ajudar e corrigir os erros de configuração.
 
 **Problemas encontrados:** projeto inicialmente configurado como Java 8, ausência de codificação explícita e erro do Eclipse ao localizar o esquema XML do Maven.
 
 **Correções aceitas:** configurar Java 21, UTF-8 e usar o esquema Maven já disponível no catálogo local do Eclipse.
 
-## 4. Protótipo single-node
+## 4. Divisão das responsabilidades
 
-**Pedido feito à IA:** criar os próximos passos com código simples, funcional, explicável e próximo dos conteúdos dos slides.
+**Maior autonomia da equipe:** definição do problema, regras do FilaFood, fluxo desejado entre servidor central e unidades, fornecimento dos materiais e restrições, decisões finais, execução, validação, estudo e apresentação.
 
-**Sugestões aceitas:**
+**Construção compartilhada:** responsabilidades das classes, identificação dos pontos de concorrência e do estoque compartilhado, escolha de `ExecutorService`, `LinkedBlockingQueue` e `synchronized`, organização do contrato `.proto` e documentação das decisões.
 
-- `ExecutorService` para simular clientes e trabalhadores concorrentes;
-- `LinkedBlockingQueue` para a fila segura de cada restaurante;
-- `synchronized` na reserva do estoque;
-- chamadas de métodos Java na etapa local;
-- manter o contrato `pedido.proto` preparado para a próxima evolução.
+**Maior apoio da IA:** elaboração da primeira versão de parte das classes e da documentação; configuração do Java, Maven e Eclipse; detalhes de `Future`, `awaitTermination`, `volatile` e interrupção; revisão independente; tratamento de situações de encerramento.
 
-**Sugestões rejeitadas ou adiadas:**
 
-- Spring Boot: adiado porque não é necessário nesta entrega;
-- banco de dados: adiado para a disciplina de Requisitos de Software;
-- gRPC executável: adiado até a validação do protótipo single-node;
-- semáforos e locks explícitos: não usados porque `BlockingQueue` e `synchronized` resolvem os riscos atuais com menos complexidade.
+## 5. Decisões rejeitadas ou adiadas
 
-## 5. Verificações realizadas
+- **Spring Boot:** adiado porque não é necessário para demonstrar concorrência local e será mais adequado às etapas web da outra disciplina.
+- **Banco de dados e interface web:** adiados porque a Parte 1 pede um protótipo single-node e o uso agora aumentaria a complexidade sem melhorar a demonstração de threads.
+- **Execução completa do gRPC:** adiada; nesta etapa foi mantido apenas o contrato `.proto` já elaborado.
+- **Semáforos e locks explícitos:** não usados nesta versão porque `BlockingQueue` e o monitor criado por `synchronized` resolvem os riscos identificados com menos complexidade.
+
+## 6. Verificações realizadas
 
 - compilação das classes com Java 21;
 - execução de pedidos enviados por quatro threads de clientes;
@@ -59,24 +56,9 @@ Este documento registra como a IA foi usada como copiloto no Projeto - Parte 1. 
 - confirmação de que o estoque final não fica negativo;
 - revisão independente solicitada com base nos slides e na rubrica.
 
-## 6. Pontos que a equipe deve saber explicar
 
-1. Por que uma `BlockingQueue` pode ser acessada por várias threads.
-2. Qual é a seção crítica do estoque.
-3. O que poderia acontecer sem o `synchronized`.
-4. Qual é a diferença entre as threads dos clientes e as threads dos restaurantes.
-5. Por que o método gRPC planejado é unário.
-6. Por que Spring Boot ainda não foi usado.
-7. Como o servidor central escolhe uma unidade.
 
-## 7. Evidências a anexar na entrega
-
-- link ou exportação das conversas relevantes com a IA;
-- este diário atualizado quando novas decisões forem tomadas;
-- captura da execução no console;
-- divisão do que cada integrante apresentará.
-
-## 8. Revisão independente
+## 7. Revisão independente
 
 **Pedido feito ao revisor:** analisar o projeto sem presumir que o código estava correto, usando a rubrica e os slides como fontes principais e sem editar os arquivos.
 
