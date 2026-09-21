@@ -1,4 +1,4 @@
-# Diário de uso da IA
+# Diário de uso da IA (Chat GPT (SOL 5.6)
 
 Este documento registra como a IA foi usada como copiloto no Projeto - Parte 1. A equipe continua responsável por executar, estudar e explicar o código.
 
