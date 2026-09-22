@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Restaurante {
     private final String id;
@@ -15,6 +16,12 @@ public class Restaurante {
     private final BlockingQueue<Pedido> fila = new LinkedBlockingQueue<>();
     private final ExecutorService trabalhadores;
     private volatile boolean aberto = true;
+
+
+    private final AtomicInteger aceitos = new AtomicInteger();
+    private final AtomicInteger concluidos = new AtomicInteger();
+    private final AtomicInteger recusados = new AtomicInteger();
+    private final AtomicInteger cancelados = new AtomicInteger();
 
     public Restaurante(String id, String regiao, Estoque estoque, int numeroTrabalhadores) {
         this.id = id;
@@ -50,6 +57,7 @@ public class Restaurante {
 
         boolean entrouNaFila = fila.offer(pedido);
         if (entrouNaFila) {
+            aceitos.incrementAndGet();
             System.out.println("[CENTRAL] " + pedido.getId() + " enviado para " + id);
         }
         return entrouNaFila;
@@ -73,15 +81,18 @@ public class Restaurante {
         System.out.println("[" + id + "] " + thread + " iniciou " + pedido.getId());
 
         if (!estoque.reservar(pedido)) {
+            recusados.incrementAndGet();
             System.out.println("[" + id + "] " + pedido.getId() + " recusado: estoque insuficiente");
             return;
         }
 
         try {
             Thread.sleep(400);
+            concluidos.incrementAndGet();
             System.out.println("[" + id + "] " + pedido.getId() + " concluído por " + thread);
         } catch (InterruptedException e) {
             estoque.devolver(pedido);
+            cancelados.incrementAndGet();
             System.out.println("[" + id + "] " + pedido.getId() + " cancelado e devolvido ao estoque");
             throw e;
         }
@@ -102,10 +113,41 @@ public class Restaurante {
         fila.drainTo(naoProcessados);
 
         for (Pedido pedido : naoProcessados) {
+            cancelados.incrementAndGet();
             System.out.println("[" + id + "] " + pedido.getId()
                     + " cancelado: unidade encerrada antes do preparo");
         }
 
         System.out.println("[" + id + "] estoque final: " + estoque.consultar());
+        imprimirBalanco();
+    }
+
+    public int getAceitos() {
+        return aceitos.get();
+    }
+
+    public int getConcluidos() {
+        return concluidos.get();
+    }
+
+    public int getRecusados() {
+        return recusados.get();
+    }
+
+    public int getCancelados() {
+        return cancelados.get();
+    }
+
+    public int getSemDesfecho() {
+        return getAceitos() - getConcluidos() - getRecusados() - getCancelados();
+    }
+
+    public void imprimirBalanco() {
+        System.out.println("[" + id + "] balan\u00e7o:"
+                + " aceitos=" + getAceitos()
+                + " | conclu\u00eddos=" + getConcluidos()
+                + " | recusados=" + getRecusados()
+                + " | cancelados=" + getCancelados()
+                + " | sem desfecho=" + getSemDesfecho());
     }
 }
