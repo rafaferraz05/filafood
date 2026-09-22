@@ -1,5 +1,7 @@
 package br.edu.cesar.filafood;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -94,6 +96,14 @@ public class Restaurante {
         if (!trabalhadores.awaitTermination(10, TimeUnit.SECONDS)) {
             trabalhadores.shutdownNow();
             trabalhadores.awaitTermination(2, TimeUnit.SECONDS);
+        }
+
+        List<Pedido> naoProcessados = new ArrayList<>();
+        fila.drainTo(naoProcessados);
+
+        for (Pedido pedido : naoProcessados) {
+            System.out.println("[" + id + "] " + pedido.getId()
+                    + " cancelado: unidade encerrada antes do preparo");
         }
 
         System.out.println("[" + id + "] estoque final: " + estoque.consultar());

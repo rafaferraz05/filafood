@@ -49,11 +49,28 @@ public class Main {
             verificarErros(resultados);
         } finally {
             clientesSimultaneos.shutdownNow();
-            centro1.encerrar();
-            boaViagem1.encerrar();
+            encerrarTodos(List.of(centro1, boaViagem1));
         }
 
         System.out.println("Simulação encerrada.");
+    }
+
+    private static void encerrarTodos(List<Restaurante> unidades) {
+        boolean interrompido = false;
+
+        for (Restaurante unidade : unidades) {
+            try {
+                unidade.encerrar();
+            } catch (InterruptedException e) {
+                interrompido = true;
+                System.out.println("[MAIN] encerramento de " + unidade.getId()
+                        + " interrompido; seguindo com as demais unidades");
+            }
+        }
+
+        if (interrompido) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private static void verificarErros(List<Future<Boolean>> resultados) {
