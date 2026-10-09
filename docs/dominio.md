@@ -123,8 +123,9 @@ Nomes de estado aceitos no sistema, reunidos aqui para que não exista sinônimo
 |---|---|---|
 | **Estado da unidade** | `ativa` ou `inativa`, no cadastro, e `disponível` ou `pausada`, no recebimento. | status, situação |
 | **Estado do funcionário** | `ativo` ou `inativo`. | status, situação |
-| **Estado do insumo** | `normal` ou `a repor`. | status, situação |
+| **Estado do insumo** | `ativo` ou `inativo`, no cadastro, e `normal` ou `a repor`, na reposição. | status, situação |
 | **Estado do entregador** | `ativo` ou `inativo`. | status, situação |
+| **Estado da zona** | `ativa` ou `inativa`. | status, situação |
 | **Estado do pedido** | `rascunho`, `enviado`, `em preparo`, `concluído`, `recusado`, `cancelado`. | status, situação |
 | **Estado da entrega** | `aguardando`, `despachada`, `em rota`, `entregue`, `falha`. | status, situação |
 
