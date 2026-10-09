@@ -2,6 +2,25 @@
 
 Protótipo acadêmico de um sistema de distribuição de pedidos entre unidades de uma rede de restaurantes.
 
+## Documentação
+
+| Artefato | Arquivo | Nível do DDD |
+| --- | --- | --- |
+| Descrição do domínio e linguagem onipresente | [`docs/dominio.md`](docs/dominio.md) | preliminar |
+| Mapa da história do usuário | [`docs/historia-do-usuario.md`](docs/historia-do-usuario.md) | preliminar |
+| Protótipos de alta fidelidade | `docs/prototipos/` | preliminar |
+| Funcionalidades e regras de negócio | [`docs/funcionalidades.md`](docs/funcionalidades.md) | tático |
+| Modelo do domínio (Context Mapper) | `filafood.cml` | estratégico e tático |
+| Diário de uso da IA | [`DIARIO-IA.md`](DIARIO-IA.md) | — |
+
+Os protótipos de alta fidelidade e o modelo em Context Mapper ainda não existem no repositório.
+
+Convenção: o CML fica na **raiz**, como no exemplo `sgb-2025-01`. A documentação fica em `docs/`.
+Os arquivos `.feature` do Cucumber ficam dentro do módulo de domínio correspondente, em
+`src/test/resources`, espelhando o pacote do conceito.
+
+As seções abaixo descrevem a Parte 1 do trabalho — o protótipo local de concorrência em Java puro.
+
 ## Objetivo da Parte 1
 
 Executar em um único computador uma simulação na qual vários clientes enviam pedidos ao mesmo tempo. O servidor central escolhe uma unidade que atende o endereço e encaminha o pedido para sua fila.
