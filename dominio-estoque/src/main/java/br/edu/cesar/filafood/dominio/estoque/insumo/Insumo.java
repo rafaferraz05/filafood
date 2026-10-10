@@ -1,5 +1,8 @@
 package br.edu.cesar.filafood.dominio.estoque.insumo;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
@@ -13,7 +16,7 @@ public class Insumo {
     private final String unidadeDeMedida;
     private final double estoqueMinimo;
     private final int prazoDeEntregaEmDias;
-    private final List<MovimentacaoEstoque> movimentacoes = new java.util.ArrayList<>();
+    private final List<MovimentacaoEstoque> movimentacoes = new ArrayList<>();
     private boolean ativo = true;
 
     public Insumo(String nome, String unidadeDeMedida, double estoqueMinimo, int prazoDeEntregaEmDias) {
@@ -59,6 +62,67 @@ public class Insumo {
         if (!ativo) {
             throw new RegraDeNegocioException("o insumo está inativo");
         }
+    }
+
+    /**
+     * Saída por consumo na produção de um pedido.
+     *
+     * <p>Não verifica o saldo: quem decide se a necessidade cabe no estoque é a explosão da ficha
+     * técnica, que precisa verificar todos os insumos antes de gravar qualquer movimentação.
+     */
+    public void consumir(double quantidade, String pedido) {
+        exigirAtivo();
+        if (quantidade <= 0) {
+            throw new RegraDeNegocioException("a quantidade deve ser maior que zero");
+        }
+        movimentacoes.add(MovimentacaoEstoque.consumo(quantidade, pedido));
+    }
+
+    /** Entrada por devolução, que recompõe o saldo quando um preparo é cancelado. */
+    public void devolver(double quantidade, String pedido) {
+        exigirAtivo();
+        if (quantidade <= 0) {
+            throw new RegraDeNegocioException("a quantidade deve ser maior que zero");
+        }
+        movimentacoes.add(MovimentacaoEstoque.devolucao(quantidade, pedido));
+    }
+
+    /** Quanto deste insumo foi consumido pelo pedido informado. */
+    public double consumidoPeloPedido(String pedido) {
+        return movimentacoes.stream()
+                .filter(m -> m.tipo() == MovimentacaoEstoque.Tipo.SAIDA && m.ehDoPedido(pedido))
+                .mapToDouble(MovimentacaoEstoque::quantidade)
+                .sum();
+    }
+
+    /**
+     * Média das saídas dos últimos 30 dias, dividida por 30.
+     *
+     * <p>A divisão é sempre por 30, mesmo com dias sem movimento, para que um insumo parado não
+     * tenha a média inflada.
+     */
+    public double consumoMedioDiario(LocalDate referencia) {
+        LocalDateTime inicio = referencia.minusDays(30).atStartOfDay();
+        double saidas = movimentacoes.stream()
+                .filter(m -> m.tipo() == MovimentacaoEstoque.Tipo.SAIDA && m.dataHora().isAfter(inicio))
+                .mapToDouble(MovimentacaoEstoque::quantidade)
+                .sum();
+        return saidas / 30.0;
+    }
+
+    /** Consumo médio diário vezes o prazo de entrega, mais o estoque mínimo. */
+    public double pontoDePedido(LocalDate referencia) {
+        return consumoMedioDiario(referencia) * prazoDeEntregaEmDias + estoqueMinimo;
+    }
+
+    /** O insumo está a repor quando o saldo é menor ou igual ao ponto de pedido. */
+    public boolean estaARepor(LocalDate referencia) {
+        return saldo() <= pontoDePedido(referencia);
+    }
+
+    /** Recusa por definição: a movimentação é imutável, então uma entrada não pode ser alterada. */
+    public void alterarQuantidadeDaMovimentacao(double quantidade) {
+        throw new RegraDeNegocioException("a movimentação de estoque não pode ser alterada");
     }
 
     public String nome() {

@@ -1,6 +1,8 @@
 package br.edu.cesar.filafood.dominio.estoque;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
@@ -32,5 +34,9 @@ public class EstoqueDaUnidade {
 
     public int quantidadeDeInsumos() {
         return insumos.size();
+    }
+
+    public Collection<Insumo> insumos() {
+        return List.copyOf(insumos.values());
     }
 }
