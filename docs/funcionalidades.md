@@ -61,7 +61,7 @@ de pedido, que projeta o consumo médio sobre o prazo de entrega.
 
 | Campo | Conteúdo |
 | --- | --- |
-| Descrição | Ao iniciar o preparo de um pedido, o sistema calcula a necessidade de cada insumo: para cada item do pedido, multiplica a quantidade pedida pela quantidade do insumo na ficha técnica do produto, somando as contribuições dos itens repetidos. Se o saldo cobrir toda a necessidade, o sistema grava uma movimentação de saída por insumo e o pedido entra em preparo. Se faltar saldo de qualquer insumo, nenhuma movimentação é gravada e o pedido é recusado com motivo. |
+| Descrição | Ao iniciar o preparo de um pedido, o sistema calcula a necessidade de cada insumo: para cada item do pedido, multiplica a quantidade pedida pela quantidade do insumo na ficha técnica do produto e acumula por insumo, somando as contribuições dos produtos que usam o mesmo insumo. Se o saldo cobrir toda a necessidade, o sistema grava uma movimentação de saída por insumo e o pedido entra em preparo. Se faltar saldo de qualquer insumo, nenhuma movimentação é gravada e o pedido é recusado com motivo. |
 | Consultas | consultar os itens do pedido; consultar a ficha técnica dos produtos envolvidos; consultar o saldo dos insumos envolvidos. |
 | Complexidade | alta |
 
@@ -77,7 +77,7 @@ de pedido, que projeta o consumo médio sobre o prazo de entrega.
 
 | Campo | Conteúdo |
 | --- | --- |
-| Descrição | O consumo médio diário de um insumo é a soma das saídas dos últimos 30 dias dividida por 30, mesmo com dias sem movimento. O ponto de pedido é o consumo médio diário multiplicado pelo prazo de entrega em dias do insumo, mais o estoque mínimo. O insumo fica "a repor" quando o saldo é menor ou igual ao ponto de pedido. |
+| Descrição | O consumo médio diário de um insumo é a soma das saídas dos últimos 30 dias dividida por 30, mesmo com dias sem movimento. O ponto de pedido é o consumo médio diário multiplicado pelo prazo de entrega em dias do insumo, mais o estoque mínimo. O insumo fica "a repor" quando o saldo é menor ou igual ao ponto de pedido. Insumo inativo não é monitorado: não entra em ficha técnica e não aceita movimentação, então não há consumo a repor. |
 | Consultas | consultar as movimentações de saída do insumo dos últimos 30 dias; consultar o insumo. |
 | Complexidade | alta |
 

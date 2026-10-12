@@ -67,7 +67,7 @@ public class Insumo {
     /**
      * Saída por consumo na produção de um pedido.
      *
-     * <p>Não verifica o saldo: quem decide se a necessidade cabe no estoque é a explosão da ficha
+     * Não verifica o saldo: quem decide se a necessidade cabe no estoque é a explosão da ficha
      * técnica, que precisa verificar todos os insumos antes de gravar qualquer movimentação.
      */
     public void consumir(double quantidade, String pedido) {
@@ -98,7 +98,7 @@ public class Insumo {
     /**
      * Média das saídas dos últimos 30 dias, dividida por 30.
      *
-     * <p>A divisão é sempre por 30, mesmo com dias sem movimento, para que um insumo parado não
+     * A divisão é sempre por 30, mesmo com dias sem movimento, para que um insumo parado não
      * tenha a média inflada.
      */
     public double consumoMedioDiario(LocalDate referencia) {
@@ -115,9 +115,14 @@ public class Insumo {
         return consumoMedioDiario(referencia) * prazoDeEntregaEmDias + estoqueMinimo;
     }
 
-    /** O insumo está a repor quando o saldo é menor ou igual ao ponto de pedido. */
+    /**
+     * O insumo está a repor quando o saldo é menor ou igual ao ponto de pedido.
+     *
+     * Insumo inativo não é monitorado: ele não entra em ficha técnica e não aceita movimentação,
+     * então não há consumo a repor.
+     */
     public boolean estaARepor(LocalDate referencia) {
-        return saldo() <= pontoDePedido(referencia);
+        return ativo && saldo() <= pontoDePedido(referencia);
     }
 
     /** Recusa por definição: a movimentação é imutável, então uma entrada não pode ser alterada. */

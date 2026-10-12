@@ -25,3 +25,8 @@ Funcionalidade: Ponto de pedido por consumo médio
   Cenário: Manter o insumo normal quando o saldo está acima do ponto de pedido
     Dado o insumo "Farinha" com ponto de pedido 11 e saldo 12
     Então o insumo "Farinha" fica normal
+
+  Cenário: Não sinalizar o insumo inativo para reposição
+    Dado o insumo "Farinha" com ponto de pedido 11 e saldo 11
+    E o insumo "Farinha" inativo
+    Então o insumo "Farinha" fica normal
