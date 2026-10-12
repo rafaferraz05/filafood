@@ -84,10 +84,12 @@ de pedido, que projeta o consumo médio sobre o prazo de entrega.
 ## Protótipos da interface com o usuário
 
 - Tela **Insumos**: lista com saldo, estoque mínimo, ponto de pedido e estado (normal ou a repor). Busca por nome e filtro por estado. Botões Novo insumo, Editar, Desativar, Reativar e Entrada.
-- Tela **Detalhe do insumo**: movimentações e ficha técnica dos produtos que o consomem.
+- Tela **Detalhe do insumo**: dados do cadastro, entrada por compra, movimentações e os produtos que consomem o insumo.
+- Tela **Ficha técnica**: produtos do cardápio com a disponibilidade e os itens de cada ficha.
+- Tela **Preparo do pedido**: itens do pedido, insumos a baixar e cancelamento do preparo.
 - Formulários exibem os erros das RN 1, 2 e 3 ao lado do campo.
 
-Os protótipos visuais de alta fidelidade ainda deverão ser desenhados pela equipe.
+Os protótipos de alta fidelidade estão em [`docs/prototipos/`](prototipos/).
 
 ---
 
@@ -99,7 +101,7 @@ entregador, com múltiplos critérios de elegibilidade e critério de desempate.
 
 | Título | Gerenciar entregadores, despacho e entregas |
 | --- | --- |
-| Descrição | O gestor mantém o cadastro de entregadores e de zonas de entrega. Quando o pedido fica pronto, ele entra na fila de despacho com uma entrega em `aguardando`. No despacho, o sistema grava a taxa de entrega calculada pela zona do endereço e escolhe o entregador elegível de menor carga. Durante o deslocamento, o entregador registra a retirada, a entrega ou a falha. O gestor acompanha a fila de despacho e as entregas em andamento, e consulta o histórico por entregador e por período. |
+| Descrição | O gestor mantém o cadastro de entregadores e de zonas de entrega. Quando o pedido fica pronto, ele entra na fila de despacho com uma entrega em `aguardando`. No despacho, o sistema grava a taxa de entrega calculada pela zona do endereço e escolhe o entregador elegível de menor carga. Durante o deslocamento, o entregador registra a retirada, a entrega ou a falha. O gestor acompanha a fila de despacho e as entregas em andamento. |
 | Entidades envolvidas | **Mantidas:** Entregador, ZonaEntrega, Entrega. **Referenciadas:** Pedido, EnderecoEntrega e Unidade. |
 
 **Definições usadas nas regras**
@@ -160,9 +162,8 @@ entregador, com múltiplos critérios de elegibilidade e critério de desempate.
 ## Protótipos da interface com o usuário
 
 - Tela **Entregadores**: lista com nome, zonas atendidas, carga atual e estado, com botões Novo, Editar, Desativar e Reativar.
-- Tela **Zonas**: zonas com centro, raio, valor base, raio gratuito, valor por quilômetro, teto e valor mínimo de pedido, com botões Novo, Editar, Desativar e Reativar.
-- Tela **Despacho**: fila de pedidos prontos sem entregador, com zona, tempo de espera e motivo de estar na fila, e as entregas em andamento. O despacho é automático.
-- Tela **Minhas entregas**: entregas atribuídas ao entregador, com a ação Registrar, que grava a retirada, a entrega ou a falha.
-- Tela **Histórico do entregador**: entregas por período, falhas e tempo médio.
+- Tela **Zonas e taxas**: zonas com centro, raio, valor base, raio gratuito, valor por quilômetro, teto e valor mínimo de pedido, com botões Novo, Editar, Desativar e Reativar, e os exemplos de cálculo da taxa.
+- Tela **Despacho e entregas**, do gestor da unidade: fila de pedidos prontos sem entregador, com zona, tempo de espera e motivo de estar na fila, e as entregas em andamento com a linha do tempo das transições. O despacho é automático.
+- Tela **Minhas entregas**, do entregador: entregas atribuídas a ele, com o registro da retirada, da entrega ou da falha.
 
-Os protótipos visuais de alta fidelidade ainda deverão ser desenhados pela equipe.
+Os protótipos de alta fidelidade estão em [`docs/prototipos/`](prototipos/).

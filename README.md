@@ -13,7 +13,7 @@ Protótipo acadêmico de um sistema de distribuição de pedidos entre unidades 
 | Modelo do domínio (Context Mapper) | `filafood.cml` | estratégico e tático |
 | Diário de uso da IA | [`DIARIO-IA.md`](DIARIO-IA.md) | — |
 
-Os protótipos de alta fidelidade e o modelo em Context Mapper ainda não existem no repositório.
+O modelo em Context Mapper ainda não existe no repositório.
 
 Convenção: o CML fica na **raiz**, como no exemplo `sgb-2025-01`. A documentação fica em `docs/`.
 Os arquivos `.feature` do Cucumber ficam dentro do módulo de domínio correspondente, em
