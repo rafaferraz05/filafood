@@ -47,7 +47,8 @@ public class PreparoDoPedido {
 
     /**
      * Necessidade de cada insumo para o pedido: para cada item, multiplica a quantidade pedida pela
-     * quantidade do insumo na ficha técnica do produto, somando as contribuições dos itens repetidos.
+     * quantidade do insumo na ficha técnica do produto e acumula por insumo, somando as contribuições
+     * dos produtos diferentes que usam o mesmo insumo.
      */
     public Map<String, Double> necessidade(List<ItemDoPedido> itens) {
         Map<String, Double> necessidade = new LinkedHashMap<>();

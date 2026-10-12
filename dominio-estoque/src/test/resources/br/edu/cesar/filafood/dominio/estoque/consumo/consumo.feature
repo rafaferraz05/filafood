@@ -7,7 +7,7 @@ Funcionalidade: Baixa automática por explosão da ficha técnica
     Dado que o produto "Hambúrguer" tem ficha técnica com 1 "Pão" e 1 "Carne" na unidade
     E o pedido tem 3 "Hambúrguer"
 
-  Cenário: Dar baixa somando as contribuições dos itens repetidos
+  Cenário: Dar baixa multiplicando a quantidade pedida pela quantidade da ficha
     Dado o saldo do insumo "Pão" igual a 10 e o saldo do insumo "Carne" igual a 10
     Quando a unidade inicia o preparo do pedido
     Então o pedido fica em preparo
