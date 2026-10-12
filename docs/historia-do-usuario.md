@@ -79,7 +79,6 @@ saber quando comprar.
 | **Cadastrar** | EN-01 Entregador · EN-02 Zona | |
 | **Despachar** | EN-03 Taxa pela zona · EN-04 Entregador elegível · EN-05 Fila de despacho | |
 | **Acompanhar** | | EN-06 Retirada e em rota · EN-07 Entrega confirmada · EN-08 Falha com motivo · EN-09 Nova tentativa |
-| **Consultar** | | EN-10 Histórico |
 
 **Entrega 1** já despacha de verdade: cadastra quem entrega, calcula a taxa e escolhe o entregador.
 **Entrega 2** acompanha o deslocamento e fecha os desfechos.
@@ -97,7 +96,6 @@ saber quando comprar.
 | EN-07 | Como entregador, quero registrar a entrega informando o nome do recebedor, para que a entrega fique comprovada. | entregador | RN 5 | 2 |
 | EN-08 | Como entregador, quero registrar uma falha escolhendo o motivo, para explicar por que a entrega não foi feita. | entregador | RN 6 | 2 |
 | EN-09 | Como gestor da unidade, quero que o pedido volte à fila quando houver falha, com apenas uma nova tentativa, para que não fique em laço. | sistema | RN 6 | 2 |
-| EN-10 | Como gestor da unidade, quero consultar o histórico de entregas por entregador e por período, para avaliar desempenho e falhas. | gestor | RN 5 | 2 |
 
 ---
 
@@ -115,7 +113,7 @@ saber quando comprar.
 | F2 RN 2 | EN-02 |
 | F2 RN 3 | EN-03 |
 | F2 RN 4 | EN-04, EN-05 |
-| F2 RN 5 | EN-06, EN-07, EN-10 |
+| F2 RN 5 | EN-06, EN-07 |
 | F2 RN 6 | EN-08, EN-09 |
 
 Toda regra de negócio tem pelo menos uma história, e toda história aponta para uma regra.

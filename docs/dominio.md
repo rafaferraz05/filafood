@@ -99,7 +99,7 @@ permanece `concluído` enquanto ela corre.
 | **Consumo médio diário** | Média das saídas de um insumo nos últimos 30 dias, dividida por 30. | média de consumo, giro |
 | **Ponto de pedido** | Consumo médio diário × prazo de entrega em dias + estoque mínimo. | ponto de ressuprimento |
 | **Custo unitário** | Valor pago por uma unidade de medida do insumo, informado na **entrada por compra** e gravado na movimentação. O custo médio de estoque está fora de escopo. | preço |
-| **A repor** | Estado de um insumo cujo **saldo** está menor ou igual ao ponto de pedido. | crítico, acabando, baixo |
+| **A repor** | Estado de um insumo **ativo** cujo **saldo** está menor ou igual ao ponto de pedido. Insumo inativo não é monitorado. | crítico, acabando, baixo |
 
 ### 3.5 Entrega
 
@@ -123,7 +123,7 @@ Nomes de estado aceitos no sistema, reunidos aqui para que não exista sinônimo
 |---|---|---|
 | **Estado da unidade** | `ativa` ou `inativa`, no cadastro, e `disponível` ou `pausada`, no recebimento. | status, situação |
 | **Estado do funcionário** | `ativo` ou `inativo`. | status, situação |
-| **Estado do insumo** | `ativo` ou `inativo`, no cadastro, e `normal` ou `a repor`, na reposição. | status, situação |
+| **Estado do insumo** | `ativo` ou `inativo`, no cadastro, e `normal` ou `a repor`, na reposição. O estado de reposição só existe para insumo ativo. | status, situação |
 | **Estado do entregador** | `ativo` ou `inativo`. | status, situação |
 | **Estado da zona** | `ativa` ou `inativa`. | status, situação |
 | **Estado do pedido** | `rascunho`, `enviado`, `em preparo`, `concluído`, `recusado`, `cancelado`. | status, situação |
@@ -205,7 +205,7 @@ flowchart TD
 1. A venda gera **saídas** de estoque, por insumo, através da ficha técnica.
 2. As saídas dos últimos 30 dias alimentam o **consumo médio diário**.
 3. O consumo médio, o prazo de entrega do insumo e o estoque mínimo definem o **ponto de pedido**.
-4. Quando o **saldo** cai até o ponto de pedido, o insumo fica **a repor** e aparece como tal na tela de insumos.
+4. Quando o **saldo** de um insumo **ativo** cai até o ponto de pedido, ele fica **a repor** e aparece como tal na tela de insumos. Insumo inativo não é monitorado, então fica fora da lista de reposição.
 
 ### 5.3 Cadastros de apoio
 
