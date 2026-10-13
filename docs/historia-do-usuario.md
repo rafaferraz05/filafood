@@ -10,8 +10,8 @@
 ## 1. Como ler o mapa
 
 - **Backbone** (seção 2): a jornada do usuário, na horizontal, em ordem cronológica.
-- **Mapa** (seções 4 e 6): as histórias sob cada etapa do backbone, na vertical, distribuídas por
-  entrega. O que está mais acima entra primeiro.
+- **Mapa** (seções 4 e 6): as histórias sob cada etapa do backbone, mais os cadastros que alimentam
+  a etapa, na vertical, distribuídas por entrega. O que está mais acima entra primeiro.
 - **Fatias**, ou entregas: dois incrementos por funcionalidade. A entrega 1 é o mínimo que já entrega valor ponta a ponta.
 - **Catálogos** (seções 5 e 7): as histórias escritas por extenso, com ator e rastreabilidade.
 
@@ -39,6 +39,7 @@ cadastros que alimenta todas elas.
 | Ator | Histórias |
 | --- | --- |
 | **Gestor da unidade** | Cadastros, movimentações de estoque e despacho |
+| **Atendente ou cozinheiro** | Inicia o preparo, conclui, cancela ou recusa o pedido. As histórias de baixa automática e de devolução decorrem da ação dele |
 | **Entregador** | Execução da entrega: retirada, entrega e falha |
 | **Sistema** | Regras automáticas (consumo, taxa e escolha do entregador), expressas como história porque o gestor é quem se beneficia do resultado |
 
