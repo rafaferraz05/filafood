@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Ficha técnica · item recusado</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo A · estoque</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="insumos.html">Insumos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="detalhe-insumo.html">Detalhe do insumo</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="ficha-tecnica.html">Ficha técnica</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="preparo-pedido.html">Preparo do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="ficha-tecnica.html">com dados</a>
+        <a class="b-estado b-estado-atual" href="ficha-tecnica-erro-item.html">item recusado</a>
+        <a class="b-estado" href="ficha-tecnica-sem-ficha.html">sem ficha</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Ficha técnica</h1>
+        <p class="subtitulo">Insumos consumidos por cada produto, na unidade Boa Viagem.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">3 produtos no cardápio</span>
+        <span class="badge badge-repor">1 sem ficha</span>
+      </div>
+    </div>
+
+    <div class="aviso-erro">
+      O item foi recusado e a ficha do Hambúrguer Clássico <b>continua com 4 itens</b>.
+    </div>
+
+    <div class="grid-2">
+
+      <div class="card">
+        <div class="card-titulo">
+          Produtos do cardápio
+          <span class="dir">a disponibilidade é o menor saldo</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Itens</th>
+              <th>Porções cobertas</th>
+              <th>Situação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="destaque">Hambúrguer Clássico</td>
+              <td>4</td>
+              <td>42</td>
+              <td><span class="badge badge-ok"><span class="bolinha"></span>disponível</span></td>
+            </tr>
+            <tr>
+              <td class="destaque">Hambúrguer Duplo</td>
+              <td>4</td>
+              <td>26</td>
+              <td><span class="badge badge-ok"><span class="bolinha"></span>disponível</span></td>
+            </tr>
+            <tr>
+              <td class="destaque">Batata Rústica</td>
+              <td>—</td>
+              <td>—</td>
+              <td><span class="badge badge-alerta"><span class="bolinha"></span>sem ficha</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">
+          Ficha técnica · Hambúrguer Clássico
+          <span class="dir">4 itens</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Insumo</th>
+              <th>Por porção</th>
+              <th>Saldo</th>
+              <th>Porções cobertas</th>
+              <th class="acoes">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="destaque">Pão</td>
+              <td>1 un</td>
+              <td>42 un</td>
+              <td>42</td>
+              <td class="acoes"><a href="#">Remover</a></td>
+            </tr>
+            <tr>
+              <td class="destaque">Carne</td>
+              <td>0,15 kg</td>
+              <td>8 kg</td>
+              <td>53</td>
+              <td class="acoes"><a href="#">Remover</a></td>
+            </tr>
+            <tr>
+              <td class="destaque">Queijo</td>
+              <td>0,03 kg</td>
+              <td>15 kg</td>
+              <td>500</td>
+              <td class="acoes"><a href="#">Remover</a></td>
+            </tr>
+            <tr>
+              <td class="destaque">Tomate</td>
+              <td>0,02 kg</td>
+              <td>6 kg</td>
+              <td>300</td>
+              <td class="acoes"><a href="#">Remover</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="card-corpo" style="border-top:1px solid var(--borda);">
+          <span class="badge badge-ok"><span class="bolinha"></span>disponível: 42 porções</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">
+        Adicionar item à ficha · Hambúrguer Clássico
+        <span class="dir">F1 RN 2</span>
+      </div>
+      <div class="card-corpo">
+        <div class="linha-campos">
+          <div class="campo">
+            <label>Insumo</label>
+            <select class="erro">
+              <option selected>Pão · un</option>
+              <option>Carne · kg</option>
+              <option>Queijo · kg</option>
+              <option>Tomate · kg</option>
+            </select>
+            <div class="campo-erro">o insumo já está na ficha técnica</div>
+          </div>
+          <div class="campo">
+            <label>Quantidade por porção</label>
+            <input type="text" class="erro" value="0">
+            <div class="campo-erro">a quantidade deve ser maior que zero</div>
+          </div>
+        </div>
+        <div class="acoes-form">
+          <a class="btn btn-primario" href="ficha-tecnica.html">Corrigir o item</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">
+      Cada item exige insumo ativo e quantidade maior que zero, e o mesmo insumo não pode aparecer
+      duas vezes no produto nesta unidade. A ficha vale por unidade, e produto sem ficha não pode ser
+      vendido.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Ficha técnica · estado item recusado</b> · F1 RN 2: insumo
+      repetido e quantidade não positiva
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

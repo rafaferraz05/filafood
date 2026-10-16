@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Despacho e entregas</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Despacho e entregas</h1>
+        <p class="subtitulo">Fila de pedidos prontos e entregas em andamento. O despacho é automático.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-repor">2 na fila</span>
+        <span class="badge badge-ok">7 em andamento</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+
+      <div>
+        <div class="card">
+          <div class="card-titulo">
+            Fila de despacho
+            <span class="dir">F2 RN 4</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Zona</th>
+                <th>Espera</th>
+                <th>Por que não foi despachado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">#1341</td>
+                <td>Grande Recife</td>
+                <td>6 min</td>
+                <td>Bruno está com a carga cheia (3 de 3) e Diego, o outro que atende a zona, está inativo</td>
+              </tr>
+              <tr>
+                <td class="destaque">#1343<span class="unidade">2ª tentativa do pedido #1330</span></td>
+                <td>Grande Recife</td>
+                <td>2 min</td>
+                <td>Entrou na fila como entrega nova, depois da falha da anterior</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">
+            Entrega #1337
+            <span class="dir">F2 RN 5</span>
+          </div>
+          <div class="card-corpo">
+            <ul class="linha-tempo">
+              <li class="feito">
+                <span class="lt-titulo">aguardando</span> · 07/10 20:12
+                <div class="lt-nota">Entrega criada quando o pedido ficou pronto.</div>
+              </li>
+              <li class="feito">
+                <span class="lt-titulo">despachada</span> · 07/10 20:14
+                <div class="lt-nota">Ana Paula Lima, a elegível de menor carga. Taxa de R$ 8,00 gravada pela zona Centro.</div>
+              </li>
+              <li class="atual">
+                <span class="lt-titulo">em rota</span> · 07/10 20:19
+                <div class="lt-nota">Retirada registrada pelo entregador.</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-titulo">
+            Entregas em andamento
+            <span class="dir">contam na carga do entregador</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Entrega</th>
+                <th>Entregador</th>
+                <th>Estado</th>
+                <th class="num">Taxa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">#1337</td>
+                <td>Ana Paula Lima</td>
+                <td><span class="badge badge-alerta"><span class="bolinha"></span>em rota</span></td>
+                <td class="num">R$ 8,00</td>
+              </tr>
+              <tr>
+                <td class="destaque">#1338</td>
+                <td>Bruno Souza</td>
+                <td><span class="badge badge-alerta"><span class="bolinha"></span>em rota</span></td>
+                <td class="num">R$ 0,00</td>
+              </tr>
+              <tr>
+                <td class="destaque">#1339</td>
+                <td>Carla Dias</td>
+                <td><span class="badge badge-neutro"><span class="bolinha"></span>despachada</span></td>
+                <td class="num">R$ 5,00</td>
+              </tr>
+              <tr>
+                <td colspan="4" style="color:var(--tinta-fraca);font-size:13px;">Mais 4 entregas em andamento nesta unidade.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rodape">
+      O pedido vai para o entregador ativo que atende a zona e está abaixo da carga máxima: o de menor
+      carga e, no empate, o que está há mais tempo sem receber entrega. Na falha, a entrega é
+      encerrada, a carga é liberada e o pedido volta à fila com uma nova entrega. O pedido admite uma
+      única nova tentativa, e na recusa do cliente é cancelado já na primeira falha.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Despacho e entregas</b> · F2 RN 4 (fila e elegível de
+      menor carga) · F2 RN 5 (estados e transições com data e hora) · F2 RN 6 (falha e nova tentativa)
+    </p>
+
+  </main>
+</div>
+</body>
+</html>

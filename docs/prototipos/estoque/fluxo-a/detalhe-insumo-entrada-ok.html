@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Detalhe do insumo · entrada registrada</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo A · estoque</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="insumos.html">Insumos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="detalhe-insumo.html">Detalhe do insumo</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="ficha-tecnica.html">Ficha técnica</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="preparo-pedido.html">Preparo do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="detalhe-insumo.html">com dados</a>
+        <a class="b-estado" href="detalhe-insumo-erro-entrada.html">entrada recusada</a>
+        <a class="b-estado b-estado-atual" href="detalhe-insumo-entrada-ok.html">entrada registrada</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Pão</h1>
+        <p class="subtitulo">Insumo da unidade Boa Viagem · unidade de medida un · prazo de entrega de 3 dias</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-ok"><span class="bolinha"></span>ativo</span>
+        <span class="badge badge-neutro">normal</span>
+      </div>
+    </div>
+
+    <div class="aviso-ok">
+      Entrada registrada: <b>100 un</b> somadas ao saldo, a R$ 0,50 por unidade.
+    </div>
+
+    <div class="card">
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-rotulo">Saldo</div>
+          <div class="kpi-valor">142</div>
+          <div class="kpi-nota">un · eram 42 antes da entrada</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Consumo médio diário</div>
+          <div class="kpi-valor">5,0</div>
+          <div class="kpi-nota">150 un em 30 dias ÷ 30</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Estoque mínimo</div>
+          <div class="kpi-valor">20</div>
+          <div class="kpi-nota">un</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Ponto de pedido</div>
+          <div class="kpi-valor">35</div>
+          <div class="kpi-nota">5,0 × 3 + 20</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Custo da última entrada</div>
+          <div class="kpi-valor">R$ 0,50</div>
+          <div class="kpi-nota">por unidade, em 16/10</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+
+      <div>
+        <div class="card">
+          <div class="card-titulo">
+            Nova entrada por compra
+            <span class="dir">F1 RN 3</span>
+          </div>
+          <div class="card-corpo">
+            <div class="linha-campos">
+              <div class="campo">
+                <label>Quantidade</label>
+                <input type="text" value="100">
+              </div>
+              <div class="campo">
+                <label>Custo unitário (R$)</label>
+                <input type="text" value="0,50">
+              </div>
+              <div class="campo">
+                <label>Custo total</label>
+                <input type="text" value="R$ 50,00" readonly>
+              </div>
+            </div>
+            <div class="acoes-form">
+              <a class="btn btn-claro" href="detalhe-insumo.html">Registrar outra entrada</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">
+            Produtos que consomem este insumo
+            <span class="dir">ficha técnica da unidade</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Por porção</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">Hambúrguer Clássico</td>
+                <td>1 un</td>
+              </tr>
+              <tr>
+                <td class="destaque">Hambúrguer Duplo</td>
+                <td>1 un</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">
+          Movimentações
+          <span class="dir">5 mais recentes</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Data e hora</th>
+              <th>Tipo</th>
+              <th>Quantidade</th>
+              <th>Origem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>16/10 09:20</td>
+              <td>Entrada</td>
+              <td>100 un</td>
+              <td>entrada por compra</td>
+            </tr>
+            <tr>
+              <td>07/10 08:15</td>
+              <td>Saída</td>
+              <td>24 un</td>
+              <td>pedido #1268</td>
+            </tr>
+            <tr>
+              <td>03/10 21:00</td>
+              <td>Saída</td>
+              <td>21 un</td>
+              <td>pedido #1200</td>
+            </tr>
+            <tr>
+              <td>30/09 20:50</td>
+              <td>Saída</td>
+              <td>30 un</td>
+              <td>pedido #1176</td>
+            </tr>
+            <tr>
+              <td>27/09 12:10</td>
+              <td>Devolução</td>
+              <td>6 un</td>
+              <td>pedido #1148 cancelado</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="card-corpo" style="border-top:1px solid var(--borda);padding-top:12px;">
+          <a class="link-vermelho" href="#">Ver todas as movimentações dos últimos 30 dias</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rodape">
+      A entrada soma a quantidade ao saldo e não pode ser alterada nem excluída depois de gravada. As
+      saídas vêm da baixa automática do preparo e as devoluções, do cancelamento de um preparo.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Detalhe do insumo · estado entrada registrada</b> ·
+      F1 RN 3: cenário "Registrar entrada e somar ao saldo", com a movimentação de entrada gravada no
+      histórico e o saldo em 142 un
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

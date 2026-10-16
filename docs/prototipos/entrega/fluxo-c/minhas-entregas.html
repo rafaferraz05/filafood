@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Minhas entregas</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Entregador: Ana Paula Lima</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Minhas entregas</h1>
+        <p class="subtitulo">Entregas atribuídas a mim, com o registro da retirada, da entrega ou da falha.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">2 em andamento</span>
+        <span class="badge badge-ok">2 de 3 na carga</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+
+      <div>
+        <div class="card">
+          <div class="card-titulo">
+            Entregas atribuídas a mim
+            <span class="dir">F2 RN 5</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Entrega</th>
+                <th>Endereço</th>
+                <th>Estado</th>
+                <th class="acoes">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">#1337</td>
+                <td>Centro, a 4 km</td>
+                <td><span class="badge badge-alerta"><span class="bolinha"></span>em rota</span></td>
+                <td class="acoes">—</td>
+              </tr>
+              <tr>
+                <td class="destaque">#1344</td>
+                <td>Centro, a 1,5 km</td>
+                <td><span class="badge badge-neutro"><span class="bolinha"></span>despachada</span></td>
+                <td class="acoes"><a href="#">Registrar retirada</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">
+            Entrega #1337
+            <span class="dir">toda transição grava data e hora</span>
+          </div>
+          <div class="card-corpo">
+            <ul class="linha-tempo">
+              <li class="feito">
+                <span class="lt-titulo">aguardando</span> · 07/10 20:12
+                <div class="lt-nota">Entrega criada quando o pedido ficou pronto.</div>
+              </li>
+              <li class="feito">
+                <span class="lt-titulo">despachada</span> · 07/10 20:14
+                <div class="lt-nota">Despacho automático. Taxa de R$ 8,00 gravada pela zona Centro.</div>
+              </li>
+              <li class="atual">
+                <span class="lt-titulo">em rota</span> · 07/10 20:19
+                <div class="lt-nota">Retirada registrada por mim.</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">
+          Registrar na entrega #1337
+          <span class="dir">F2 RN 5 e RN 6</span>
+        </div>
+        <div class="card-corpo">
+          <div class="linha-campos-2">
+            <div class="campo">
+              <label>Recebedor</label>
+              <input type="text" value="Maria">
+            </div>
+            <div class="campo">
+              <label>&nbsp;</label>
+              <button class="btn btn-primario">Registrar entrega</button>
+            </div>
+          </div>
+
+          <hr style="border:0;border-top:1px solid var(--borda);margin:14px 0;">
+
+          <div class="linha-campos-2">
+            <div class="campo">
+              <label>Motivo da falha</label>
+              <select>
+                <option>ausência do cliente</option>
+                <option>endereço não encontrado</option>
+                <option>recusa do cliente</option>
+                <option>problema no transporte</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label>Observação</label>
+              <input type="text" placeholder="obrigatória na falha">
+            </div>
+          </div>
+          <button class="btn btn-perigo">Registrar falha</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rodape">
+      Não é possível pular etapa: a entrega precisa estar despachada para registrar a retirada. Para
+      registrar a entrega é obrigatório o nome do recebedor, e para registrar a falha são obrigatórios
+      o motivo e a observação. Depois de finalizada, a entrega não aceita novo registro.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Minhas entregas</b> · F2 RN 5 (estados, exigências de cada
+      registro e data e hora em toda transição) · F2 RN 6 (falha com motivo e observação)
+    </p>
+
+  </main>
+</div>
+</body>
+</html>

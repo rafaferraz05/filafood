@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Insumos · confirmar desativação</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo A · estoque</span>
+      <span class="gui-dir">
+        <a class="b-nav b-nav-atual" href="insumos.html">Insumos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="detalhe-insumo.html">Detalhe do insumo</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="ficha-tecnica.html">Ficha técnica</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="preparo-pedido.html">Preparo do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="insumos.html">com dados</a>
+        <a class="b-estado" href="insumos-vazio.html">sem insumos</a>
+        <a class="b-estado" href="insumos-filtro-repor.html">a repor</a>
+        <a class="b-estado" href="insumos-formulario.html">formulário</a>
+        <a class="b-estado" href="insumos-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="insumos-cadastrado.html">cadastrado</a>
+        <a class="b-estado b-estado-atual" href="insumos-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="insumos-desativado.html">desativado</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Insumos</h1>
+        <p class="subtitulo">Estoque da unidade, com saldo, estoque mínimo e ponto de pedido.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">4 insumos ativos</span>
+        <span class="badge badge-repor">2 a repor</span>
+      </div>
+    </div>
+
+    <div class="barra">
+      <div class="busca">
+        <svg class="lupa" width="16" height="16" viewBox="0 0 18 18" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="7.6" cy="7.6" r="5.2"></circle>
+          <line x1="11.6" y1="11.6" x2="15.6" y2="15.6"></line>
+        </svg>
+        <input type="text" placeholder="Buscar por nome">
+      </div>
+      <select>
+        <option>Estado: todos</option>
+        <option>Estado: normal</option>
+        <option>Estado: a repor</option>
+        <option>Estado: inativo</option>
+      </select>
+      <a class="btn btn-primario" href="insumos-formulario.html">Novo insumo</a>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Insumo</th>
+          <th>Saldo</th>
+          <th>Estoque mínimo</th>
+          <th>Ponto de pedido</th>
+          <th>Estado</th>
+          <th class="acoes">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="destaque">Pão<span class="unidade">un</span></td>
+          <td>42</td>
+          <td>20</td>
+          <td>35</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>normal</span></td>
+          <td class="acoes"><a href="#">Editar</a><a href="detalhe-insumo.html">Entrada</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Carne<span class="unidade">kg</span></td>
+          <td>8</td>
+          <td>10</td>
+          <td>18</td>
+          <td><span class="badge badge-repor"><span class="bolinha"></span>a repor</span></td>
+          <td class="acoes"><a href="#">Editar</a><a href="#">Entrada</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Queijo<span class="unidade">kg</span></td>
+          <td>15</td>
+          <td>5</td>
+          <td>12</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>normal</span></td>
+          <td class="acoes"><a href="#">Editar</a><a href="#">Entrada</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Tomate<span class="unidade">kg</span></td>
+          <td>6</td>
+          <td>8</td>
+          <td>14</td>
+          <td><span class="badge badge-repor"><span class="bolinha"></span>a repor</span></td>
+          <td class="acoes"><a href="#">Editar</a><a href="#">Entrada</a><a class="apagada" href="insumos-confirmar-desativacao.html">Desativar</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rodape">
+      O insumo fica a repor quando o saldo é menor ou igual ao ponto de pedido, que é o consumo médio
+      diário vezes o prazo de entrega mais o estoque mínimo. Insumo inativo não é monitorado: não há
+      consumo a repor.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Insumos · estado confirmação da desativação</b> ·
+      F1 RN 1: cenário "Desativar insumo sem perder o histórico"
+    </p>
+
+    <div class="fundo-modal">
+      <div class="confirmacao">
+        <div class="confirmacao-titulo">Desativar o insumo Tomate?</div>
+        <p class="confirmacao-texto">
+          O Tomate sai da lista de reposição enquanto estiver inativo. As movimentações já
+          registradas continuam consultáveis, e o insumo pode ser reativado depois.
+        </p>
+        <div class="acoes-form">
+          <a class="btn btn-perigo" href="insumos-desativado.html">Desativar insumo</a>
+          <a class="btn btn-claro" href="insumos.html">Cancelar</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

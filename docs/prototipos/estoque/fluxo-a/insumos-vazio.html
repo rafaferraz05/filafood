@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Insumos · sem insumos</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo A · estoque</span>
+      <span class="gui-dir">
+        <a class="b-nav b-nav-atual" href="insumos.html">Insumos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="detalhe-insumo.html">Detalhe do insumo</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="ficha-tecnica.html">Ficha técnica</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="preparo-pedido.html">Preparo do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="insumos.html">com dados</a>
+        <a class="b-estado b-estado-atual" href="insumos-vazio.html">sem insumos</a>
+        <a class="b-estado" href="insumos-filtro-repor.html">a repor</a>
+        <a class="b-estado" href="insumos-formulario.html">formulário</a>
+        <a class="b-estado" href="insumos-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="insumos-cadastrado.html">cadastrado</a>
+        <a class="b-estado" href="insumos-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="insumos-desativado.html">desativado</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Insumos</h1>
+        <p class="subtitulo">Estoque da unidade, com saldo, estoque mínimo e ponto de pedido.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">0 insumos</span>
+      </div>
+    </div>
+
+    <div class="barra">
+      <div class="busca">
+        <svg class="lupa" width="16" height="16" viewBox="0 0 18 18" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="7.6" cy="7.6" r="5.2"></circle>
+          <line x1="11.6" y1="11.6" x2="15.6" y2="15.6"></line>
+        </svg>
+        <input type="text" placeholder="Buscar por nome">
+      </div>
+      <select>
+        <option>Estado: todos</option>
+        <option>Estado: normal</option>
+        <option>Estado: a repor</option>
+        <option>Estado: inativo</option>
+      </select>
+      <a class="btn btn-primario" href="insumos-formulario.html">Novo insumo</a>
+    </div>
+
+    <div class="vazio">
+      <div class="vazio-titulo">Nenhum insumo cadastrado</div>
+      <div class="vazio-nota">A unidade ainda não tem insumos no estoque. A lista de reposição
+        começa a existir depois do primeiro cadastro.</div>
+      <a class="btn btn-primario" href="insumos-formulario.html">Novo insumo</a>
+    </div>
+
+    <div class="rodape">
+      Um insumo nasce <b>ativo</b> e com <b>saldo zero</b>. O ponto de pedido é calculado pelo
+      consumo médio diário vezes o prazo de entrega, mais o estoque mínimo.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Insumos · estado sem insumos</b> · F1 RN 1: cenário
+      "Cadastrar insumo com os dados obrigatórios", em que o saldo do insumo novo fica zero
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Entregadores</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Entregadores</h1>
+        <p class="subtitulo">Cadastro da unidade, com zonas atendidas, carga em andamento e estado.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">4 entregadores</span>
+        <span class="badge badge-ok">3 ativos</span>
+      </div>
+    </div>
+
+    <div class="barra">
+      <div class="busca">
+        <svg class="lupa" width="16" height="16" viewBox="0 0 18 18" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="7.6" cy="7.6" r="5.2"></circle>
+          <line x1="11.6" y1="11.6" x2="15.6" y2="15.6"></line>
+        </svg>
+        <input type="text" placeholder="Buscar por nome">
+      </div>
+      <select>
+        <option>Estado: todos</option>
+        <option>Estado: ativos</option>
+        <option>Estado: inativos</option>
+      </select>
+      <button class="btn btn-primario">Novo entregador</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Entregador</th>
+          <th>Zonas atendidas</th>
+          <th>Carga em andamento</th>
+          <th>Última entrega concluída</th>
+          <th>Estado</th>
+          <th class="acoes">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="destaque">Ana Paula Lima</td>
+          <td>Centro, Boa Viagem</td>
+          <td>2 de 3</td>
+          <td>07/10 19:48</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativo</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Inativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Bruno Souza</td>
+          <td>Centro, Boa Viagem, Grande Recife</td>
+          <td>3 de 3</td>
+          <td>07/10 20:05</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativo</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Inativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Carla Dias</td>
+          <td>Centro</td>
+          <td>2 de 2</td>
+          <td>06/10 19:40</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativo</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Inativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Diego Melo</td>
+          <td>Grande Recife, Orla</td>
+          <td>0 de 4</td>
+          <td>21/09 13:10</td>
+          <td><span class="badge badge-neutro"><span class="bolinha"></span>inativo</span></td>
+          <td class="acoes"><a href="#">Editar</a><a href="#">Reativar</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-titulo">
+        Novo entregador
+        <span class="dir">F2 RN 1</span>
+      </div>
+      <div class="card-corpo">
+        <div class="linha-campos">
+          <div class="campo">
+            <label>Nome</label>
+            <input type="text" value="">
+            <div class="campo-erro">informe o nome do entregador</div>
+          </div>
+          <div class="campo">
+            <label>Zonas atendidas</label>
+            <div class="marcadores">
+              <label><input type="checkbox" checked> Centro</label>
+              <label><input type="checkbox" checked> Boa Viagem</label>
+              <label><input type="checkbox"> Grande Recife</label>
+              <label><input type="checkbox"> Orla</label>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Carga máxima</label>
+            <input type="text" value="0">
+            <div class="campo-erro">a carga máxima deve ser maior que zero</div>
+          </div>
+        </div>
+        <div class="acoes-form">
+          <button class="btn btn-primario">Cadastrar entregador</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">
+      A carga em andamento conta as entregas despachadas e em rota. Entregador inativo para de receber
+      novas entregas, mas as que já estão em rota continuam com ele até o fim.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Entregadores</b> · F2 RN 1 (nome obrigatório, zonas
+      atendidas, carga máxima maior que zero, inativar e reativar sem cancelar entregas em andamento)
+    </p>
+
+  </main>
+</div>
+</body>
+</html>

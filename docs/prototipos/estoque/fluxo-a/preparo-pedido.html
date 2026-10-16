@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Preparo do pedido</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo A · estoque</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="insumos.html">Insumos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="detalhe-insumo.html">Detalhe do insumo</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="ficha-tecnica.html">Ficha técnica</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="preparo-pedido.html">Preparo do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado b-estado-atual" href="preparo-pedido.html">com dados</a>
+        <a class="b-estado" href="preparo-pedido-recusado.html">pedido recusado</a>
+        <a class="b-estado" href="preparo-pedido-devolvido.html">preparo devolvido</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Atendente ou cozinheiro</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Pedido #1337</h1>
+        <p class="subtitulo">Ao iniciar o preparo, o sistema dá baixa nos insumos pela ficha técnica.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-alerta"><span class="bolinha"></span>em preparo</span>
+        <span class="badge badge-neutro">3 porções</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+
+      <div>
+        <div class="card">
+          <div class="card-titulo">
+            Itens do pedido
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">Hambúrguer Clássico</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td class="destaque">Hambúrguer Duplo</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">
+            Cancelar o preparo
+            <span class="dir">F1 RN 5</span>
+          </div>
+          <div class="card-corpo">
+            <p class="subtitulo" style="margin:0 0 12px;">
+              O cancelamento devolve ao estoque as mesmas quantidades lançadas na baixa, gravando uma
+              entrada do tipo devolução.
+            </p>
+            <a class="btn btn-perigo" href="preparo-pedido-devolvido.html">Cancelar preparo e devolver os insumos</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">
+          Insumos a baixar
+          <span class="dir">quantidade pedida × quantidade da ficha</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Insumo</th>
+              <th>Necessidade</th>
+              <th>Saldo antes</th>
+              <th>Saldo depois</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="destaque">Pão</td>
+              <td>3 un<span class="unidade">Clássico 2 × 1 + Duplo 1 × 1</span></td>
+              <td>42 un</td>
+              <td>39 un</td>
+            </tr>
+            <tr>
+              <td class="destaque">Carne</td>
+              <td>0,60 kg<span class="unidade">Clássico 2 × 0,15 + Duplo 1 × 0,30</span></td>
+              <td>8 kg</td>
+              <td>7,40 kg</td>
+            </tr>
+            <tr>
+              <td class="destaque">Queijo</td>
+              <td>0,12 kg<span class="unidade">Clássico 2 × 0,03 + Duplo 1 × 0,06</span></td>
+              <td>15 kg</td>
+              <td>14,88 kg</td>
+            </tr>
+            <tr>
+              <td class="destaque">Tomate</td>
+              <td>0,08 kg<span class="unidade">Clássico 2 × 0,02 + Duplo 1 × 0,04</span></td>
+              <td>6 kg</td>
+              <td>5,92 kg</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="card-corpo" style="border-top:1px solid var(--borda);">
+          <a class="btn btn-primario" href="../../entrega/fluxo-b/despacho.html">Concluir preparo</a>
+          <p class="anotacao" style="margin-top:10px;">
+            Se faltar saldo de qualquer insumo, nenhuma movimentação é gravada e o pedido é recusado
+            com o motivo. Ao concluir, o pedido entra na fila de despacho, e a entrega nasce em
+            <b>aguardando</b>.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rodape">
+      A necessidade de cada insumo é a quantidade pedida multiplicada pela quantidade da ficha técnica
+      do produto, somando as contribuições dos produtos diferentes que usam o mesmo insumo. O saldo de
+      todos os insumos é conferido antes de gravar qualquer movimentação, e a devolução só é aceita
+      para pedido em preparo.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Preparo do pedido · estado em preparo</b> · F1 RN 4 (cálculo da necessidade
+      pela ficha técnica e recusa sem gravar movimentação) · F1 RN 5 (devolução ao cancelar o preparo)
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

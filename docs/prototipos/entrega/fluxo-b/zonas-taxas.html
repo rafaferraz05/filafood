@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Zonas e taxas</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Zonas e taxas</h1>
+        <p class="subtitulo">Zonas de entrega da unidade e a taxa cobrada em cada uma.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">4 zonas</span>
+        <span class="badge badge-ok">3 ativas</span>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Zona</th>
+          <th>Centro</th>
+          <th class="num">Raio</th>
+          <th class="num">Valor base</th>
+          <th class="num">Raio grátis</th>
+          <th class="num">Por km</th>
+          <th class="num">Teto</th>
+          <th class="num">Mínimo</th>
+          <th>Estado</th>
+          <th class="acoes">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="destaque">Centro</td>
+          <td class="coord">-8.0533, -34.8813</td>
+          <td class="num">5 km</td>
+          <td class="num">R$ 5,00</td>
+          <td class="num">2 km</td>
+          <td class="num">R$ 1,50</td>
+          <td class="num">R$ 10,00</td>
+          <td class="num">R$ 30,00</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Boa Viagem</td>
+          <td class="coord">-8.1200, -34.9000</td>
+          <td class="num">6 km</td>
+          <td class="num">R$ 6,00</td>
+          <td class="num">3 km</td>
+          <td class="num">R$ 1,20</td>
+          <td class="num">R$ 12,00</td>
+          <td class="num">R$ 40,00</td>
+          <td><span class="badge badge-neutro"><span class="bolinha"></span>inativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a href="#">Reativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Grande Recife</td>
+          <td class="coord">-8.0533, -34.8813</td>
+          <td class="num">20 km</td>
+          <td class="num">R$ 8,00</td>
+          <td class="num">5 km</td>
+          <td class="num">R$ 1,00</td>
+          <td class="num">R$ 25,00</td>
+          <td class="num">R$ 100,00</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Orla</td>
+          <td class="coord">-8.1900, -34.8813</td>
+          <td class="num">10 km</td>
+          <td class="num">R$ 10,00</td>
+          <td class="num">2 km</td>
+          <td class="num">R$ 2,00</td>
+          <td class="num">R$ 15,00</td>
+          <td class="num">R$ 30,00</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid-2" style="margin-top:16px;">
+
+      <div class="card">
+        <div class="card-titulo">
+          Como a taxa é calculada
+          <span class="dir">base + km além do grátis</span>
+        </div>
+        <ul class="lista-exemplos">
+          <li>
+            <b>R$ 5,00</b>
+            <span>25,00 a 1,5 km do Centro — dentro do raio grátis: só o valor base</span>
+          </li>
+          <li>
+            <b>R$ 8,00</b>
+            <span>25,00 a 4 km do Centro — 5,00 mais 2 km excedentes × 1,50</span>
+          </li>
+          <li>
+            <b>R$ 15,00</b>
+            <span>25,00 a 8 km da Orla — daria 22,00, e o teto limita a 15,00</span>
+          </li>
+          <li>
+            <b>R$ 0,00</b>
+            <span>35,00 a 4 km do Centro — passou do mínimo de R$ 30,00</span>
+          </li>
+          <li>
+            <b>R$ 5,00</b>
+            <span>25,00 a 2 km — vale a zona de menor raio: Centro</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">
+          Nova zona
+          <span class="dir">F2 RN 2</span>
+        </div>
+        <div class="card-corpo">
+          <div class="linha-campos-4">
+            <div class="campo" style="grid-column: span 2;">
+              <label>Centro</label>
+              <input type="text" value="-8,1900, -34,8813">
+            </div>
+            <div class="campo">
+              <label>Raio (km)</label>
+              <input type="text" value="10">
+            </div>
+            <div class="campo">
+              <label>Valor base (R$)</label>
+              <input type="text" value="10,00">
+            </div>
+            <div class="campo">
+              <label>Raio grátis (km)</label>
+              <input type="text" value="2">
+            </div>
+            <div class="campo">
+              <label>Por km (R$)</label>
+              <input type="text" value="2,00">
+            </div>
+            <div class="campo">
+              <label>Teto (R$)</label>
+              <input type="text" value="15,00">
+            </div>
+            <div class="campo">
+              <label>Mínimo (R$)</label>
+              <input type="text" value="30,00">
+            </div>
+          </div>
+          <div class="acoes-form">
+            <button class="btn btn-primario">Cadastrar zona</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rodape">
+      A taxa é gravada na entrega no despacho e não é recalculada depois. Zona desativada não recebe
+      novas entregas e pode ser reativada.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Zonas e taxas</b> · F2 RN 2 (cadastro, desativar e
+      reativar) · F2 RN 3 (menor raio, raio grátis, km excedente, teto, isenção pelo mínimo e taxa
+      gravada no despacho)
+    </p>
+
+  </main>
+</div>
+</body>
+</html>
