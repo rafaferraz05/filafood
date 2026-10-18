@@ -1,8 +1,6 @@
 # FilaFood: mapa da história do usuário
 
-> Nível preliminar do DDD. Este arquivo cobre as duas funcionalidades sob responsabilidade de
-> Gabriel Rocha. O backbone do grupo é maior, e as etapas dos demais integrantes estão marcadas
-> como pendentes na seção 2, para que o mapa seja completado depois.
+> Nível preliminar do DDD. Este arquivo cobre as funcionalidades
 >
 > O vocabulário segue `docs/dominio.md`, e cada história aponta para a regra de negócio que a
 > implementa, em `docs/funcionalidades.md`.
