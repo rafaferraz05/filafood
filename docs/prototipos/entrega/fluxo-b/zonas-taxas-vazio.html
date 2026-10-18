@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Zonas e taxas · sem zonas</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo B · entrega</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="entregadores.html">Entregadores</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="zonas-taxas.html">Zonas e taxas</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="despacho.html">Despacho e entregas</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="zonas-taxas.html">com dados</a>
+        <a class="b-estado b-estado-atual" href="zonas-taxas-vazio.html">sem zonas</a>
+        <a class="b-estado" href="zonas-taxas-formulario.html">formulário</a>
+        <a class="b-estado" href="zonas-taxas-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="zonas-taxas-cadastrada.html">cadastrada</a>
+        <a class="b-estado" href="zonas-taxas-desativada.html">desativada</a>
+        <a class="b-estado" href="zonas-taxas-reativada.html">reativada</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Zonas e taxas</h1>
+        <p class="subtitulo">Zonas de entrega da unidade e a taxa cobrada em cada uma.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">0 zonas</span>
+      </div>
+    </div>
+
+    <div class="barra">
+      <select>
+        <option>Estado: todas</option>
+        <option>Estado: ativas</option>
+        <option>Estado: inativas</option>
+      </select>
+      <a class="btn btn-primario" href="zonas-taxas-formulario.html">Nova zona</a>
+    </div>
+
+    <div class="vazio">
+      <div class="vazio-titulo">Nenhuma zona cadastrada</div>
+      <div class="vazio-nota">Sem zona, o endereço do pedido não é classificado: o despacho não tem
+        como calcular a taxa nem encontrar um entregador que atenda o endereço.</div>
+      <a class="btn btn-primario" href="zonas-taxas-formulario.html">Nova zona</a>
+    </div>
+
+    <div class="rodape">
+      A zona define a taxa da entrega. Ela é gravada na entrega no momento do despacho e não é
+      recalculada depois.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Zonas e taxas · estado sem zonas</b> · F2 RN 2:
+      cenário "Cadastrar zona com os dados obrigatórios", e F2 RN 3, que depende de haver zona para
+      o endereço
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

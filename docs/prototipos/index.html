@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Mapa dos protótipos</title>
+<link rel="stylesheet" href="estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">mapa dos protótipos · dia 19</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="#fluxo-a">Fluxo A · estoque</a>
+        <a class="b-nav" href="#fluxo-b">Fluxo B · entrega</a>
+        <a class="b-nav" href="#fluxo-c">Fluxo C · rota</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">8 telas · 42 estados</span>
+      <span class="pill pill-amarela">Apresentação do dia 19</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Mapa dos protótipos</h1>
+        <p class="subtitulo">Cada estado é um arquivo HTML, aberto por link. A barra acima da moldura
+          leva às telas do fluxo e aos estados da tela aberta.</p>
+      </div>
+    </div>
+
+    <div class="grid-3">
+
+      <div class="card" id="fluxo-a">
+        <div class="card-titulo">Fluxo A <span class="dir">estoque</span></div>
+        <ul class="lista-exemplos">
+          <li>
+            <b><a class="link-vermelho" href="estoque/fluxo-a/insumos.html">Insumos</a></b>
+            <span>8 estados</span>
+          </li>
+          <li>
+            <b><a class="link-vermelho" href="estoque/fluxo-a/detalhe-insumo.html">Detalhe do insumo</a></b>
+            <span>3 estados</span>
+          </li>
+          <li>
+            <b><a class="link-vermelho" href="estoque/fluxo-a/ficha-tecnica.html">Ficha técnica</a></b>
+            <span>3 estados</span>
+          </li>
+          <li>
+            <b><a class="link-vermelho" href="estoque/fluxo-a/preparo-pedido.html">Preparo do pedido</a></b>
+            <span>4 estados</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card" id="fluxo-b">
+        <div class="card-titulo">Fluxo B <span class="dir">entrega</span></div>
+        <ul class="lista-exemplos">
+          <li>
+            <b><a class="link-vermelho" href="entrega/fluxo-b/entregadores.html">Entregadores</a></b>
+            <span>7 estados</span>
+          </li>
+          <li>
+            <b><a class="link-vermelho" href="entrega/fluxo-b/zonas-taxas.html">Zonas e taxas</a></b>
+            <span>7 estados</span>
+          </li>
+          <li>
+            <b><a class="link-vermelho" href="entrega/fluxo-b/despacho.html">Despacho e entregas</a></b>
+            <span>4 estados</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card" id="fluxo-c">
+        <div class="card-titulo">Fluxo C <span class="dir">o entregador na rota</span></div>
+        <ul class="lista-exemplos">
+          <li>
+            <b><a class="link-vermelho" href="entrega/fluxo-c/minhas-entregas.html">Minhas entregas</a></b>
+            <span>6 estados</span>
+          </li>
+          <li>
+            <b><a class="link-vermelho" href="entrega/fluxo-b/despacho.html">Despacho e entregas</a></b>
+            <span>segunda tentativa</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="grid-2" style="margin-top:16px;">
+
+      <div class="card">
+        <div class="card-titulo">
+          Roteiro A
+          <span class="dir">estoque, do cadastro à reposição</span>
+        </div>
+        <ul class="lista-exemplos">
+          <li>
+            <b>1</b>
+            <span><a class="link-vermelho" href="estoque/fluxo-a/insumos.html">Insumos</a> — 4 insumos ativos, 2 a repor</span>
+          </li>
+          <li>
+            <b>2</b>
+            <span><a class="link-vermelho" href="estoque/fluxo-a/insumos-filtro-repor.html">Filtrar a repor</a> — o que precisa ser comprado</span>
+          </li>
+          <li>
+            <b>3</b>
+            <span><a class="link-vermelho" href="estoque/fluxo-a/detalhe-insumo.html">Abrir o Pão</a> — saldo 42, mínimo 20</span>
+          </li>
+          <li>
+            <b>4</b>
+            <span><a class="link-vermelho" href="estoque/fluxo-a/detalhe-insumo-entrada-ok.html">Registrar entrada</a> — 100 un a R$ 0,50, saldo 142</span>
+          </li>
+          <li>
+            <b>5</b>
+            <span><a class="link-vermelho" href="estoque/fluxo-a/ficha-tecnica.html">Ficha técnica</a> — Clássico consome 42 porções</span>
+          </li>
+          <li>
+            <b>6</b>
+            <span><a class="link-vermelho" href="estoque/fluxo-a/preparo-pedido.html">Preparo do #1337</a> — baixa dos 4 insumos</span>
+          </li>
+          <li>
+            <b>7</b>
+            <span><a class="link-vermelho" href="estoque/fluxo-a/preparo-pedido-recusado.html">Falta saldo do Carne</a> — nada é gravado</span>
+          </li>
+          <li>
+            <b>8</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/despacho.html">Despacho</a> — o #1337 já está na fila</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">
+          Roteiro B
+          <span class="dir">do cadastro do entregador à entrega</span>
+        </div>
+        <ul class="lista-exemplos">
+          <li>
+            <b>1</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/entregadores.html">Entregadores</a> — 4 cadastrados, 3 ativos</span>
+          </li>
+          <li>
+            <b>2</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/entregadores-formulario.html">Novo entregador</a> — cadastro em branco</span>
+          </li>
+          <li>
+            <b>3</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/entregadores-formulario-erros.html">Cadastro com erros</a> — nome e carga máxima</span>
+          </li>
+          <li>
+            <b>4</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/entregadores-cadastrado.html">Entregador cadastrado</a> — entra ativo</span>
+          </li>
+          <li>
+            <b>5</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/zonas-taxas.html">Zonas e taxas</a> — 4 zonas e o cálculo da taxa</span>
+          </li>
+          <li>
+            <b>6</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/zonas-taxas-confirmar-desativacao.html">Desativar a Orla</a> — a confirmação</span>
+          </li>
+          <li>
+            <b>7</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/zonas-taxas-desativada.html">Zona desativada</a> — pode ser reativada</span>
+          </li>
+          <li>
+            <b>8</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-b/despacho.html">Despacho</a> — fila, rota e taxa gravada</span>
+          </li>
+          <li>
+            <b>9</b>
+            <span><a class="link-vermelho" href="entrega/fluxo-c/minhas-entregas.html">Minhas entregas</a> — a tela do entregador</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="rodape">
+      Os dois roteiros se cruzam em dois pontos: ao concluir o preparo, o pedido entra na fila de
+      despacho; ao registrar falha, ele volta para a fila como segunda tentativa.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · mapa dos protótipos</b> · HTML e CSS, sem JavaScript · os 60
+      cenários BDD estão em <b>dominio-estoque</b> e <b>dominio-entrega</b>
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

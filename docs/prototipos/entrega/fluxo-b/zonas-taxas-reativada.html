@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Zonas e taxas · reativada</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo B · entrega</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="entregadores.html">Entregadores</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="zonas-taxas.html">Zonas e taxas</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="despacho.html">Despacho e entregas</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="zonas-taxas.html">com dados</a>
+        <a class="b-estado" href="zonas-taxas-vazio.html">sem zonas</a>
+        <a class="b-estado" href="zonas-taxas-formulario.html">formulário</a>
+        <a class="b-estado" href="zonas-taxas-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="zonas-taxas-cadastrada.html">cadastrada</a>
+        <a class="b-estado" href="zonas-taxas-desativada.html">desativada</a>
+        <a class="b-estado b-estado-atual" href="zonas-taxas-reativada.html">reativada</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Zonas e taxas</h1>
+        <p class="subtitulo">Zonas de entrega da unidade e a taxa cobrada em cada uma.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">4 zonas</span>
+        <span class="badge badge-ok">4 ativas</span>
+      </div>
+    </div>
+
+    <div class="aviso-ok">
+      Zona reativada: <b>Orla</b> volta a receber novas entregas, com as taxas que já estavam
+      configuradas.
+    </div>
+
+    <div class="barra">
+      <select>
+        <option>Estado: todas</option>
+        <option>Estado: ativas</option>
+        <option>Estado: inativas</option>
+      </select>
+      <a class="btn btn-primario" href="zonas-taxas-formulario.html">Nova zona</a>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Zona</th>
+          <th>Centro</th>
+          <th class="num">Raio</th>
+          <th class="num">Valor base</th>
+          <th class="num">Raio grátis</th>
+          <th class="num">Por km</th>
+          <th class="num">Teto</th>
+          <th class="num">Mínimo</th>
+          <th>Estado</th>
+          <th class="acoes">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="destaque">Centro</td>
+          <td class="coord">-8.0533, -34.8813</td>
+          <td class="num">5 km</td>
+          <td class="num">R$ 5,00</td>
+          <td class="num">2 km</td>
+          <td class="num">R$ 1,50</td>
+          <td class="num">R$ 10,00</td>
+          <td class="num">R$ 30,00</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Boa Viagem</td>
+          <td class="coord">-8.1200, -34.9000</td>
+          <td class="num">6 km</td>
+          <td class="num">R$ 6,00</td>
+          <td class="num">3 km</td>
+          <td class="num">R$ 1,20</td>
+          <td class="num">R$ 12,00</td>
+          <td class="num">R$ 40,00</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Grande Recife</td>
+          <td class="coord">-8.0533, -34.8813</td>
+          <td class="num">20 km</td>
+          <td class="num">R$ 8,00</td>
+          <td class="num">5 km</td>
+          <td class="num">R$ 1,00</td>
+          <td class="num">R$ 25,00</td>
+          <td class="num">R$ 100,00</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Orla</td>
+          <td class="coord">-8.1900, -34.8813</td>
+          <td class="num">10 km</td>
+          <td class="num">R$ 10,00</td>
+          <td class="num">2 km</td>
+          <td class="num">R$ 2,00</td>
+          <td class="num">R$ 15,00</td>
+          <td class="num">R$ 30,00</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="zonas-taxas-confirmar-desativacao.html">Desativar</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rodape">
+      A taxa é gravada na entrega no despacho e não é recalculada depois. Zona desativada não recebe
+      novas entregas e pode ser reativada.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Zonas e taxas · estado zona reativada</b> · F2 RN 2:
+      cenário "Reativar zona desativada"
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

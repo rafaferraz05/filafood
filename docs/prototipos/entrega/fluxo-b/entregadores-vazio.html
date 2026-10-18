@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Entregadores · sem entregadores</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo B · entrega</span>
+      <span class="gui-dir">
+        <a class="b-nav b-nav-atual" href="entregadores.html">Entregadores</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="zonas-taxas.html">Zonas e taxas</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="despacho.html">Despacho e entregas</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="entregadores.html">com dados</a>
+        <a class="b-estado b-estado-atual" href="entregadores-vazio.html">sem entregadores</a>
+        <a class="b-estado" href="entregadores-formulario.html">formulário</a>
+        <a class="b-estado" href="entregadores-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="entregadores-confirmar-inativacao.html">confirmar</a>
+        <a class="b-estado" href="entregadores-cadastrado.html">cadastrado</a>
+        <a class="b-estado" href="entregadores-inativado.html">inativado</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Entregadores</h1>
+        <p class="subtitulo">Cadastro da unidade, com zonas atendidas, carga em andamento e estado.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">0 entregadores</span>
+      </div>
+    </div>
+
+    <div class="barra">
+      <div class="busca">
+        <svg class="lupa" width="16" height="16" viewBox="0 0 18 18" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="7.6" cy="7.6" r="5.2"></circle>
+          <line x1="11.6" y1="11.6" x2="15.6" y2="15.6"></line>
+        </svg>
+        <input type="text" placeholder="Buscar por nome">
+      </div>
+      <select>
+        <option>Estado: todos</option>
+        <option>Estado: ativos</option>
+        <option>Estado: inativos</option>
+      </select>
+      <a class="btn btn-primario" href="entregadores-formulario.html">Novo entregador</a>
+    </div>
+
+    <div class="vazio">
+      <div class="vazio-titulo">Nenhum entregador cadastrado</div>
+      <div class="vazio-nota">Sem entregador ativo, o pedido pronto fica na fila de despacho: não há
+        quem seja escolhido para a entrega.</div>
+      <a class="btn btn-primario" href="entregadores-formulario.html">Novo entregador</a>
+    </div>
+
+    <div class="rodape">
+      A carga em andamento conta as entregas despachadas e em rota. Entregador inativo para de receber
+      novas entregas, mas as que já estão em rota continuam com ele até o fim.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Entregadores · estado sem entregadores</b> · F2 RN 1:
+      cenário "Cadastrar entregador com os dados obrigatórios", e F2 RN 4, que depende de haver
+      entregador elegível
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

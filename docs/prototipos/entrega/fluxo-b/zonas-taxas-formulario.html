@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Zonas e taxas · formulário</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo B · entrega</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="entregadores.html">Entregadores</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="zonas-taxas.html">Zonas e taxas</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="despacho.html">Despacho e entregas</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="zonas-taxas.html">com dados</a>
+        <a class="b-estado" href="zonas-taxas-vazio.html">sem zonas</a>
+        <a class="b-estado b-estado-atual" href="zonas-taxas-formulario.html">formulário</a>
+        <a class="b-estado" href="zonas-taxas-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="zonas-taxas-cadastrada.html">cadastrada</a>
+        <a class="b-estado" href="zonas-taxas-desativada.html">desativada</a>
+        <a class="b-estado" href="zonas-taxas-reativada.html">reativada</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Nova zona</h1>
+        <p class="subtitulo">Área de entrega da unidade Boa Viagem e a taxa cobrada dentro dela.</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+
+      <div class="card">
+        <div class="card-titulo">Dados da zona</div>
+        <div class="card-corpo">
+          <div class="linha-campos-2">
+            <div class="campo">
+              <label>Nome</label>
+              <input type="text" placeholder="Ex.: Zona Sul">
+            </div>
+            <div class="campo">
+              <label>Centro (latitude, longitude)</label>
+              <input type="text" placeholder="Ex.: -8,1200, -34,9100">
+            </div>
+          </div>
+          <div class="linha-campos">
+            <div class="campo">
+              <label>Raio (km)</label>
+              <input type="text" placeholder="10">
+            </div>
+            <div class="campo">
+              <label>Valor base (R$)</label>
+              <input type="text" placeholder="12,00">
+            </div>
+            <div class="campo">
+              <label>Raio grátis (km)</label>
+              <input type="text" placeholder="3">
+            </div>
+          </div>
+          <div class="linha-campos">
+            <div class="campo">
+              <label>Por km (R$)</label>
+              <input type="text" placeholder="1,80">
+            </div>
+            <div class="campo">
+              <label>Teto (R$)</label>
+              <input type="text" placeholder="20,00">
+            </div>
+            <div class="campo">
+              <label>Mínimo (R$)</label>
+              <input type="text" placeholder="50,00">
+            </div>
+          </div>
+          <div class="acoes-form">
+            <a class="btn btn-primario" href="zonas-taxas-cadastrada.html">Cadastrar zona</a>
+            <a class="btn btn-claro" href="zonas-taxas.html">Cancelar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">
+          Como a taxa é calculada
+          <span class="dir">base + km além do grátis</span>
+        </div>
+        <div class="card-corpo">
+          <ul class="lista-exemplos">
+            <li><b>Base</b><span>o valor base é cobrado em qualquer entrega dentro do raio</span></li>
+            <li><b>Km excedente</b><span>o que passa do raio grátis é cobrado por quilômetro</span></li>
+            <li><b>Teto</b><span>a taxa não passa do teto da zona</span></li>
+            <li><b>Mínimo</b><span>pedido acima do mínimo da zona não paga taxa</span></li>
+          </ul>
+          <p class="anotacao">
+            A zona nasce ativa. A taxa é gravada na entrega no despacho e não é recalculada depois.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rodape">
+      Quando as zonas se sobrepõem, o endereço pertence à de menor raio: a zona mais específica tem
+      prioridade no cálculo da taxa.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Zonas e taxas · estado formulário</b> · F2 RN 2 ·
+      F2 RN 3 (valor base, raio grátis, por quilômetro, teto e mínimo entram no cálculo)
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

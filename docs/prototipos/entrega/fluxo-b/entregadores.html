@@ -6,6 +6,35 @@
 <link rel="stylesheet" href="../../estilo.css?v=3">
 </head>
 <body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo B · entrega</span>
+      <span class="gui-dir">
+        <a class="b-nav b-nav-atual" href="entregadores.html">Entregadores</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="zonas-taxas.html">Zonas e taxas</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="despacho.html">Despacho e entregas</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado b-estado-atual" href="entregadores.html">com dados</a>
+        <a class="b-estado" href="entregadores-vazio.html">sem entregadores</a>
+        <a class="b-estado" href="entregadores-formulario.html">formulário</a>
+        <a class="b-estado" href="entregadores-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="entregadores-confirmar-inativacao.html">confirmar</a>
+        <a class="b-estado" href="entregadores-cadastrado.html">cadastrado</a>
+        <a class="b-estado" href="entregadores-inativado.html">inativado</a>
+      </span>
+    </div>
+  </nav>
+
 <div class="app">
 
   <header class="topbar">
@@ -49,7 +78,7 @@
         <option>Estado: ativos</option>
         <option>Estado: inativos</option>
       </select>
-      <button class="btn btn-primario">Novo entregador</button>
+      <a class="btn btn-primario" href="entregadores-formulario.html">Novo entregador</a>
     </div>
 
     <table>
@@ -70,7 +99,7 @@
           <td>2 de 3</td>
           <td>07/10 19:48</td>
           <td><span class="badge badge-ok"><span class="bolinha"></span>ativo</span></td>
-          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Inativar</a></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="entregadores-confirmar-inativacao.html">Inativar</a></td>
         </tr>
         <tr>
           <td class="destaque">Bruno Souza</td>
@@ -99,50 +128,18 @@
       </tbody>
     </table>
 
-    <div class="card" style="margin-top:16px;">
-      <div class="card-titulo">
-        Novo entregador
-        <span class="dir">F2 RN 1</span>
-      </div>
-      <div class="card-corpo">
-        <div class="linha-campos">
-          <div class="campo">
-            <label>Nome</label>
-            <input type="text" value="">
-            <div class="campo-erro">informe o nome do entregador</div>
-          </div>
-          <div class="campo">
-            <label>Zonas atendidas</label>
-            <div class="marcadores">
-              <label><input type="checkbox" checked> Centro</label>
-              <label><input type="checkbox" checked> Boa Viagem</label>
-              <label><input type="checkbox"> Grande Recife</label>
-              <label><input type="checkbox"> Orla</label>
-            </div>
-          </div>
-          <div class="campo">
-            <label>Carga máxima</label>
-            <input type="text" value="0">
-            <div class="campo-erro">a carga máxima deve ser maior que zero</div>
-          </div>
-        </div>
-        <div class="acoes-form">
-          <button class="btn btn-primario">Cadastrar entregador</button>
-        </div>
-      </div>
-    </div>
-
     <div class="rodape">
       A carga em andamento conta as entregas despachadas e em rota. Entregador inativo para de receber
       novas entregas, mas as que já estão em rota continuam com ele até o fim.
     </div>
 
     <p class="anotacao">
-      <b>Protótipo de alta fidelidade · Tela Entregadores</b> · F2 RN 1 (nome obrigatório, zonas
-      atendidas, carga máxima maior que zero, inativar e reativar sem cancelar entregas em andamento)
+      <b>Protótipo de alta fidelidade · Tela Entregadores · estado com dados</b> · F2 RN 1 (nome obrigatório,
+      zonas atendidas, carga máxima maior que zero, inativar e reativar sem cancelar entregas em andamento)
     </p>
 
   </main>
+</div>
 </div>
 </body>
 </html>

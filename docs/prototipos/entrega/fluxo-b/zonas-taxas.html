@@ -6,6 +6,35 @@
 <link rel="stylesheet" href="../../estilo.css?v=3">
 </head>
 <body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo B · entrega</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="entregadores.html">Entregadores</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="zonas-taxas.html">Zonas e taxas</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="despacho.html">Despacho e entregas</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado b-estado-atual" href="zonas-taxas.html">com dados</a>
+        <a class="b-estado" href="zonas-taxas-vazio.html">sem zonas</a>
+        <a class="b-estado" href="zonas-taxas-formulario.html">formulário</a>
+        <a class="b-estado" href="zonas-taxas-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="zonas-taxas-cadastrada.html">cadastrada</a>
+        <a class="b-estado" href="zonas-taxas-desativada.html">desativada</a>
+        <a class="b-estado" href="zonas-taxas-reativada.html">reativada</a>
+      </span>
+    </div>
+  </nav>
+
 <div class="app">
 
   <header class="topbar">
@@ -31,8 +60,17 @@
       </div>
       <div class="badges">
         <span class="badge badge-neutro">4 zonas</span>
-        <span class="badge badge-ok">3 ativas</span>
+        <span class="badge badge-ok">4 ativas</span>
       </div>
+    </div>
+
+    <div class="barra">
+      <select>
+        <option>Estado: todas</option>
+        <option>Estado: ativas</option>
+        <option>Estado: inativas</option>
+      </select>
+      <a class="btn btn-primario" href="zonas-taxas-formulario.html">Nova zona</a>
     </div>
 
     <table>
@@ -72,8 +110,8 @@
           <td class="num">R$ 1,20</td>
           <td class="num">R$ 12,00</td>
           <td class="num">R$ 40,00</td>
-          <td><span class="badge badge-neutro"><span class="bolinha"></span>inativa</span></td>
-          <td class="acoes"><a href="#">Editar</a><a href="#">Reativar</a></td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Desativar</a></td>
         </tr>
         <tr>
           <td class="destaque">Grande Recife</td>
@@ -97,84 +135,38 @@
           <td class="num">R$ 15,00</td>
           <td class="num">R$ 30,00</td>
           <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
-          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="#">Desativar</a></td>
+          <td class="acoes"><a href="#">Editar</a><a class="apagada" href="zonas-taxas-confirmar-desativacao.html">Desativar</a></td>
         </tr>
       </tbody>
     </table>
 
-    <div class="grid-2" style="margin-top:16px;">
-
-      <div class="card">
-        <div class="card-titulo">
-          Como a taxa é calculada
-          <span class="dir">base + km além do grátis</span>
-        </div>
-        <ul class="lista-exemplos">
-          <li>
-            <b>R$ 5,00</b>
-            <span>25,00 a 1,5 km do Centro — dentro do raio grátis: só o valor base</span>
-          </li>
-          <li>
-            <b>R$ 8,00</b>
-            <span>25,00 a 4 km do Centro — 5,00 mais 2 km excedentes × 1,50</span>
-          </li>
-          <li>
-            <b>R$ 15,00</b>
-            <span>25,00 a 8 km da Orla — daria 22,00, e o teto limita a 15,00</span>
-          </li>
-          <li>
-            <b>R$ 0,00</b>
-            <span>35,00 a 4 km do Centro — passou do mínimo de R$ 30,00</span>
-          </li>
-          <li>
-            <b>R$ 5,00</b>
-            <span>25,00 a 2 km — vale a zona de menor raio: Centro</span>
-          </li>
-        </ul>
+    <div class="card" style="margin-top:16px;">
+      <div class="card-titulo">
+        Como a taxa é calculada
+        <span class="dir">base + km além do grátis</span>
       </div>
-
-      <div class="card">
-        <div class="card-titulo">
-          Nova zona
-          <span class="dir">F2 RN 2</span>
-        </div>
-        <div class="card-corpo">
-          <div class="linha-campos-4">
-            <div class="campo" style="grid-column: span 2;">
-              <label>Centro</label>
-              <input type="text" value="-8,1900, -34,8813">
-            </div>
-            <div class="campo">
-              <label>Raio (km)</label>
-              <input type="text" value="10">
-            </div>
-            <div class="campo">
-              <label>Valor base (R$)</label>
-              <input type="text" value="10,00">
-            </div>
-            <div class="campo">
-              <label>Raio grátis (km)</label>
-              <input type="text" value="2">
-            </div>
-            <div class="campo">
-              <label>Por km (R$)</label>
-              <input type="text" value="2,00">
-            </div>
-            <div class="campo">
-              <label>Teto (R$)</label>
-              <input type="text" value="15,00">
-            </div>
-            <div class="campo">
-              <label>Mínimo (R$)</label>
-              <input type="text" value="30,00">
-            </div>
-          </div>
-          <div class="acoes-form">
-            <button class="btn btn-primario">Cadastrar zona</button>
-          </div>
-        </div>
-      </div>
-
+      <ul class="lista-exemplos">
+        <li>
+          <b>R$ 5,00</b>
+          <span>25,00 a 1,5 km do Centro — dentro do raio grátis: só o valor base</span>
+        </li>
+        <li>
+          <b>R$ 8,00</b>
+          <span>25,00 a 4 km do Centro — 5,00 mais 2 km excedentes × 1,50</span>
+        </li>
+        <li>
+          <b>R$ 15,00</b>
+          <span>25,00 a 8 km da Orla — daria 22,00, e o teto limita a 15,00</span>
+        </li>
+        <li>
+          <b>R$ 0,00</b>
+          <span>35,00 a 4 km do Centro — passou do mínimo de R$ 30,00</span>
+        </li>
+        <li>
+          <b>R$ 5,00</b>
+          <span>25,00 a 2 km — vale a zona de menor raio: Centro</span>
+        </li>
+      </ul>
     </div>
 
     <div class="rodape">
@@ -189,6 +181,7 @@
     </p>
 
   </main>
+</div>
 </div>
 </body>
 </html>

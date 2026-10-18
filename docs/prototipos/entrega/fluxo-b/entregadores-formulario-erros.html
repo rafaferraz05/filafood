@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Entregadores · cadastro recusado</title>
+<link rel="stylesheet" href="../../estilo.css?v=3">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo B · entrega</span>
+      <span class="gui-dir">
+        <a class="b-nav b-nav-atual" href="entregadores.html">Entregadores</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="zonas-taxas.html">Zonas e taxas</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="despacho.html">Despacho e entregas</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="entregadores.html">com dados</a>
+        <a class="b-estado" href="entregadores-vazio.html">sem entregadores</a>
+        <a class="b-estado" href="entregadores-formulario.html">formulário</a>
+        <a class="b-estado b-estado-atual" href="entregadores-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="entregadores-confirmar-inativacao.html">confirmar</a>
+        <a class="b-estado" href="entregadores-cadastrado.html">cadastrado</a>
+        <a class="b-estado" href="entregadores-inativado.html">inativado</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Novo entregador</h1>
+        <p class="subtitulo">Cadastro de entregador da unidade Boa Viagem.</p>
+      </div>
+    </div>
+
+    <div class="aviso-erro">
+      O cadastro foi recusado e <b>nenhum entregador foi gravado</b>. Corrija os campos indicados e
+      salve de novo.
+    </div>
+
+    <div class="grid-2">
+
+      <div class="card">
+        <div class="card-titulo">Dados do entregador</div>
+        <div class="card-corpo">
+          <div class="linha-campos-2">
+            <div class="campo">
+              <label>Nome</label>
+              <input type="text" class="erro" value="" placeholder="Ex.: Fábio Tomaz">
+              <div class="campo-erro">informe o nome do entregador</div>
+            </div>
+            <div class="campo">
+              <label>Carga máxima</label>
+              <input type="text" class="erro" value="0">
+              <div class="campo-erro">a carga máxima deve ser maior que zero</div>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Zonas atendidas</label>
+            <div class="marcadores">
+              <label><input type="checkbox" checked> Centro</label>
+              <label><input type="checkbox"> Boa Viagem</label>
+              <label><input type="checkbox"> Grande Recife</label>
+              <label><input type="checkbox"> Orla</label>
+            </div>
+          </div>
+          <div class="acoes-form">
+            <a class="btn btn-primario" href="entregadores-cadastrado.html">Salvar entregador</a>
+            <a class="btn btn-claro" href="entregadores.html">Cancelar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Como o entregador é escolhido</div>
+        <div class="card-corpo">
+          <ul class="lista-exemplos">
+            <li><b>Zonas</b><span>o endereço do pedido precisa estar numa zona atendida por ele</span></li>
+            <li><b>Carga</b><span>conta as entregas despachadas e em rota, e não pode chegar à carga máxima</span></li>
+            <li><b>Desempate</b><span>vence quem está há mais tempo sem receber entrega</span></li>
+          </ul>
+          <p class="anotacao">
+            O entregador nasce ativo. Zona e carga máxima são o que decide se ele entra no despacho.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rodape">
+      A recusa acontece antes de gravar: nenhum entregador entra na lista enquanto houver erro no
+      formulário. O nome vazio e a carga máxima zero são as duas recusas previstas na regra.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Entregadores · estado cadastro recusado</b> · F2 RN 1:
+      cenários "Recusar cadastro de entregador sem nome" e "Recusar cadastro de entregador com carga
+      máxima não positiva", com as mensagens exatas ao lado do campo
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

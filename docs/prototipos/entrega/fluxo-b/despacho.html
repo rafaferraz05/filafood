@@ -6,6 +6,35 @@
 <link rel="stylesheet" href="../../estilo.css?v=3">
 </head>
 <body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">Fluxo B · entrega</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="entregadores.html">Entregadores</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="zonas-taxas.html">Zonas e taxas</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="despacho.html">Despacho e entregas</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado b-estado-atual" href="despacho.html">com dados</a>
+        <a class="b-estado" href="despacho-falha-entrega.html">falha na entrega</a>
+        <a class="b-estado" href="despacho-fila-vazia.html">fila vazia</a>
+        <a class="b-estado" href="despacho-pedido-cancelado.html">pedido cancelado</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../fluxo-c/minhas-entregas.html">Tela do entregador ›</a>
+      </span>
+    </div>
+  </nav>
+
 <div class="app">
 
   <header class="topbar">
@@ -57,13 +86,13 @@
                 <td class="destaque">#1341</td>
                 <td>Grande Recife</td>
                 <td>6 min</td>
-                <td>Bruno está com a carga cheia (3 de 3) e Diego, o outro que atende a zona, está inativo</td>
+                <td>Bruno está com a carga cheia (3 de 3) e Diego está inativo</td>
               </tr>
               <tr>
                 <td class="destaque">#1343<span class="unidade">2ª tentativa do pedido #1330</span></td>
                 <td>Grande Recife</td>
                 <td>2 min</td>
-                <td>Entrou na fila como entrega nova, depois da falha da anterior</td>
+                <td>Bruno está com a carga cheia (3 de 3) e Diego está inativo</td>
               </tr>
             </tbody>
           </table>
@@ -145,11 +174,12 @@
     </div>
 
     <p class="anotacao">
-      <b>Protótipo de alta fidelidade · Tela Despacho e entregas</b> · F2 RN 4 (fila e elegível de
+      <b>Protótipo de alta fidelidade · Tela Despacho e entregas · estado com dados</b> · F2 RN 4 (fila e elegível de
       menor carga) · F2 RN 5 (estados e transições com data e hora) · F2 RN 6 (falha e nova tentativa)
     </p>
 
   </main>
+</div>
 </div>
 </body>
 </html>
