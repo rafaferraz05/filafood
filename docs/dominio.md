@@ -50,7 +50,7 @@ quando ela faz parte dele.
 | **Motivo de pausa** | Justificativa obrigatória, de até 200 caracteres, registrada ao pausar uma unidade. | observação, comentário |
 | **Região de atendimento** | Área geográfica declarada por uma unidade, na qual ela aceita pedidos. Atributo **da unidade**, distinto da **zona de entrega**. | área de cobertura, setor, bairro |
 | **Funcionário** | Pessoa vinculada a uma unidade, com uma função. Permanece consultável mesmo quando inativo. | empregado, colaborador, usuário |
-| **Função** | Papel do funcionário: `administrador`, `gestor`, `atendente` ou `cozinheiro`. | cargo, posição, perfil |
+| **Função** | Papel do funcionário da unidade: `gestor`, `atendente` ou `cozinheiro`. Administrador da rede é um papel de acesso separado, não concedido pelo cadastro do gestor. | cargo, posição, perfil |
 
 ### 3.2 Cardápio e produção
 
@@ -211,6 +211,19 @@ flowchart TD
 
 Unidade, funcionário, produto, insumo, ficha técnica, zona de entrega e entregador são mantidos
 pelos papéis de administração. São insumos de dados para os fluxos acima.
+
+### 5.4 Fronteiras das funcionalidades de Rafael
+
+- F3 mantém unidades, incluindo pausa e retomada. Unidade nasce disponível; reativar a torna
+  disponível e limpa o motivo. Pedidos já aceitos não são cancelados por pausa ou desativação.
+- F4 mantém rascunho, envio, histórico e cancelamento pelo cliente. Cancelamento do cliente
+  só ocorre antes do preparo e não devolve estoque: ele ainda não foi consumido.
+- F5 mantém pessoas da unidade. Não altera pools ou threads, nem cria administradores da rede.
+- Cancelar preparo pela unidade continua sendo a F1 RN 5 e devolve insumos.
+- Dados inválidos mantêm o rascunho; falta de unidade elegível ou falta de saldo gera recusa
+  registrada. Só pedidos que passaram pela tentativa de envio aparecem no histórico do cliente.
+- O endereço textual e sua região são informados no pedido. Coordenadas e valor do pedido
+  são dados de integração com entrega; não são calculados pelos protótipos estáticos.
 
 ## 6. Fora de escopo
 

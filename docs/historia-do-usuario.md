@@ -1,6 +1,6 @@
 # FilaFood: mapa da história do usuário
 
-> Nível preliminar do DDD. Este arquivo cobre as funcionalidades
+> Nível preliminar do DDD. Gabriel Rocha responde por F1/F2; Rafael Ferraz Silva por F3/F4/F5.
 >
 > O vocabulário segue `docs/dominio.md`, e cada história aponta para a regra de negócio que a
 > implementa, em `docs/funcionalidades.md`.
@@ -13,15 +13,14 @@
 - **Fatias**, ou entregas: dois incrementos por funcionalidade. A entrega 1 é o mínimo que já entrega valor ponta a ponta.
 - **Catálogos** (seções 5 e 7): as histórias escritas por extenso, com ator e rastreabilidade.
 
-Nenhuma funcionalidade é apenas leitura: as duas têm cadastro, consulta, alteração, desativação e
-reativação. Algumas histórias isoladas são consulta, mas sempre dentro de uma funcionalidade que
-escreve.
+Nenhuma funcionalidade é apenas leitura. Os cadastros permitem manutenção; o pedido permite
+montagem, envio e cancelamento. Algumas histórias isoladas são consulta dentro desse ciclo.
 
 ## 2. Backbone do produto
 
 | # | Etapa da jornada | Responsável |
 | --- | --- | --- |
-| 1 | Cliente monta o pedido | pendente |
+| 1 | Cliente monta, envia, acompanha e cancela enquanto permitido | Rafael Ferraz Silva (Funcionalidade 4) |
 | 2 | Unidade recebe e prepara o pedido | pendente |
 | 3 | Insumos são consumidos pela ficha técnica | Gabriel Rocha (Funcionalidade 1) |
 | 4 | Estoque é reposto a partir do consumo | Gabriel Rocha (Funcionalidade 1) |
@@ -29,13 +28,15 @@ escreve.
 | 6 | Entregador é escolhido e a entrega é despachada | Gabriel Rocha (Funcionalidade 2) |
 | 7 | Entrega é concluída ou falha | Gabriel Rocha (Funcionalidade 2) |
 
-As funcionalidades dos demais integrantes ocupam as etapas 1 e 2 e também a administração de
-cadastros que alimenta todas elas.
+A etapa 2 continua com a operação da unidade, a ser integrada pelo grupo. Rafael também mantém
+os cadastros de unidades (F3) e funcionários (F5), que alimentam essa jornada.
 
 ## 3. Atores
 
 | Ator | Histórias |
 | --- | --- |
+| **Cliente** | Monta, envia, acompanha e cancela o próprio pedido antes do preparo |
+| **Administrador da rede** | Mantém unidades, incluindo pausa e retomada |
 | **Gestor da unidade** | Cadastros, movimentações de estoque e despacho |
 | **Atendente ou cozinheiro** | Inicia o preparo, conclui, cancela ou recusa o pedido. As histórias de baixa automática e de devolução decorrem da ação dele |
 | **Entregador** | Execução da entrega: retirada, entrega e falha |
@@ -114,5 +115,50 @@ saber quando comprar.
 | F2 RN 4 | EN-04, EN-05 |
 | F2 RN 5 | EN-06, EN-07 |
 | F2 RN 6 | EN-08, EN-09 |
+| F3 RN 1 | UN-01 |
+| F3 RN 2 | UN-02 |
+| F3 RN 3 | UN-03 |
+| F3 RN 4 | UN-04 |
+| F4 RN 1 | PE-01 |
+| F4 RN 2 | PE-02 |
+| F4 RN 3 | PE-03 |
+| F4 RN 4 | PE-04 |
+| F4 RN 5 | PE-05 |
+| F4 RN 6 | PE-06 |
+| F5 RN 1 | FU-01 |
+| F5 RN 2 | FU-02 |
+| F5 RN 3 | FU-03 |
+| F5 RN 4 | FU-04 |
 
 Toda regra de negócio tem pelo menos uma história, e toda história aponta para uma regra.
+
+## 9. Mapas das funcionalidades de Rafael
+
+| Atividade | Entrega 1 | Entrega 2 |
+| --- | --- | --- |
+| Preparar a operação | UN-01 Nome e manutenção; UN-02 Região; UN-03 Telefone; FU-01 Cadastro e edição; FU-02 Função; FU-03 Telefone | UN-04 Pausa e estados; FU-04 Desativação e reativação |
+| Montar e enviar pedido | PE-01 Dados de entrega; PE-02 Itens; PE-03 Edição/descarte; PE-04 Seleção de unidade | |
+| Acompanhar e cancelar | | PE-05 Histórico e estados; PE-06 Cancelamento |
+
+Entrega 1 permite cadastrar a operação e enviar um pedido válido. Entrega 2 cobre disponibilidade,
+manutenção dos estados e acompanhamento. Os cadastros de apoio não são etapas executadas pelo
+cliente: os perfis permanecem separados.
+
+| ID | História | Ator | Regra |
+| --- | --- | --- | --- |
+| UN-01 | Como administrador da rede, quero cadastrar, consultar e editar unidades, para manter seus dados corretos. | administrador | F3 RN 1 |
+| UN-02 | Como administrador da rede, quero informar a região de atendimento da unidade, para encaminhar pedidos ao destino correto. | administrador | F3 RN 2 |
+| UN-03 | Como administrador da rede, quero manter um telefone opcional válido, para contato com a unidade. | administrador | F3 RN 3 |
+| UN-04 | Como administrador da rede, quero desativar, reativar, pausar e retomar unidades, para controlar novos recebimentos sem perder os cadastros. | administrador | F3 RN 4 |
+| PE-01 | Como cliente, quero informar meus dados e endereço, para enviar um pedido que possa ser atendido. | cliente | F4 RN 1 |
+| PE-02 | Como cliente, quero adicionar, alterar e remover itens, para montar o que desejo pedir. | cliente | F4 RN 2 |
+| PE-03 | Como cliente, quero editar ou descartar um rascunho antes de enviar, para corrigir ou desistir da montagem. | cliente | F4 RN 3 |
+| PE-04 | Como cliente, quero que uma unidade disponível da minha região receba o pedido, ou que o sistema explique a recusa. | cliente | F4 RN 4 |
+| PE-05 | Como cliente, quero consultar somente meus pedidos e seus estados, para acompanhar o andamento. | cliente | F4 RN 5 |
+| PE-06 | Como cliente, quero cancelar enquanto o preparo não começou, para desistir sem consumo de insumos. | cliente | F4 RN 6 |
+| FU-01 | Como gestor, quero cadastrar, consultar e editar funcionários da minha unidade, para manter os dados da equipe. | gestor | F5 RN 1 |
+| FU-02 | Como gestor, quero definir a função na unidade, para distinguir suas responsabilidades. | gestor | F5 RN 2 |
+| FU-03 | Como gestor, quero manter um telefone opcional válido do funcionário, para contato. | gestor | F5 RN 3 |
+| FU-04 | Como gestor, quero desativar e reativar funcionários sem apagar dados, para manter o cadastro ao longo do tempo. | gestor | F5 RN 4 |
+
+Os protótipos e seus cenários estão mapeados em [ATENDIMENTO.md](prototipos/ATENDIMENTO.md).
