@@ -230,3 +230,11 @@ sempre pela barra, e a ação que pertence a outro perfil não vira botão.
    pedido, e o protótipo mostra o pedido já pronto.
 4. **Os PNGs saíram.** Os estados substituem as imagens exportadas; a captura é feita na hora, se
    precisar.
+
+## 9. Inclusão das funcionalidades de Rafael
+
+As seções anteriores descrevem os 42 estados de estoque e entrega do Gabriel.
+F3/F4/F5 acrescentam 73 estados em 5 telas, documentados em [ATENDIMENTO.md](ATENDIMENTO.md).
+O mapa geral soma 13 telas e 115 estados; [atendimento/index.html](atendimento/index.html)
+é a entrada dos três perfis novos. A folha original é reutilizada; somente os complementos
+responsivos das telas novas ficam em `atendimento.css`.

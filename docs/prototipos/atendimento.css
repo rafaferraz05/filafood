@@ -1,0 +1,35 @@
+/* Complementos apenas das telas de atendimento; identidade visual em estilo.css. */
+.rafael .gui-linha, .rafael .gui-estados, .rafael .gui-dir { flex-wrap: wrap; }
+.rafael .gui-estados { flex: 1; min-width: 0; padding: 3px 0; }
+.rafael .gui-dir { gap: 6px; }
+.rafael .gui-fluxo { opacity: .85; }
+.rafael .links-acoes { display: flex; gap: 9px; flex-wrap: wrap; }
+.rafael .tabela-rolavel { width: 100%; overflow-x: auto; }
+.rafael .confirmacao h2 { margin: 0 0 10px; font-size: 19px; }
+.rafael .confirmacao { width: 490px; }
+.rafael .fundo-modal { z-index: 3; padding: 16px; }
+.rafael .campo-erro { color: #A32015; }
+.rafael input[type="text"]:focus, .rafael select:focus, .rafael a:focus-visible {
+  outline: 3px solid var(--vermelho); outline-offset: 3px;
+}
+.rafael .acoes-form { flex-wrap: wrap; }
+.rafael .card-corpo p { margin: 7px 0; }
+.rafael .confirmacao input { min-width: 0; }
+.rafael .mapa-links { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 760px) {
+  body.rafael { height: auto; min-height: 100%; padding: 8px; }
+  .rafael .casca { height: auto; min-height: calc(100vh - 16px); }
+  .rafael .casca .app { flex: auto; }
+  .rafael .conteudo { overflow: visible; padding: 14px; }
+  .rafael .grid-2, .rafael .grid-3, .rafael .linha-campos-2 { grid-template-columns: 1fr; gap: 10px; }
+  .rafael .topbar { flex-wrap: wrap; padding: 12px; }
+  .rafael .topbar-pills { margin-left: 0; flex-wrap: wrap; }
+  .rafael .gui-dir { margin-left: 0; }
+  .rafael .gui-rotulo { width: 100%; }
+  .rafael .fundo-modal { position: fixed; grid-template-columns: minmax(0, 1fr); }
+  .rafael .confirmacao {
+    width: min(490px, calc(100vw - 32px)); min-width: 0;
+    max-width: calc(100vw - 32px); max-height: calc(100vh - 32px);
+    overflow-y: auto; overflow-wrap: anywhere;
+  }
+}
