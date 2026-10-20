@@ -6,7 +6,8 @@ const root = path.resolve(import.meta.dirname, '..');
 const proto = path.join(root, 'docs/prototipos');
 const walk = dir => fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => e.isDirectory() ? walk(path.join(dir,e.name)) : [path.join(dir,e.name)]);
 const htmls = walk(proto).filter(p => p.endsWith('.html'));
-const novos = htmls.filter(p => p.includes(path.join('prototipos','atendimento') + path.sep));
+const pastasNovas = ['atendimento', 'cardapio', 'compras'].map(nome => path.join('prototipos', nome) + path.sep);
+const novos = htmls.filter(p => pastasNovas.some(pasta => p.includes(pasta)));
 const erros = [];
 let marcadoresAntigos = 0, cenarios = 0;
 for (const file of htmls) {
@@ -51,4 +52,4 @@ for (const [sufixo,id,quantidade,vegetariano] of [['tres','2402',3,false],['dupl
  }
 }
 assert.equal(erros.length, 0, erros.join('\n'));
-console.log(JSON.stringify({paginasGrupo:htmls.length,paginasRafael:novos.length,estadosComBDD:cenarios,linksSemDestinoNoLegado:marcadoresAntigos,erros:erros.length},null,2));
+console.log(JSON.stringify({paginasGrupo:htmls.length,paginasNovas:novos.length,estadosComBDD:cenarios,linksSemDestinoNoLegado:marcadoresAntigos,erros:erros.length},null,2));

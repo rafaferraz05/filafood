@@ -1,6 +1,5 @@
-# FilaFood: mapa da história do usuário
 
-> Nível preliminar do DDD. Gabriel Rocha responde por F1/F2; Rafael Ferraz Silva por F3/F4/F5.
+> Nível preliminar do DDD. Gabriel Rocha responde por F1/F2; Rafael Ferraz Silva por F3/F4/F5; F6 (Cardápio) e F7 (Compras) foram incorporadas conforme o documento de requisitos.
 >
 > O vocabulário segue `docs/dominio.md`, e cada história aponta para a regra de negócio que a
 > implementa, em `docs/funcionalidades.md`.
@@ -11,7 +10,7 @@
 - **Mapa** (seções 4 e 6): as histórias sob cada etapa do backbone, mais os cadastros que alimentam
   a etapa, na vertical, distribuídas por entrega. O que está mais acima entra primeiro.
 - **Fatias**, ou entregas: dois incrementos por funcionalidade. A entrega 1 é o mínimo que já entrega valor ponta a ponta.
-- **Catálogos** (seções 5 e 7): as histórias escritas por extenso, com ator e rastreabilidade.
+- **Catálogos** (seções 5, 7, 10 e 11): as histórias escritas por extenso, com ator e rastreabilidade.
 
 Nenhuma funcionalidade é apenas leitura. Os cadastros permitem manutenção; o pedido permite
 montagem, envio e cancelamento. Algumas histórias isoladas são consulta dentro desse ciclo.
@@ -27,6 +26,9 @@ montagem, envio e cancelamento. Algumas histórias isoladas são consulta dentro
 | 5 | Pedido pronto entra na fila de despacho | Gabriel Rocha (Funcionalidade 2) |
 | 6 | Entregador é escolhido e a entrega é despachada | Gabriel Rocha (Funcionalidade 2) |
 | 7 | Entrega é concluída ou falha | Gabriel Rocha (Funcionalidade 2) |
+| 8 | Cliente consulta o cardápio e escolhe produtos disponíveis com preço vigente | F6 — Cardápio |
+| 9 | Gestor acompanha necessidades de compra e seleciona fornecedor | F7 — Compras |
+| 10 | Gestor formaliza a compra e registra recebimento de insumos | F7 — Compras |
 
 A etapa 2 continua com a operação da unidade, a ser integrada pelo grupo. Rafael também mantém
 os cadastros de unidades (F3) e funcionários (F5), que alimentam essa jornada.
@@ -40,7 +42,10 @@ os cadastros de unidades (F3) e funcionários (F5), que alimentam essa jornada.
 | **Gestor da unidade** | Cadastros, movimentações de estoque e despacho |
 | **Atendente ou cozinheiro** | Inicia o preparo, conclui, cancela ou recusa o pedido. As histórias de baixa automática e de devolução decorrem da ação dele |
 | **Entregador** | Execução da entrega: retirada, entrega e falha |
-| **Sistema** | Regras automáticas (consumo, taxa e escolha do entregador), expressas como história porque o gestor é quem se beneficia do resultado |
+| **Sistema** | Regras automáticas (consumo, taxa e escolha do entregador, preço vigente, disponibilidade, sugestão de compra e escolha de fornecedor), expressas como história porque o usuário se beneficia do resultado |
+| **Administrador da rede** | Mantém produtos e categorias do cardápio (F6) |
+| **Gestor da unidade** | Habilita produtos, define preços, mantém fornecedores e catálogo e confirma ordens de compra (F6/F7) |
+| **Cliente** | Consulta o cardápio publicado, seus preços e a disponibilidade dos produtos (F6) |
 
 ---
 
@@ -129,6 +134,18 @@ saber quando comprar.
 | F5 RN 2 | FU-02 |
 | F5 RN 3 | FU-03 |
 | F5 RN 4 | FU-04 |
+| F6 RN 1 | CA-01 |
+| F6 RN 2 | CA-02 |
+| F6 RN 3 | CA-03 |
+| F6 RN 4 | CA-04 |
+| F6 RN 5 | CA-05 |
+| F6 RN 6 | CA-06 |
+| F7 RN 1 | CP-01 |
+| F7 RN 2 | CP-02 |
+| F7 RN 3 | CP-03 |
+| F7 RN 4 | CP-04 |
+| F7 RN 5 | CP-05 |
+| F7 RN 6 | CP-06 |
 
 Toda regra de negócio tem pelo menos uma história, e toda história aponta para uma regra.
 
@@ -162,3 +179,56 @@ cliente: os perfis permanecem separados.
 | FU-04 | Como gestor, quero desativar e reativar funcionários sem apagar dados, para manter o cadastro ao longo do tempo. | gestor | F5 RN 4 |
 
 Os protótipos e seus cenários estão mapeados em [ATENDIMENTO.md](prototipos/ATENDIMENTO.md).
+
+---
+
+# 10. Mapa da Funcionalidade 6: Cardápio
+
+| Épico (backbone) | Entrega 1 | Entrega 2 |
+| --- | --- | --- |
+| **Manter catálogo** | CA-01 Produto · CA-02 Categoria | |
+| **Preparar venda na unidade** | CA-03 Habilitação do produto | |
+| **Definir preço e disponibilidade** | | CA-04 Preço vigente · CA-05 Disponibilidade calculada |
+| **Publicar cardápio** | | CA-06 Cardápio publicado |
+
+**Entrega 1** mantém produtos e categorias e permite habilitar um produto com os dados operacionais exigidos. **Entrega 2** resolve preço por período, calcula a disponibilidade a partir da ficha técnica e publica o cardápio da unidade para o cliente.
+
+## 10.1 Catálogo da Funcionalidade 6
+
+| ID | História | Ator | Regra | Entrega |
+| --- | --- | --- | --- | --- |
+| CA-01 | Como administrador da rede, quero cadastrar, pesquisar, editar, desativar e reativar produtos com nome, categoria, descrição opcional e preço base, para manter o catálogo de produtos válido. | administrador da rede | F6 RN 1 | 1 |
+| CA-02 | Como administrador da rede, quero manter categorias com nome e ordem de exibição, para organizar os produtos do cardápio. | administrador da rede | F6 RN 2 | 1 |
+| CA-03 | Como gestor da unidade, quero habilitar ou desabilitar produtos ativos para venda na minha unidade, exigindo ficha técnica e configuração de preparo, para controlar o que a unidade oferece. | gestor da unidade | F6 RN 3 | 1 |
+| CA-04 | Como gestor da unidade, quero definir preços próprios por período de vigência, sem sobreposições, para que cada pedido registre o preço válido no momento da criação. | gestor da unidade | F6 RN 4 | 2 |
+| CA-05 | Como gestor da unidade, quero consultar quantas porções cada produto permite preparar com o saldo atual e se está disponível, para evitar oferecer produto sem insumos. | sistema | F6 RN 5 | 2 |
+| CA-06 | Como cliente, quero consultar o cardápio da unidade com produtos habilitados, categorias ordenadas, preço vigente e disponibilidade, para escolher apenas produtos que podem ser pedidos. | cliente | F6 RN 6 | 2 |
+
+**Protótipos:** [Preços](prototipos/cardapio/precos.html), [formulário de preço](prototipos/cardapio/precos-formulario.html), [sobreposição](prototipos/cardapio/precos-sobreposicao.html), [período iniciado](prototipos/cardapio/precos-periodo-iniciado.html), [período encerrado](prototipos/cardapio/precos-encerrado.html), [disponibilidade](prototipos/cardapio/disponibilidade.html), [sem saldo](prototipos/cardapio/disponibilidade-sem-saldo.html) e [insumo inativo](prototipos/cardapio/disponibilidade-insumo-inativo.html). Ver também o [mapa geral](prototipos/index.html).
+
+---
+
+# 11. Mapa da Funcionalidade 7: Compras
+
+| Épico (backbone) | Entrega 1 | Entrega 2 |
+| --- | --- | --- |
+| **Manter fornecedores** | CP-01 Cadastro de fornecedor | |
+| **Manter catálogo de fornecimento** | CP-02 Catálogo do fornecedor | |
+| **Planejar a reposição** | | CP-03 Sugestão de quantidade · CP-04 Escolha do fornecedor |
+| **Formalizar e receber compra** | | CP-05 Ordem de compra e estados · CP-06 Recebimento e entrada no estoque |
+
+**Entrega 1** mantém fornecedores e os itens do catálogo com preço, quantidade mínima e prazo. **Entrega 2** calcula a quantidade a comprar, compara fornecedores, permite formalizar a ordem e registrar recebimentos parciais ou completos que alimentam o estoque.
+
+## 11.1 Catálogo da Funcionalidade 7
+
+| ID | História | Ator | Regra | Entrega |
+| --- | --- | --- | --- | --- |
+| CP-01 | Como gestor da unidade, quero cadastrar, consultar, editar, desativar e reativar fornecedores com identificação e contato válidos, preservando o histórico, para comprar de fornecedores habilitados. | gestor da unidade | F7 RN 1 | 1 |
+| CP-02 | Como gestor da unidade, quero manter o catálogo de cada fornecedor com insumo, preço unitário, quantidade mínima e prazo, para conhecer as condições de compra. | gestor da unidade | F7 RN 2 | 1 |
+| CP-03 | Como gestor da unidade, quero ver a quantidade sugerida para cada insumo ativo a repor, considerando cobertura, saldo, consumo e ordens abertas, para planejar a compra sem criar uma ordem automaticamente. | gestor da unidade | F7 RN 3 | 2 |
+| CP-04 | Como gestor da unidade, quero que o sistema compare os fornecedores por custo total, prazo e desempate definido, sinalizando atraso quando necessário, para escolher a opção mais vantajosa. | sistema | F7 RN 4 | 2 |
+| CP-05 | Como gestor da unidade, quero criar e acompanhar uma ordem de compra com transições válidas e preço unitário registrado, para formalizar a compra e manter seu histórico. | gestor da unidade | F7 RN 5 | 2 |
+| CP-06 | Como gestor da unidade, quero registrar recebimentos parciais ou totais por item, atualizando a ordem e gerando entradas no estoque, para manter saldo e custo coerentes com a compra. | gestor da unidade | F7 RN 6 | 2 |
+
+**Protótipos:** [Fornecedores](prototipos/compras/fornecedores.html), [fornecedor escolhido](prototipos/compras/fornecedor-escolhido.html), [empate](prototipos/compras/fornecedor-empate.html), [atraso previsto](prototipos/compras/fornecedor-atraso.html), [sem fornecedor](prototipos/compras/sem-fornecedor.html), [sugestões](prototipos/compras/sugestoes.html), [sugestão calculada](prototipos/compras/sugestao-calculada.html) e [sem necessidade](prototipos/compras/sugestoes-sem-necessidade.html). Ver também o [mapa geral](prototipos/index.html).
+

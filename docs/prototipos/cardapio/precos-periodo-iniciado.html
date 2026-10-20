@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · F6 · Cardápio · Período já iniciado</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+</head>
+<body><div class="casca">
+<nav class="gui" aria-label="Navegação do protótipo">
+  <div class="gui-linha"><span class="gui-titulo">Protótipo FilaFood · F6 · Cardápio</span><span class="gui-fluxo">Gestor da unidade</span><span class="gui-dir"><a class="b-nav" href="../index.html">Mapa completo</a><a class="b-nav b-nav-atual" href="precos.html">Preços</a><a class="b-nav" href="../compras/sugestoes.html">Compras</a></span></div>
+  <div class="gui-linha"><span class="gui-rotulo">Estado da tela</span><div class="gui-estados"><a class="b-estado" href="precos.html">preços</a><a class="b-estado" href="precos-formulario.html">novo período</a><a class="b-estado" href="precos-sobreposicao.html">sobreposição</a><a class="b-estado b-estado-atual" href="precos-periodo-iniciado.html">iniciado</a><a class="b-estado" href="precos-encerrado.html">encerrado</a><a class="b-estado" href="disponibilidade.html">cálculo</a><a class="b-estado" href="disponibilidade-sem-saldo.html">saldo zero</a><a class="b-estado" href="disponibilidade-insumo-inativo.html">insumo inativo</a></div></div>
+</nav>
+<div class="app"><header class="topbar"><div class="marca"><div class="marca-selo">FF</div><div><div class="marca-nome">FilaFood</div><div class="marca-sub">rede de restaurantes</div></div></div><div class="topbar-pills"><span class="pill pill-clara">Gestor da unidade</span><span class="pill pill-amarela">Unidade: Boa Viagem</span></div></header>
+<main class="conteudo"><div class="cabecalho"><div><h1>Período já iniciado</h1><p class="subtitulo">somente encerramento · protótipo estático para validação da regra de negócio</p></div></div>
+<div class="aviso-erro">Este preço já entrou em vigência. O valor não pode ser editado; apenas é permitido encerrar o período com uma data final.</div><div class="grid-2"><div class="card"><div class="card-titulo">Período vigente · Clássico</div><div class="card-corpo"><div class="kpi-valor">R$ 19,50</div><p>Início: 01/10/2026</p><p>Fim: sem data final</p><span class="badge badge-ok">Vigente agora</span></div></div><div class="card"><div class="card-titulo">Encerrar período</div><div class="card-corpo"><div class="campo"><label for="fim">Nova data final</label><input id="fim" type="text" value="31/10/2026"></div><p class="anotacao">A data final encerra a vigência. O preço histórico permanece preservado.</p><div class="acoes-form"><a class="btn btn-claro" href="precos.html">Voltar</a><span class="espaco"></span><a class="btn btn-primario" href="precos-encerrado.html">Confirmar encerramento</a></div></div></div></div>
+<p class="anotacao"><b>F6 · Cardápio</b> · protótipo sem JavaScript: os links abrem estados separados; valores e formulários são demonstrativos.</p>
+</main></div></div></body></html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · F7 · Compras · Desempate por prazo e nome</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+</head>
+<body><div class="casca">
+<nav class="gui" aria-label="Navegação do protótipo">
+  <div class="gui-linha"><span class="gui-titulo">Protótipo FilaFood · F7 · Compras</span><span class="gui-fluxo">Gestor da unidade</span><span class="gui-dir"><a class="b-nav" href="../index.html">Mapa completo</a><a class="b-nav b-nav-atual" href="sugestoes.html">Sugestões</a><a class="b-nav" href="../cardapio/precos.html">Cardápio</a></span></div>
+  <div class="gui-linha"><span class="gui-rotulo">Estado da tela</span><div class="gui-estados"><a class="b-estado" href="sugestoes.html">sugestões</a><a class="b-estado" href="sugestoes-sem-necessidade.html">sem sugestão</a><a class="b-estado" href="sugestao-calculada.html">quantidades</a><a class="b-estado" href="fornecedores.html">comparação</a><a class="b-estado" href="fornecedor-escolhido.html">escolhido</a><a class="b-estado b-estado-atual" href="fornecedor-empate.html">desempate</a><a class="b-estado" href="fornecedor-atraso.html">atraso</a><a class="b-estado" href="sem-fornecedor.html">sem fornecedor</a></div></div>
+</nav>
+<div class="app"><header class="topbar"><div class="marca"><div class="marca-selo">FF</div><div><div class="marca-nome">FilaFood</div><div class="marca-sub">rede de restaurantes</div></div></div><div class="topbar-pills"><span class="pill pill-clara">Gestor da unidade</span><span class="pill pill-amarela">Unidade: Boa Viagem</span></div></header>
+<main class="conteudo"><div class="cabecalho"><div><h1>Desempate por prazo e nome</h1><p class="subtitulo">empate de custo · protótipo estático para validação da regra de negócio</p></div></div>
+<div class="aviso-ok">Empate no custo total resolvido pelo menor prazo de entrega.</div><div class="card"><div class="card-titulo">Comparação de fornecedores para Pão</div><table><thead><tr><th>Fornecedor</th><th>Preço unitário</th><th>Quantidade ajustada</th><th>Custo total</th><th>Prazo</th><th>Desempate</th></tr></thead><tbody><tr><td class="destaque">Alimentos Recife</td><td>R$ 0,50</td><td>40 un</td><td>R$ 20,00</td><td>2 dias</td><td><span class="badge badge-ok">Escolhido · prazo menor</span></td></tr><tr><td class="destaque">Mercado Central</td><td>R$ 0,50</td><td>40 un</td><td>R$ 20,00</td><td>3 dias</td><td><span class="badge badge-neutro">Prazo maior</span></td></tr></tbody></table><div class="card-corpo"><p>Se custo e prazo também empatarem, vence o nome anterior em ordem alfabética.</p><a class="btn btn-primario" href="fornecedores.html">Voltar à comparação</a></div></div>
+<p class="anotacao"><b>F7 · Compras</b> · protótipo sem JavaScript: os links abrem estados separados; valores e formulários são demonstrativos.</p>
+</main></div></div></body></html>

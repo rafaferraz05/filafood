@@ -17,6 +17,8 @@
         <a class="b-nav" href="#fluxo-a">Fluxo A · estoque</a>
         <a class="b-nav" href="#fluxo-b">Fluxo B · entrega</a>
         <a class="b-nav" href="#fluxo-c">Fluxo C · rota</a>
+        <a class="b-nav" href="#fluxo-cardapio">Cardápio · F6</a>
+        <a class="b-nav" href="#fluxo-compras">Compras · F7</a>
         <a class="b-nav" href="atendimento/index.html">Rafael · unidades, pedidos e equipe</a>
       </span>
     </div>
@@ -104,6 +106,35 @@
         </ul>
       </div>
 
+    </div>
+
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="card" id="fluxo-cardapio">
+        <div class="card-titulo">F6 · Cardápio <span class="dir">preço vigente e disponibilidade</span></div>
+        <ul class="lista-exemplos">
+          <li><b><a class="link-vermelho" href="cardapio/precos.html">Preços vigentes</a></b><span>Clássico e Vegetariano · preço da unidade ou preço base</span></li>
+          <li><b><a class="link-vermelho" href="cardapio/precos-formulario.html">Novo período</a></b><span>Preço, data inicial e data final opcional</span></li>
+          <li><b><a class="link-vermelho" href="cardapio/precos-sobreposicao.html">Sobreposição</a></b><span>Período recusado sem alterar o preço existente</span></li>
+          <li><b><a class="link-vermelho" href="cardapio/precos-periodo-iniciado.html">Período iniciado</a></b><span>Permite encerrar, não editar o valor</span></li>
+          <li><b><a class="link-vermelho" href="cardapio/precos-encerrado.html">Período encerrado</a></b><span>Histórico preservado</span></li>
+          <li><b><a class="link-vermelho" href="cardapio/disponibilidade.html">Disponibilidade</a></b><span>Porções possíveis pelo insumo limitante</span></li>
+          <li><b><a class="link-vermelho" href="cardapio/disponibilidade-sem-saldo.html">Saldo zero</a></b><span>Produto indisponível</span></li>
+          <li><b><a class="link-vermelho" href="cardapio/disponibilidade-insumo-inativo.html">Insumo inativo</a></b><span>Porções possíveis zeradas</span></li>
+        </ul>
+      </div>
+      <div class="card" id="fluxo-compras">
+        <div class="card-titulo">F7 · Compras <span class="dir">sugestão e escolha de fornecedor</span></div>
+        <ul class="lista-exemplos">
+          <li><b><a class="link-vermelho" href="compras/sugestoes.html">Sugestões</a></b><span>Pão e Carne · saldo, consumo, cobertura e ordens abertas</span></li>
+          <li><b><a class="link-vermelho" href="compras/sugestoes-sem-necessidade.html">Sem sugestão</a></b><span>Quantidade bruta menor ou igual a zero</span></li>
+          <li><b><a class="link-vermelho" href="compras/sugestao-calculada.html">Quantidades calculadas</a></b><span>Arredondamento ao múltiplo mínimo</span></li>
+          <li><b><a class="link-vermelho" href="compras/fornecedores.html">Comparar fornecedores</a></b><span>Custo total ajustado e prazo limite</span></li>
+          <li><b><a class="link-vermelho" href="compras/fornecedor-escolhido.html">Fornecedor escolhido</a></b><span>Menor custo entre os elegíveis</span></li>
+          <li><b><a class="link-vermelho" href="compras/fornecedor-empate.html">Desempate</a></b><span>Prazo e nome em ordem alfabética</span></li>
+          <li><b><a class="link-vermelho" href="compras/fornecedor-atraso.html">Atraso previsto</a></b><span>Nenhum prazo atende; menor prazo é selecionado</span></li>
+          <li><b><a class="link-vermelho" href="compras/sem-fornecedor.html">Sem fornecedor</a></b><span>Catálogo não tem fornecedor ativo para o insumo</span></li>
+        </ul>
+      </div>
     </div>
 
     <div class="card" style="margin-top:16px;">

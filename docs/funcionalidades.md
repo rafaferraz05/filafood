@@ -1,6 +1,6 @@
-# FilaFood: funcionalidades e regras de negócio
 
 > Gabriel Rocha: F1 e F2 (altas). Rafael Ferraz Silva: F3 (baixa), F4 (média) e F5 (baixa).
+> F6 (Cardápio) e F7 (Compras) seguem o documento de requisitos `FilaFood_Funcionalidades_Cardapio_e_Compras.pdf`.
 > Os números são globais neste repositório. No formulário individual de Rafael, F3/F4/F5
 > correspondem, respectivamente, às funcionalidades 1/2/3 aprovadas com o professor.
 >
@@ -15,6 +15,8 @@
 | 3 | [Gerenciar unidades de atendimento](#funcionalidade-3-baixa) | baixa | 4 |
 | 4 | [Pedido do cliente](#funcionalidade-4-média) | média | 6 |
 | 5 | [Gerenciar funcionários](#funcionalidade-5-baixa) | baixa | 4 |
+| 6 | [Gerenciamento do cardápio, preço vigente e disponibilidade](#funcionalidade-6-alta) | alta | 6 |
+| 7 | [Compra de insumos por fornecedor](#funcionalidade-7-alta) | alta | 6 |
 
 ---
 
@@ -336,3 +338,158 @@ o protocolo; não ligam automaticamente os módulos de estoque e entrega. Adapta
 em banco, autenticação e a interface real permanecem etapas futuras. Coordenadas e valor do pedido,
 necessários à F2, serão fornecidos pela integração com endereço e produto; não há geocodificação
 ou cobrança neste protótipo.
+
+---
+
+# Funcionalidade 6 (alta)
+
+| Título | Gerenciamento do cardápio, preço vigente e disponibilidade dos produtos |
+| --- | --- |
+| Descrição | O administrador da rede cadastra, pesquisa, altera, desativa e reativa produtos e categorias do cardápio. O gestor da unidade habilita os produtos que a unidade vende e define preços próprios com período de vigência. O sistema calcula o preço vigente de cada produto e a disponibilidade pelo saldo dos insumos da ficha técnica, e publica o cardápio da unidade para o cliente montar o pedido. |
+| Entidades envolvidas | **Mantidas:** Produto, Categoria, ProdutoNaUnidade e PrecoDaUnidade. **Referenciadas:** Unidade, FichaTecnica, Insumo e ConfiguracaoPreparo. |
+| Complexidade | alta: RN 4 resolve períodos de preço e sobreposições; RN 5 calcula as porções possíveis pelo insumo limitante da ficha técnica. |
+
+**Definições usadas nas regras**
+
+- **preço base:** preço do produto em toda a rede, definido no cadastro do produto.
+- **preço da unidade:** preço próprio de um produto em uma unidade, com data inicial e data final de vigência opcional.
+- **preço vigente:** preço que vale em um instante para um produto em uma unidade.
+- **porções possíveis:** quantidade de unidades do produto que o saldo atual dos insumos permite preparar.
+
+## Regras de negócio
+
+### RN 1: Cadastro de produto
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Todo produto tem nome não vazio e único na rede (sem diferenciar maiúsculas de minúsculas), categoria ativa, descrição opcional de até 300 caracteres e preço base maior que zero, com duas casas decimais. O produto pode ser editado, desativado sem perder o histórico e reativado a qualquer momento. Produto inativo não aparece no cardápio e não pode ser habilitado em unidade. |
+| Consultas | Consultar o produto pelo nome, para garantir a unicidade; consultar a categoria informada e seu estado. |
+| Complexidade | média |
+
+### RN 2: Categorias do cardápio
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Toda categoria tem nome não vazio e único na rede e ordem de exibição inteira maior ou igual a zero. A categoria pode ser editada, desativada e reativada. Categoria com produto ativo não pode ser desativada. Categoria inativa não aceita novos produtos. |
+| Consultas | Consultar a categoria pelo nome, para garantir a unicidade; consultar os produtos ativos da categoria, para a desativação. |
+| Complexidade | média |
+
+### RN 3: Habilitação do produto na unidade
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | O gestor da unidade habilita um produto ativo para venda na unidade. A habilitação exige ficha técnica do produto na unidade (RN 2 do controle de estoque) e configuração de preparo do produto na unidade. O gestor pode desabilitar o produto a qualquer momento. A desabilitação não altera pedidos já criados e o produto desabilitado deixa de aparecer no cardápio da unidade. |
+| Consultas | Consultar o produto e seu estado; consultar a ficha técnica do produto na unidade; consultar a configuração de preparo do produto na unidade; consultar a habilitação existente do produto na unidade. |
+| Complexidade | média |
+
+### RN 4: Preço vigente do produto na unidade
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | O gestor define o preço da unidade, maior que zero, com data inicial e data final opcional. Para o mesmo produto e a mesma unidade, os períodos de vigência não podem se sobrepor, e a ausência de data final conta como vigência sem fim. A data inicial não pode ser anterior à data atual. O preço vigente em um instante é o preço da unidade cujo período contém o instante; se não houver nenhum, vale o preço base. Preço de período já iniciado não pode ser alterado, apenas encerrado com data final. O preço vigente no momento da criação do pedido é o que o pedido grava no item. |
+| Consultas | Consultar os preços da unidade do produto cujo período intersecta o período informado, para detectar sobreposição; consultar o preço da unidade vigente no instante; consultar o preço base do produto. |
+| Complexidade | alta |
+
+### RN 5: Disponibilidade calculada pelo estoque
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | As porções possíveis do produto na unidade são o menor valor, entre os itens da ficha técnica, do resultado da divisão inteira do saldo do insumo pela quantidade do insumo por porção. O produto fica disponível quando as porções possíveis são maiores ou iguais a 1. Se algum insumo da ficha estiver inativo ou com saldo zero, as porções possíveis são zero e o produto fica indisponível. O cálculo apenas consulta o saldo: não reserva insumos, e a baixa continua ocorrendo ao iniciar o preparo (F1 RN 4). |
+| Consultas | Consultar a ficha técnica do produto na unidade; consultar o saldo e o estado de cada insumo da ficha. |
+| Complexidade | alta |
+
+### RN 6: Cardápio publicado da unidade
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | O cardápio da unidade lista os produtos ativos e habilitados na unidade, de categorias ativas, com o preço vigente e a disponibilidade. Os produtos são agrupados por categoria, na ordem de exibição das categorias, e ordenados por nome dentro de cada categoria. Produto indisponível aparece sinalizado e não pode ser adicionado ao pedido. Se a unidade não estiver disponível (inativa ou pausada), o cardápio informa que ela não recebe pedidos. |
+| Consultas | Consultar os produtos habilitados da unidade; consultar as categorias ativas; consultar o preço vigente e a disponibilidade de cada produto; consultar o estado da unidade. |
+| Complexidade | média |
+
+## Protótipos da interface com o usuário
+
+Protótipos estáticos em HTML, com `estilo.css`, navegação por links e um arquivo por estado, sem JavaScript. A identidade visual usa vermelho e amarelo; os dados de demonstração usam os nomes canônicos **Clássico**, **Vegetariano**, **Pão** e **Carne**.
+
+- [Preços da unidade — estado principal](prototipos/cardapio/precos.html), [formulário](prototipos/cardapio/precos-formulario.html), [período sobreposto](prototipos/cardapio/precos-sobreposicao.html), [período iniciado](prototipos/cardapio/precos-periodo-iniciado.html) e [período encerrado](prototipos/cardapio/precos-encerrado.html).
+- [Disponibilidade — estado principal](prototipos/cardapio/disponibilidade.html), [sem saldo](prototipos/cardapio/disponibilidade-sem-saldo.html) e [insumo inativo](prototipos/cardapio/disponibilidade-insumo-inativo.html).
+- [Mapa geral dos protótipos](prototipos/index.html).
+
+**Histórias:** CA-01 a CA-06. **BDD:** [preco-vigente.feature](../dominio-cardapio/src/test/resources/br/edu/cesar/filafood/dominio/cardapio/preco-vigente.feature) (`@f6-rn4`) e [disponibilidade.feature](../dominio-cardapio/src/test/resources/br/edu/cesar/filafood/dominio/cardapio/disponibilidade.feature) (`@f6-rn5`). O BDD desta etapa cobre as duas regras de maior complexidade; as demais regras seguem documentadas para as entregas seguintes.
+
+---
+
+# Funcionalidade 7 (alta)
+
+| Título | Compra de insumos por fornecedor |
+| --- | --- |
+| Descrição | O gestor da unidade cadastra, pesquisa, altera, desativa e reativa fornecedores e mantém o catálogo de insumos que cada um vende, com preço, quantidade mínima e prazo. Para os insumos sinalizados “a repor”, o sistema sugere a quantidade a comprar e o fornecedor mais vantajoso. O gestor cria a ordem de compra, envia ao fornecedor, acompanha seus estados e registra o recebimento total ou parcial, que gera a entrada por compra no estoque da unidade. |
+| Entidades envolvidas | **Mantidas:** Fornecedor, ItemDoCatalogo, OrdemDeCompra e ItemDaOrdem. **Referenciadas:** Insumo, Unidade e MovimentacaoEstoque. |
+| Complexidade | alta: RN 3 projeta consumo, saldo e ordens abertas sobre a cobertura desejada; RN 4 compara fornecedores por custo total, prazo e desempate. |
+
+**Definições usadas nas regras**
+
+- **ordem de compra:** solicitação de insumos feita pela unidade a um fornecedor; não se confunde com o pedido do cliente.
+- **cobertura:** número de dias de consumo que a compra deve cobrir além do ponto de pedido. É inteiro, maior ou igual a 1, e definido por unidade.
+- **quantidade em ordens abertas:** soma, para um insumo, da quantidade ainda não recebida em ordens nos estados enviada e recebida parcialmente.
+- **custo total:** preço unitário do catálogo multiplicado pela quantidade da compra.
+
+## Regras de negócio
+
+### RN 1: Cadastro de fornecedor
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Todo fornecedor tem nome não vazio, CNPJ com 14 algarismos e dígitos verificadores válidos, único na rede, e ao menos um contato (telefone com 10 ou 11 algarismos ou e-mail válido). O fornecedor pode ser editado, desativado sem perder o histórico e reativado. Fornecedor com ordem de compra aberta (enviada ou recebida parcialmente) não pode ser desativado, e fornecedor inativo não recebe novas ordens. |
+| Consultas | Consultar o fornecedor pelo CNPJ, para garantir a unicidade; consultar as ordens abertas do fornecedor, para a desativação. |
+| Complexidade | média |
+
+### RN 2: Catálogo do fornecedor
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Cada item do catálogo liga o fornecedor a um insumo ativo e informa preço unitário maior que zero, quantidade mínima de compra maior que zero e prazo de entrega em dias, inteiro maior ou igual a 1. Um fornecedor tem no máximo um item por insumo. O item pode ser alterado ou removido do catálogo. A alteração de preço vale para as ordens criadas depois dela e não altera ordens já criadas. |
+| Consultas | Consultar o insumo e seu estado; consultar o item do fornecedor para o insumo, para impedir duplicidade. |
+| Complexidade | média |
+
+### RN 3: Sugestão de quantidade a comprar
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Para cada insumo ativo no estado “a repor” (F1 RN 6), a quantidade bruta é o ponto de pedido mais o consumo médio diário multiplicado pelos dias de cobertura, menos o saldo, menos a quantidade em ordens abertas. Se a quantidade bruta for menor ou igual a zero, não há sugestão. Caso contrário, a quantidade sugerida é a bruta arredondada para cima ao múltiplo da quantidade mínima do fornecedor escolhido na RN 4. A sugestão apenas informa: nenhuma ordem é criada sem a confirmação do gestor. |
+| Consultas | Consultar os insumos ativos a repor; consultar o saldo e o consumo médio diário de cada insumo; consultar a quantidade em ordens abertas de cada insumo; consultar a cobertura da unidade. |
+| Complexidade | alta |
+
+### RN 4: Escolha do fornecedor
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Entre os fornecedores ativos que têm o insumo no catálogo, escolhe-se o de menor custo total para a quantidade sugerida, já arredondada ao múltiplo da quantidade mínima de cada um. Só concorrem os que entregam dentro do prazo de entrega do insumo. Em caso de empate no custo total, vence o de menor prazo; persistindo o empate, o de nome anterior em ordem alfabética. Se nenhum fornecedor cumprir o prazo, escolhe-se o de menor prazo e a sugestão é sinalizada com o atraso previsto. Sem fornecedor no catálogo, informa-se que não há fornecedor para o insumo. |
+| Consultas | Consultar os itens de catálogo do insumo com seus fornecedores e estados; consultar o prazo de entrega do insumo. |
+| Complexidade | alta |
+
+### RN 5: Ordem de compra e seus estados
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | A ordem tem unidade, fornecedor ativo e ao menos um item. Cada item exige insumo ativo presente no catálogo do fornecedor e quantidade maior ou igual à mínima do catálogo, e o mesmo insumo não pode repetir na ordem. O preço unitário é gravado do catálogo no momento da criação e não muda depois. Os estados são rascunho, enviada, recebida parcialmente, recebida e cancelada. A ordem só pode ser alterada em rascunho. Não é permitido pular etapa nem alterar ordem recebida ou cancelada. O cancelamento é aceito em rascunho ou em ordem enviada sem recebimento. Toda transição grava data e hora. |
+| Consultas | Consultar a ordem pelo id e seu estado; consultar o fornecedor e seu estado; consultar o item do catálogo de cada insumo da ordem. |
+| Complexidade | média |
+
+### RN 6: Recebimento e entrada no estoque
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | O gestor registra o recebimento por item, com quantidade maior que zero e que não ultrapasse a quantidade ainda pendente do item. Cada recebimento grava uma entrada por compra (F1 RN 3) com o custo unitário gravado na ordem e soma a quantidade ao saldo. Se todos os itens ficarem completos, a ordem passa a recebida; se restar quantidade pendente, passa a recebida parcialmente e continua aberta. O recebimento de insumo inativo é recusado, e o recebimento registrado não pode ser alterado nem excluído. |
+| Consultas | Consultar a ordem, seus itens e as quantidades já recebidas; consultar o insumo e seu estado. |
+| Complexidade | média |
+
+## Protótipos da interface com o usuário
+
+Protótipos estáticos em HTML, com `estilo.css`, navegação por links e um arquivo por estado, sem JavaScript. A identidade visual usa vermelho e amarelo e os dados de demonstração usam **Pão** e **Carne**.
+
+- [Fornecedores — estado principal](prototipos/compras/fornecedores.html), [fornecedor escolhido](prototipos/compras/fornecedor-escolhido.html), [empate](prototipos/compras/fornecedor-empate.html), [atraso previsto](prototipos/compras/fornecedor-atraso.html) e [sem fornecedor](prototipos/compras/sem-fornecedor.html).
+- [Sugestões — estado principal](prototipos/compras/sugestoes.html), [sugestão calculada](prototipos/compras/sugestao-calculada.html) e [sem necessidade](prototipos/compras/sugestoes-sem-necessidade.html).
+- [Mapa geral dos protótipos](prototipos/index.html).
+
+**Histórias:** CP-01 a CP-06. **BDD:** [sugestao-quantidade.feature](../dominio-compras/src/test/resources/br/edu/cesar/filafood/dominio/compras/sugestao-quantidade.feature) (`@f7-rn3`) e [escolha-fornecedor.feature](../dominio-compras/src/test/resources/br/edu/cesar/filafood/dominio/compras/escolha-fornecedor.feature) (`@f7-rn4`). O BDD desta etapa cobre as duas regras de maior complexidade; as demais regras seguem documentadas para as entregas seguintes.
+

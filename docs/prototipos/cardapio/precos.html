@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · F6 · Cardápio · Preços vigentes</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+</head>
+<body><div class="casca">
+<nav class="gui" aria-label="Navegação do protótipo">
+  <div class="gui-linha"><span class="gui-titulo">Protótipo FilaFood · F6 · Cardápio</span><span class="gui-fluxo">Gestor da unidade</span><span class="gui-dir"><a class="b-nav" href="../index.html">Mapa completo</a><a class="b-nav b-nav-atual" href="precos.html">Preços</a><a class="b-nav" href="../compras/sugestoes.html">Compras</a></span></div>
+  <div class="gui-linha"><span class="gui-rotulo">Estado da tela</span><div class="gui-estados"><a class="b-estado b-estado-atual" href="precos.html">preços</a><a class="b-estado" href="precos-formulario.html">novo período</a><a class="b-estado" href="precos-sobreposicao.html">sobreposição</a><a class="b-estado" href="precos-periodo-iniciado.html">iniciado</a><a class="b-estado" href="precos-encerrado.html">encerrado</a><a class="b-estado" href="disponibilidade.html">cálculo</a><a class="b-estado" href="disponibilidade-sem-saldo.html">saldo zero</a><a class="b-estado" href="disponibilidade-insumo-inativo.html">insumo inativo</a></div></div>
+</nav>
+<div class="app"><header class="topbar"><div class="marca"><div class="marca-selo">FF</div><div><div class="marca-nome">FilaFood</div><div class="marca-sub">rede de restaurantes</div></div></div><div class="topbar-pills"><span class="pill pill-clara">Gestor da unidade</span><span class="pill pill-amarela">Unidade: Boa Viagem</span></div></header>
+<main class="conteudo"><div class="cabecalho"><div><h1>Preços vigentes</h1><p class="subtitulo">com dados · protótipo estático para validação da regra de negócio</p></div></div>
+<div class="kpis"><div class="kpi"><div class="kpi-rotulo">Produtos habilitados</div><div class="kpi-valor">2</div><div class="kpi-nota">Clássico e Vegetariano</div></div><div class="kpi"><div class="kpi-rotulo">Preço vigente</div><div class="kpi-valor">2</div><div class="kpi-nota">um por produto</div></div><div class="kpi"><div class="kpi-rotulo">Próxima mudança</div><div class="kpi-valor">01 nov</div><div class="kpi-nota">início programado</div></div><div class="kpi"><div class="kpi-rotulo">Períodos conflitantes</div><div class="kpi-valor">0</div><div class="kpi-nota">sem sobreposição</div></div><div class="kpi"><div class="kpi-rotulo">Unidade</div><div class="kpi-valor">Boa Viagem</div><div class="kpi-nota">gestão de preços</div></div></div>
+<div class="barra" style="margin-top:14px"><a class="btn btn-primario" href="precos-formulario.html">Definir preço da unidade</a><a class="btn btn-claro" href="precos-periodo-iniciado.html">Ver período iniciado</a></div>
+<div class="card"><div class="card-titulo">Preços por produto <span class="dir">valores de exemplo</span></div><table><thead><tr><th>Produto</th><th>Preço base</th><th>Preço da unidade</th><th>Vigência</th><th>Preço vigente</th><th>Ação</th></tr></thead><tbody><tr><td class="destaque">Clássico</td><td>R$ 18,00</td><td>R$ 19,50</td><td>01/10/2026–31/10/2026</td><td><span class="badge badge-ok">R$ 19,50</span></td><td class="acoes"><a href="precos-periodo-iniciado.html">Detalhar</a></td></tr><tr><td class="destaque">Vegetariano</td><td>R$ 20,00</td><td>—</td><td>sem período da unidade</td><td><span class="badge badge-neutro">R$ 20,00 · base</span></td><td class="acoes"><a href="precos-formulario.html">Definir</a></td></tr></tbody></table></div>
+<div class="rodape">O preço gravado no item do pedido é o preço vigente no instante em que o pedido é criado. Sem período vigente, vale o preço base.</div>
+<p class="anotacao"><b>F6 · Cardápio</b> · protótipo sem JavaScript: os links abrem estados separados; valores e formulários são demonstrativos.</p>
+</main></div></div></body></html>

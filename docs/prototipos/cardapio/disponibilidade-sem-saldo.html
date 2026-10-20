@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · F6 · Cardápio · Produto indisponível</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+</head>
+<body><div class="casca">
+<nav class="gui" aria-label="Navegação do protótipo">
+  <div class="gui-linha"><span class="gui-titulo">Protótipo FilaFood · F6 · Cardápio</span><span class="gui-fluxo">Gestor da unidade</span><span class="gui-dir"><a class="b-nav" href="../index.html">Mapa completo</a><a class="b-nav b-nav-atual" href="precos.html">Preços</a><a class="b-nav" href="../compras/sugestoes.html">Compras</a></span></div>
+  <div class="gui-linha"><span class="gui-rotulo">Estado da tela</span><div class="gui-estados"><a class="b-estado" href="precos.html">preços</a><a class="b-estado" href="precos-formulario.html">novo período</a><a class="b-estado" href="precos-sobreposicao.html">sobreposição</a><a class="b-estado" href="precos-periodo-iniciado.html">iniciado</a><a class="b-estado" href="precos-encerrado.html">encerrado</a><a class="b-estado" href="disponibilidade.html">cálculo</a><a class="b-estado b-estado-atual" href="disponibilidade-sem-saldo.html">saldo zero</a><a class="b-estado" href="disponibilidade-insumo-inativo.html">insumo inativo</a></div></div>
+</nav>
+<div class="app"><header class="topbar"><div class="marca"><div class="marca-selo">FF</div><div><div class="marca-nome">FilaFood</div><div class="marca-sub">rede de restaurantes</div></div></div><div class="topbar-pills"><span class="pill pill-clara">Gestor da unidade</span><span class="pill pill-amarela">Unidade: Boa Viagem</span></div></header>
+<main class="conteudo"><div class="cabecalho"><div><h1>Produto indisponível</h1><p class="subtitulo">saldo zero · protótipo estático para validação da regra de negócio</p></div></div>
+<div class="aviso-erro">Clássico está indisponível: o saldo de Carne é zero, então não é possível preparar nenhuma porção.</div><div class="card"><div class="card-titulo">Resultado do cálculo</div><table><thead><tr><th>Produto</th><th>Insumo</th><th>Quantidade por porção</th><th>Saldo</th><th>Divisão inteira</th><th>Porções possíveis</th><th>Disponibilidade</th></tr></thead><tbody><tr><td class="destaque">Clássico</td><td>Pão</td><td>1 un</td><td>42 un</td><td>42 ÷ 1 = 42</td><td>Limitado por Carne</td><td>—</td></tr><tr><td class="destaque">Clássico</td><td>Carne</td><td>0,15 kg</td><td>0 kg</td><td>0 ÷ 0,15 = 0</td><td>0</td><td><span class="badge badge-repor">Indisponível</span></td></tr></tbody></table></div><div class="barra"><a class="btn btn-claro" href="disponibilidade.html">Voltar ao cálculo normal</a><a class="btn btn-primario" href="../compras/sugestoes.html">Consultar reposição de Carne</a></div><p class="anotacao">O estoque não é alterado pelo cálculo de disponibilidade. A baixa ocorre ao iniciar o preparo.</p>
+<p class="anotacao"><b>F6 · Cardápio</b> · protótipo sem JavaScript: os links abrem estados separados; valores e formulários são demonstrativos.</p>
+</main></div></div></body></html>
