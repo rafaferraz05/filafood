@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Pedido aceito</title>
+<link rel="stylesheet" href="estilo.css?v=3">
+<link rel="stylesheet" href="felipe.css">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F2 · validação</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="index.html">Mapa de Felipe</a>
+        <span class="b-seta">|</span>
+        <a class="b-nav" href="avaliacao.html">Avaliação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="validacao.html">Validação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="metricas.html">Métricas e relatório</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="validacao.html">formulário</a>
+        <a class="b-estado" href="validacao-sem-itens.html">sem itens</a>
+        <a class="b-estado" href="validacao-quantidade.html">quantidade inválida</a>
+        <a class="b-estado" href="validacao-dados.html">dados faltando</a>
+        <a class="b-estado b-estado-atual" href="validacao-aceito.html">pedido aceito</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Pedido aceito</h1>
+        <p class="subtitulo">Validado e encaminhado para a fila do restaurante.</p>
+      </div>
+      <div class="badges"><span class="badge badge-ok"><span class="bolinha"></span>aceito</span></div>
+    </div>
+
+    <div class="alerta alerta-ok"><b>Pedido #1043 aceito</b>Passou em todas as validações e foi encaminhado para a fila de Centro.</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-titulo">Verificações <span class="dir">antes da fila</span></div>
+        <ul class="lista-exemplos">
+          <li><b>Pelo menos um item</b><span><span class="badge badge-ok"><span class="bolinha"></span>ok</span></span></li>
+          <li><b>Quantidades maiores que zero</b><span><span class="badge badge-ok"><span class="bolinha"></span>ok</span></span></li>
+          <li><b>Cliente e endereço preenchidos</b><span><span class="badge badge-ok"><span class="bolinha"></span>ok</span></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-titulo">Encaminhamento <span class="dir">#1043</span></div>
+        <ul class="lista-exemplos">
+          <li><b>Restaurante</b><span>Centro</span></li>
+          <li><b>Itens</b><span>2 × Hambúrguer Clássico, 1 × Batata Rústica</span></li>
+          <li><b>Próximo passo</b><span>reserva de estoque no preparo</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="acoes-form"><a class="btn btn-primario" href="validacao.html">Novo pedido</a></div>
+
+    <div class="rodape">
+      O estoque só é acionado depois que o pedido passa na validação. Pedido recusado não vai para a fila e não reserva nada.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Validação do pedido · estado pedido aceito</b> · F2 RN 4 e RN 6
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

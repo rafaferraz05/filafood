@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Avaliações da unidade</title>
+<link rel="stylesheet" href="estilo.css?v=3">
+<link rel="stylesheet" href="felipe.css">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F1 · avaliação</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="index.html">Mapa de Felipe</a>
+        <span class="b-seta">|</span>
+        <a class="b-nav b-nav-atual" href="avaliacao.html">Avaliação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="validacao.html">Validação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="metricas.html">Métricas e relatório</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="avaliacao.html">formulário</a>
+        <a class="b-estado" href="avaliacao-nao-concluido.html">pedido não concluído</a>
+        <a class="b-estado" href="avaliacao-nota.html">nota inválida</a>
+        <a class="b-estado" href="avaliacao-comentario.html">comentário longo</a>
+        <a class="b-estado" href="avaliacao-espacos.html">só espaços</a>
+        <a class="b-estado" href="avaliacao-duplicada.html">já avaliado</a>
+        <a class="b-estado" href="avaliacao-registrada.html">registrada</a>
+        <a class="b-estado b-estado-atual" href="avaliacoes-unidade.html">consulta da unidade</a>
+        <a class="b-estado" href="avaliacoes-vazio.html">sem avaliações</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Avaliações da unidade</h1>
+        <p class="subtitulo">Notas e comentários dos clientes de Boa Viagem.</p>
+      </div>
+      <div class="badges"><span class="badge badge-neutro">12 avaliações</span><span class="badge badge-ok">média 4,2</span></div>
+    </div>
+
+    <div class="barra">
+      <select><option>Unidade: Boa Viagem</option><option>Unidade: Centro</option></select>
+      <select><option>Produto: todos</option><option>Hambúrguer Clássico</option><option>Hambúrguer Duplo</option><option>Batata Rústica</option></select>
+    </div>
+    <div class="kpis">
+      <div class="kpi destaque-kpi"><div class="valor">4,2</div><div class="rot">nota média · <span class="estrelas">★★★★<span class="off">★</span></span></div></div>
+      <div class="kpi"><div class="valor">12</div><div class="rot">avaliações registradas</div></div>
+      <div class="kpi"><div class="valor">9</div><div class="rot">com comentário</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-titulo">Avaliações recentes <span class="dir">mostrando 5 de 12</span></div>
+        <table><thead><tr><th>Nota</th><th>Comentário</th><th>Produtos</th><th>Data</th></tr></thead><tbody>
+          <tr><td><span class="estrelas">★★★★★<span class="off"></span></span></td><td>Lanche chegou quente e no ponto.</td><td>Clássico</td><td>20/10/2026</td></tr><tr><td><span class="estrelas">★★★★<span class="off">★</span></span></td><td><span class="fora">sem comentário</span></td><td>Duplo, Batata</td><td>19/10/2026</td></tr><tr><td><span class="estrelas">★★★<span class="off">★★</span></span></td><td>A batata veio um pouco mole.</td><td>Batata Rústica</td><td>18/10/2026</td></tr><tr><td><span class="estrelas">★★★★★<span class="off"></span></span></td><td>Atendimento rápido.</td><td>Clássico</td><td>17/10/2026</td></tr><tr><td><span class="estrelas">★★<span class="off">★★★</span></span></td><td>Demorou mais que o previsto.</td><td>Duplo</td><td>15/10/2026</td></tr>
+        </tbody></table>
+      </div>
+      <div class="card">
+        <div class="card-titulo">Distribuição das notas <span class="dir">12 avaliações</span></div>
+        <div style="padding:8px 0"><div class="dist"><span>5 ★</span><div class="trilho"><i style="width:100%"></i></div><span>6</span></div><div class="dist"><span>4 ★</span><div class="trilho"><i style="width:50%"></i></div><span>3</span></div><div class="dist"><span>3 ★</span><div class="trilho"><i style="width:33%"></i></div><span>2</span></div><div class="dist"><span>2 ★</span><div class="trilho"><i style="width:17%"></i></div><span>1</span></div><div class="dist"><span>1 ★</span><div class="trilho"><i style="width:0%"></i></div><span>0</span></div></div>
+      </div>
+    </div>
+
+    <div class="rodape">
+      A lista mostra nota, comentário (quando houver) e data. O nome e os dados pessoais do cliente não aparecem na consulta.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Avaliações da unidade · estado com dados</b> · F1 RN 6
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

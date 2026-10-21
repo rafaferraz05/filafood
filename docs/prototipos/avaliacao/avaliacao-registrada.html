@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Avaliação registrada</title>
+<link rel="stylesheet" href="estilo.css?v=3">
+<link rel="stylesheet" href="felipe.css">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F1 · avaliação</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="index.html">Mapa de Felipe</a>
+        <span class="b-seta">|</span>
+        <a class="b-nav b-nav-atual" href="avaliacao.html">Avaliação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="validacao.html">Validação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="metricas.html">Métricas e relatório</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="avaliacao.html">formulário</a>
+        <a class="b-estado" href="avaliacao-nao-concluido.html">pedido não concluído</a>
+        <a class="b-estado" href="avaliacao-nota.html">nota inválida</a>
+        <a class="b-estado" href="avaliacao-comentario.html">comentário longo</a>
+        <a class="b-estado" href="avaliacao-espacos.html">só espaços</a>
+        <a class="b-estado" href="avaliacao-duplicada.html">já avaliado</a>
+        <a class="b-estado b-estado-atual" href="avaliacao-registrada.html">registrada</a>
+        <a class="b-estado" href="avaliacoes-unidade.html">consulta da unidade</a>
+        <a class="b-estado" href="avaliacoes-vazio.html">sem avaliações</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Cliente</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Avaliação registrada</h1>
+        <p class="subtitulo">Guardada junto ao pedido, com data e hora.</p>
+      </div>
+      <div class="badges"><span class="badge badge-ok"><span class="bolinha"></span>registrada</span></div>
+    </div>
+
+    <div class="alerta alerta-ok"><b>Avaliação registrada</b>Obrigado! Sua avaliação do pedido #1337 foi salva.</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-titulo">Avaliação <span class="dir">#A-0042</span></div>
+        <ul class="lista-exemplos">
+          <li><b>Pedido</b><span>#1337</span></li>
+          <li><b>Nota</b><span><span class="estrelas">★★★★<span class="off">★</span></span> 4</span></li>
+          <li><b>Comentário</b><span>Lanche chegou quente e no ponto.</span></li>
+          <li><b>Registrada em</b><span>21/10/2026 · 14:32</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-titulo">Vínculo com a compra <span class="dir">F1 RN 5</span></div>
+        <ul class="lista-exemplos">
+          <li><b>Unidade</b><span>Boa Viagem</span></li>
+          <li><b>Produtos avaliados</b><span>Hambúrguer Clássico, Batata Rústica</span></li>
+          <li><b>Origem</b><span>obtidos do pedido</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="acoes-form"><a class="btn btn-primario" href="avaliacoes-unidade.html">Ver avaliações da unidade</a><a class="btn btn-claro" href="avaliacao.html">Avaliar outro pedido</a></div>
+
+    <div class="rodape">
+      A avaliação guarda o pedido e a data e hora do registro. A unidade e os produtos vêm do pedido; o cliente não escolhe a quais eles se referem.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Avaliação do pedido · estado registrada</b> · F1 RN 3 e RN 5
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

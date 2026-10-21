@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Métricas e relatório</title>
+<link rel="stylesheet" href="estilo.css?v=3">
+<link rel="stylesheet" href="felipe.css">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F3 · métricas</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="index.html">Mapa de Felipe</a>
+        <span class="b-seta">|</span>
+        <a class="b-nav" href="avaliacao.html">Avaliação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="validacao.html">Validação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="metricas.html">Métricas e relatório</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado b-estado-atual" href="metricas.html">com dados</a>
+        <a class="b-estado" href="metricas-sem-dados.html">sem concluídos</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Relatório de desempenho</h1>
+        <p class="subtitulo">Resumo do processamento ao final da execução.</p>
+      </div>
+      <div class="badges"><span class="badge badge-ok">6 concluídos</span><span class="badge badge-repor">1 recusado</span><span class="badge badge-aviso">1 cancelado</span></div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="valor">6</div><div class="rot">pedidos concluídos com sucesso</div></div>
+      <div class="kpi destaque-kpi"><div class="valor">412 ms</div><div class="rot">tempo médio de processamento</div></div>
+      <div class="kpi"><div class="valor">8</div><div class="rot">pedidos recebidos na execução</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-titulo">Pedidos da execução <span class="dir">tempo de início a conclusão</span></div>
+        <table><thead><tr><th>Pedido</th><th>Restaurante</th><th>Tempo</th><th>Desfecho</th></tr></thead><tbody><tr><td class="destaque">#1001</td><td>Boa Viagem</td><td>380 ms</td><td><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></td></tr><tr><td class="destaque">#1002</td><td>Centro</td><td>415 ms</td><td><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></td></tr><tr><td class="destaque">#1003</td><td>Boa Viagem</td><td>402 ms</td><td><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></td></tr><tr><td class="destaque">#1004</td><td>Centro</td><td>455 ms</td><td><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></td></tr><tr><td class="destaque">#1005</td><td>Boa Viagem</td><td>390 ms</td><td><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></td></tr><tr><td class="destaque">#1006</td><td>Centro</td><td>430 ms</td><td><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></td></tr><tr><td class="destaque">#1007</td><td>Centro</td><td class="fora">fora do cálculo</td><td><span class="badge badge-repor"><span class="bolinha"></span>recusado</span></td></tr><tr><td class="destaque">#1008</td><td>Boa Viagem</td><td class="fora">fora do cálculo</td><td><span class="badge badge-aviso"><span class="bolinha"></span>cancelado</span></td></tr></tbody></table>
+      </div>
+      <div class="card">
+        <div class="card-titulo">Por restaurante <span class="dir">somente concluídos</span></div>
+        <table><thead><tr><th>Restaurante</th><th>Concluídos</th><th>Tempo médio</th></tr></thead><tbody>
+          <tr><td class="destaque">Boa Viagem</td><td>3</td><td>391 ms</td></tr>
+          <tr><td class="destaque">Centro</td><td>3</td><td>433 ms</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="rodape">
+      O tempo de cada pedido é a diferença entre o início e a conclusão do processamento. A média considera só pedidos concluídos com sucesso; recusados e cancelados ficam de fora.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Relatório de desempenho · estado com dados</b> · F3 RN 1 a RN 4, RN 6 e RN 7
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

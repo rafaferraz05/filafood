@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Nota inválida</title>
+<link rel="stylesheet" href="estilo.css?v=3">
+<link rel="stylesheet" href="felipe.css">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F1 · avaliação</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="index.html">Mapa de Felipe</a>
+        <span class="b-seta">|</span>
+        <a class="b-nav b-nav-atual" href="avaliacao.html">Avaliação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="validacao.html">Validação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="metricas.html">Métricas e relatório</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="avaliacao.html">formulário</a>
+        <a class="b-estado" href="avaliacao-nao-concluido.html">pedido não concluído</a>
+        <a class="b-estado b-estado-atual" href="avaliacao-nota.html">nota inválida</a>
+        <a class="b-estado" href="avaliacao-comentario.html">comentário longo</a>
+        <a class="b-estado" href="avaliacao-espacos.html">só espaços</a>
+        <a class="b-estado" href="avaliacao-duplicada.html">já avaliado</a>
+        <a class="b-estado" href="avaliacao-registrada.html">registrada</a>
+        <a class="b-estado" href="avaliacoes-unidade.html">consulta da unidade</a>
+        <a class="b-estado" href="avaliacoes-vazio.html">sem avaliações</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Cliente</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Avaliar pedido</h1>
+        <p class="subtitulo">Conte como foi o pedido que você recebeu.</p>
+      </div>
+      <div class="badges"><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></div>
+    </div>
+
+    <div class="alerta alerta-erro"><b>Avaliação não registrada</b>Corrija a nota e envie novamente.</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-titulo">Pedido #1337 <span class="dir">F1 RN 1, RN 5</span></div>
+        <ul class="lista-exemplos">
+          <li><b>Situação</b><span><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></span></li>
+          <li><b>Unidade</b><span>Boa Viagem</span></li>
+          <li><b>Itens</b><span>2 × Hambúrguer Clássico, 1 × Batata Rústica</span></li>
+          <li><b>Responsável</b><span>você</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-titulo">Sua avaliação <span class="dir">F1 RN 2 e RN 4</span></div>
+        <div class="card-corpo">
+          <div class="campo erro"><label>Nota</label><input type="text" value="6"><span class="msg">A nota deve ser um número inteiro de 1 a 5. Valores como 0, 6 ou 3,5 são recusados.</span></div>
+          <div class="campo"><label>Comentário (opcional)</label><textarea>Lanche chegou quente e no ponto.</textarea><span class="contador">33/500</span></div>
+          <div class="acoes-form">
+            <a class="btn btn-primario" href="avaliacao-registrada.html">Enviar avaliação</a>
+            <a class="btn btn-claro" href="avaliacao.html">Limpar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">
+      Só pedidos concluídos podem ser avaliados, uma vez por pedido. A nota é um inteiro de 1 a 5 e o comentário é opcional, com até 500 caracteres e sem ser só espaços. Unidade e produtos vêm do pedido, não do formulário.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Avaliação do pedido · estado nota inválida</b> · F1 RN 2
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

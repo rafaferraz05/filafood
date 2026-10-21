@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>FilaFood · Validação do pedido</title>
+<link rel="stylesheet" href="estilo.css?v=3">
+<link rel="stylesheet" href="felipe.css">
+</head>
+<body>
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F2 · validação</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="index.html">Mapa de Felipe</a>
+        <span class="b-seta">|</span>
+        <a class="b-nav" href="avaliacao.html">Avaliação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="validacao.html">Validação do pedido</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="metricas.html">Métricas e relatório</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado b-estado-atual" href="validacao.html">formulário</a>
+        <a class="b-estado" href="validacao-sem-itens.html">sem itens</a>
+        <a class="b-estado" href="validacao-quantidade.html">quantidade inválida</a>
+        <a class="b-estado" href="validacao-dados.html">dados faltando</a>
+        <a class="b-estado" href="validacao-aceito.html">pedido aceito</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Novo pedido</h1>
+        <p class="subtitulo">Confira os dados antes de enviar ao restaurante.</p>
+      </div>
+      <div class="badges"><span class="badge badge-neutro">rascunho</span></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-titulo">Dados do pedido <span class="dir">F2 RN 3</span></div>
+        <div class="card-corpo">
+          <div class="campo"><label>Cliente</label><input type="text" value="Marina Lopes"></div>
+          <div class="campo"><label>Endereço de entrega</label><input type="text" value="Rua da Aurora, 120 · Centro"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-titulo">Itens do pedido <span class="dir">2 itens</span></div>
+        <table><thead><tr><th>Item</th><th>Quantidade</th><th class="acoes">Ações</th></tr></thead><tbody><tr><td class="destaque">Hambúrguer Clássico</td><td>2</td><td class="acoes"><a href="#">Remover</a></td></tr><tr><td class="destaque">Batata Rústica</td><td>1</td><td class="acoes"><a href="#">Remover</a></td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="acoes-form"><a class="btn btn-primario" href="validacao-aceito.html">Enviar pedido</a><a class="btn btn-claro" href="validacao.html">Limpar</a></div>
+
+    <div class="rodape">
+      O pedido precisa de pelo menos um item, cada item com quantidade inteira maior que zero, e cliente e endereço preenchidos. A validação roda antes de o pedido entrar na fila e antes de qualquer reserva de estoque.
+    </div>
+
+    <p class="anotacao">
+      <b>Protótipo de alta fidelidade · Tela Validação do pedido · estado formulário</b> · F2 RN 1 a RN 4
+    </p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>
