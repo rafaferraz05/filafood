@@ -1,0 +1,622 @@
+[
+  {
+    "folder": "fidelidade",
+    "slug": "pontos",
+    "title": "Fidelidade e recompensas",
+    "state": "meus pontos",
+    "scenario": "Saldo de pontos após entregas",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Meus pontos"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "pontos-vazio",
+    "title": "Fidelidade e recompensas",
+    "state": "sem pontos",
+    "scenario": "Conta sem movimentações",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Meus pontos"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "resgate-confirmar",
+    "title": "Confirmar resgate",
+    "state": "confirmar",
+    "scenario": "Confirmar resgate com saldo suficiente",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Resgate de recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "resgate-sem-pontos",
+    "title": "Resgate não realizado",
+    "state": "saldo insuficiente",
+    "scenario": "Recusar resgate sem saldo",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Resgate de recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "resgate-pendente",
+    "title": "Minha recompensa",
+    "state": "pendente",
+    "scenario": "Aguardar próximo pedido",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Resgate de recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "resgate-cancelar",
+    "title": "Cancelar resgate",
+    "state": "cancelar",
+    "scenario": "Confirmar cancelamento pendente",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Resgate de recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "resgate-cancelado",
+    "title": "Resgate cancelado",
+    "state": "cancelado",
+    "scenario": "Devolver pontos uma única vez",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Resgate de recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "pedido-resumo",
+    "title": "Conferir próximo pedido",
+    "state": "rascunho",
+    "scenario": "Conferir recompensa no rascunho",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Pedido com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "pedido-enviado",
+    "title": "Pedido #2501",
+    "state": "vinculada",
+    "scenario": "Vincular sem duplicar",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Pedido com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-indisponivel",
+    "title": "Recompensa aguardando disponibilidade",
+    "state": "indisponível",
+    "scenario": "Manter pendente quando indisponível",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Pedido com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "pedido-cancelar",
+    "title": "Cancelar pedido #2501",
+    "state": "confirmar cancelamento",
+    "scenario": "Confirmar cancelamento do pedido",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Pedido com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "pedido-cancelado",
+    "title": "Pedido #2501 cancelado",
+    "state": "recompensa liberada",
+    "scenario": "Liberar resgate após cancelamento",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Pedido com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "preparo",
+    "title": "Preparo do pedido #2501",
+    "state": "preparo",
+    "scenario": "Incluir recompensa na ficha técnica",
+    "profile": "Atendente · Boa Viagem",
+    "group": "operacao",
+    "screen": "Preparo com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "entrega",
+    "title": "Entrega do pedido #2501",
+    "state": "entregue",
+    "scenario": "Creditar apenas após entrega e uma única vez",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Pedido com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "falha-definitiva",
+    "title": "Pedido #2501 cancelado após falha",
+    "state": "falha definitiva",
+    "scenario": "Liberar após falha definitiva",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Pedido com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "catalogo",
+    "title": "Catálogo de recompensas",
+    "state": "catálogo",
+    "scenario": "Consultar catálogo",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-nova",
+    "title": "Cadastrar recompensa",
+    "state": "cadastro",
+    "scenario": "Cadastrar recompensa válida",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-erros",
+    "title": "Cadastrar recompensa",
+    "state": "dados inválidos",
+    "scenario": "Recusar cadastro inválido",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-criada",
+    "title": "Recompensa cadastrada",
+    "state": "cadastrada",
+    "scenario": "Preservar dados cadastrados",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-desativar",
+    "title": "Desativar recompensa",
+    "state": "confirmar desativação",
+    "scenario": "Confirmar desativação",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-inativa",
+    "title": "Catálogo de recompensas",
+    "state": "inativa",
+    "scenario": "Preservar resgate após desativação",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "planos",
+    "title": "Refeições recorrentes",
+    "state": "meus planos",
+    "scenario": "Consultar planos do cliente",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Minhas recorrências"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "planos-vazio",
+    "title": "Refeições recorrentes",
+    "state": "sem planos",
+    "scenario": "Consultar lista vazia",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Minhas recorrências"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-novo",
+    "title": "Nova recorrência",
+    "state": "cadastro",
+    "scenario": "Preencher recorrência",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Nova recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-erros",
+    "title": "Nova recorrência",
+    "state": "dados inválidos",
+    "scenario": "Recusar agenda inválida",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Nova recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-revisar",
+    "title": "Revisar recorrência",
+    "state": "revisão",
+    "scenario": "Autorizar geração recorrente",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Nova recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-ativo",
+    "title": "Detalhe da recorrência",
+    "state": "ativa",
+    "scenario": "Consultar próxima ocorrência",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-pausar",
+    "title": "Pausar recorrência",
+    "state": "confirmar pausa",
+    "scenario": "Confirmar pausa",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-pausado",
+    "title": "Detalhe da recorrência",
+    "state": "pausada",
+    "scenario": "Pausar sem cancelar pedidos",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-retomado",
+    "title": "Recorrência retomada",
+    "state": "retomada",
+    "scenario": "Retomar sem recuperar passado",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "ocorrencia-pular",
+    "title": "Pular próxima ocorrência",
+    "state": "confirmar pulo",
+    "scenario": "Confirmar pulo de ocorrência",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "ocorrencia-pulada",
+    "title": "Ocorrência pulada",
+    "state": "pulada",
+    "scenario": "Pular uma única ocorrência",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-cancelar",
+    "title": "Cancelar recorrência",
+    "state": "confirmar cancelamento",
+    "scenario": "Confirmar cancelamento de plano ativo",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-cancelar-pausado",
+    "title": "Cancelar recorrência",
+    "state": "cancelar pausada",
+    "scenario": "Confirmar cancelamento de plano pausado",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "plano-cancelado",
+    "title": "Recorrência cancelada",
+    "state": "cancelada",
+    "scenario": "Cancelar sem apagar histórico",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Detalhe da recorrência"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "pedido-gerado",
+    "title": "Pedido recorrente #2601",
+    "state": "pedido gerado",
+    "scenario": "Gerar pedido uma única vez",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Ocorrências e pedidos"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "pedido-cancelar",
+    "title": "Cancelar pedido recorrente #2601",
+    "state": "confirmar pedido",
+    "scenario": "Confirmar cancelamento de pedido recorrente",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Ocorrências e pedidos"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "pedido-cancelado",
+    "title": "Pedido #2601 cancelado",
+    "state": "pedido cancelado",
+    "scenario": "Cancelar pedido mantendo plano",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Ocorrências e pedidos"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "prazo-encerrado",
+    "title": "Ocorrência já processada",
+    "state": "prazo encerrado",
+    "scenario": "Impedir pulo após geração",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Ocorrências e pedidos"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "limite-excedido",
+    "title": "Ocorrência não gerada",
+    "state": "preço acima do limite",
+    "scenario": "Bloquear acima do limite",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Ocorrências e pedidos"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "sem-unidade",
+    "title": "Ocorrência recusada",
+    "state": "sem unidade",
+    "scenario": "Registrar recusa sem unidade",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Ocorrências e pedidos"
+  },
+  {
+    "folder": "recorrencia",
+    "slug": "pedido-com-recompensa",
+    "title": "Pedido recorrente #2603",
+    "state": "com recompensa",
+    "scenario": "Anexar recompensa à ocorrência recorrente",
+    "profile": "Cliente · Rafael",
+    "group": "cliente",
+    "screen": "Ocorrências e pedidos"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "editar-ativa",
+    "title": "Editar recompensa",
+    "state": "editar · ativa",
+    "scenario": "Editar recompensa ativa",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "editar-erros-ativa",
+    "title": "Editar recompensa",
+    "state": "erro · ativa",
+    "scenario": "Rejeitar edição inválida sem alterações parciais",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "excluir-ativa",
+    "title": "Excluir recompensa",
+    "state": "excluir · ativa",
+    "scenario": "Excluir oferta preservando resgates e histórico",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "editar-inativa",
+    "title": "Editar recompensa",
+    "state": "editar · inativa",
+    "scenario": "Editar recompensa inativa",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "editar-erros-inativa",
+    "title": "Editar recompensa",
+    "state": "erro · inativa",
+    "scenario": "Rejeitar edição inválida sem alterações parciais",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "excluir-inativa",
+    "title": "Excluir recompensa",
+    "state": "excluir · inativa",
+    "scenario": "Excluir oferta preservando resgates e histórico",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-editada",
+    "title": "Catálogo de recompensas",
+    "state": "editada",
+    "scenario": "Salvar edição preservando estado editada",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "editar-editada",
+    "title": "Editar recompensa",
+    "state": "editar · editada",
+    "scenario": "Editar recompensa editada",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "editar-erros-editada",
+    "title": "Editar recompensa",
+    "state": "erro · editada",
+    "scenario": "Rejeitar edição inválida sem alterações parciais",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "excluir-editada",
+    "title": "Excluir recompensa",
+    "state": "excluir · editada",
+    "scenario": "Excluir oferta preservando resgates e histórico",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-editada-inativa",
+    "title": "Catálogo de recompensas",
+    "state": "editada-inativa",
+    "scenario": "Salvar edição preservando estado editada-inativa",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "editar-editada-inativa",
+    "title": "Editar recompensa",
+    "state": "editar · editada-inativa",
+    "scenario": "Editar recompensa editada-inativa",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "editar-erros-editada-inativa",
+    "title": "Editar recompensa",
+    "state": "erro · editada-inativa",
+    "scenario": "Rejeitar edição inválida sem alterações parciais",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "excluir-editada-inativa",
+    "title": "Excluir recompensa",
+    "state": "excluir · editada-inativa",
+    "scenario": "Excluir oferta preservando resgates e histórico",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "recompensa-excluida",
+    "title": "Catálogo de recompensas",
+    "state": "excluída",
+    "scenario": "Não exibir oferta excluída no catálogo",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "desativar-editada",
+    "title": "Desativar recompensa",
+    "state": "desativar editada",
+    "scenario": "Desativar preservando dados editados",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "catalogo-vazio",
+    "title": "Catálogo de recompensas",
+    "state": "sem dados",
+    "scenario": "Exibir catálogo sem recompensas cadastradas",
+    "profile": "Administrador da rede",
+    "group": "gestao",
+    "screen": "Catálogo de recompensas"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "preparo-sem-recompensa",
+    "title": "Preparo do pedido #2501",
+    "state": "sem recompensa",
+    "scenario": "O pedido pago segue em preparo",
+    "profile": "Atendente · Boa Viagem",
+    "group": "operacao",
+    "screen": "Preparo com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "preparo-recusado",
+    "title": "Preparo do pedido #2501",
+    "state": "recusado",
+    "scenario": "Faltam insumos para os produtos pagos",
+    "profile": "Atendente · Boa Viagem",
+    "group": "operacao",
+    "screen": "Preparo com recompensa"
+  },
+  {
+    "folder": "fidelidade",
+    "slug": "preparo-concluido",
+    "title": "Preparo do pedido #2501",
+    "state": "concluído",
+    "scenario": "Preparo concluído com recompensa",
+    "profile": "Atendente · Boa Viagem",
+    "group": "operacao",
+    "screen": "Preparo com recompensa"
+  }
+]

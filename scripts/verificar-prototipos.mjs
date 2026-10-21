@@ -6,10 +6,10 @@ const root = path.resolve(import.meta.dirname, '..');
 const proto = path.join(root, 'docs/prototipos');
 const walk = dir => fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => e.isDirectory() ? walk(path.join(dir,e.name)) : [path.join(dir,e.name)]);
 const htmls = walk(proto).filter(p => p.endsWith('.html'));
-const pastasNovas = ['atendimento', 'cardapio', 'compras'].map(nome => path.join('prototipos', nome) + path.sep);
+const pastasNovas = ['atendimento', 'cardapio', 'compras', 'fidelidade', 'recorrencia'].map(nome => path.join('prototipos', nome) + path.sep);
 const novos = htmls.filter(p => pastasNovas.some(pasta => p.includes(pasta)));
 const erros = [];
-let marcadoresAntigos = 0, cenarios = 0;
+let marcadoresAntigos = 0, cenarios = 0, especificacoes = 0;
 for (const file of htmls) {
  const s = fs.readFileSync(file,'utf8');
  const novo = novos.includes(file);
@@ -34,7 +34,22 @@ for (const file of htmls) {
   if(!tag || !fs.readFileSync(f,'utf8').split(/\s+/).includes('@'+tag)) erros.push(file + ': cenário BDD não encontrado');
   else cenarios++;
  }
+ const aceitacao = s.match(/data-aceitacao="([^"]+)"/)?.[1];
+ if (aceitacao) {
+  const modulo = path.basename(path.dirname(file));
+  const spec = fs.readFileSync(path.join(proto,'aceitacao',modulo+'.feature'),'utf8');
+  if (!spec.split(/\s+/).includes('@'+aceitacao)) erros.push(file+': especificação de aceitação ausente');
+  if (!s.includes('href="../estilo.css?v=3"')) erros.push(file+': identidade visual compartilhada ausente');
+  if (!s.includes('name="viewport"')) erros.push(file+': viewport ausente');
+  especificacoes++;
+ }
 }
+const manifesto = JSON.parse(fs.readFileSync(path.join(proto,'aceitacao/manifesto.json'),'utf8'));
+for (const estado of manifesto) {
+ const file = path.join(proto,estado.folder,estado.slug+'.html');
+ if (!fs.existsSync(file)) erros.push(file+': estado do manifesto ausente');
+}
+if (manifesto.length !== especificacoes) erros.push('Manifesto e estados com aceitação divergem');
 // Regressões semânticas dos fluxos corrigidos nas revisões independentes.
 const ler = rel => fs.readFileSync(path.join(proto,'atendimento',rel),'utf8');
 for (const nome of ['unidades-editada-pausada','unidades-editada-inativa','unidades-retomada-apos-edicao','unidades-reativada-apos-edicao']) {
@@ -52,4 +67,4 @@ for (const [sufixo,id,quantidade,vegetariano] of [['tres','2402',3,false],['dupl
  }
 }
 assert.equal(erros.length, 0, erros.join('\n'));
-console.log(JSON.stringify({paginasGrupo:htmls.length,paginasNovas:novos.length,estadosComBDD:cenarios,linksSemDestinoNoLegado:marcadoresAntigos,erros:erros.length},null,2));
+console.log(JSON.stringify({paginasGrupo:htmls.length,paginasNovas:novos.length,estadosComBDD:cenarios,estadosComEspecificacaoF8F9:especificacoes,linksSemDestinoNoLegado:marcadoresAntigos,erros:erros.length},null,2));

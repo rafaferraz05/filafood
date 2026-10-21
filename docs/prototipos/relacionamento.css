@@ -1,0 +1,20 @@
+/* F8/F9: complementos locais; cores e componentes vêm de estilo.css. */
+.relacionamento .gui-linha,.relacionamento .gui-dir,.relacionamento .gui-estados,.relacionamento .acoes-form { flex-wrap:wrap; gap:8px; }
+.relacionamento .gui-estados { display:flex; min-width:0; }
+.relacionamento .gui-fluxo { opacity:.85; }
+.relacionamento .acoes-form { display:flex; margin-top:14px; }
+.relacionamento .tabela-rolavel { overflow-x:auto; }
+.relacionamento .pontos { font-size:40px; font-weight:750; color:var(--vermelho); }
+.relacionamento .pontos small { font-size:16px; color:var(--tinta); }
+.relacionamento .card-corpo p { margin:8px 0 12px; }
+.relacionamento :is(a,input,select):focus-visible { outline:3px solid var(--vermelho); outline-offset:3px; }
+.relacionamento .anotacao { margin-top:18px; }
+@media(max-width:760px) {
+ body.relacionamento { height:auto; min-height:100%; padding:8px; }
+ .relacionamento .casca { height:auto; min-height:calc(100vh - 16px); }
+ .relacionamento .conteudo { overflow:visible; padding:14px; }
+ .relacionamento .grid-2 { grid-template-columns:minmax(0,1fr); }
+ .relacionamento .topbar,.relacionamento .topbar-pills { flex-wrap:wrap; }
+ .relacionamento .topbar-pills,.relacionamento .gui-dir { margin-left:0; }
+ .relacionamento .btn { white-space:normal; }
+}
