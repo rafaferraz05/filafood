@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Detalhe do pedido</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F10 · cupom</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-cupom">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav" href="cupons.html">Cupons</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="pedidos.html">Pedidos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="pedido-detalhe.html">Detalhe do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="pedido-detalhe.html">enviado</a>
+        <a class="b-estado" href="pedido-detalhe-concluido.html">concluído</a>
+        <a class="b-estado b-estado-atual" href="pedido-detalhe-recusado.html">recusado</a>
+        <a class="b-estado" href="pedido-detalhe-cancelado.html">cancelado</a>
+        <a class="b-estado" href="pedido-detalhe-despachado.html">total final</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="novo-pedido.html">Tela do cliente ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Pedido #3104</h1>
+        <p class="subtitulo">Diego · entrega · recusado no início do preparo</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-repor"><span class="bolinha"></span>recusado</span>
+        <span class="badge badge-neutro">BEMVINDO liberado</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-rotulo">Subtotal</div>
+          <div class="kpi-valor">R$&nbsp;35,00</div>
+          <div class="kpi-nota">gravado na criação</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Desconto</div>
+          <div class="kpi-valor">− R$&nbsp;3,50</div>
+          <div class="kpi-nota">BEMVINDO, 10%</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Valor do pedido</div>
+          <div class="kpi-valor">R$&nbsp;31,50</div>
+          <div class="kpi-nota">subtotal − desconto</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Taxa estimada</div>
+          <div class="kpi-valor">R$&nbsp;6,00</div>
+          <div class="kpi-nota">abaixo do mínimo da zona</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Total</div>
+          <div class="kpi-valor">R$&nbsp;37,50</div>
+          <div class="kpi-nota">exibido na criação</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-titulo">Itens<span class="dir">preços do momento da criação</span></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Qtd.</th>
+                <th>Preço gravado</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">Duplo</td>
+                <td>1</td>
+                <td>R$&nbsp;26,00</td>
+                <td>R$&nbsp;26,00</td>
+              </tr>
+              <tr>
+                <td class="destaque">Batata Frita</td>
+                <td>1</td>
+                <td>R$&nbsp;9,00</td>
+                <td>R$&nbsp;9,00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-titulo">Cupom<span class="dir">F10 RN 3 e RN 6</span></div>
+          <div class="card-corpo">
+            <p class="subtitulo" style="margin:0"><b>BEMVINDO</b>, uso <b>liberado</b>: o pedido foi recusado antes de ser produzido, então o uso deixou de contar nos limites e o Diego pode usar o cupom de novo.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-titulo">Histórico de estados<span class="dir">toda transição grava data e hora</span></div>
+          <div class="card-corpo">
+            <ul class="linha-tempo">
+              <li class="feito"><span class="lt-titulo">enviado</span> · 20/10 18:44<div class="lt-nota">Prazo prometido: 18:55.</div></li>
+              <li class="atual"><span class="lt-titulo">recusado</span> · 20/10 18:45<div class="lt-nota">Motivo: falta de saldo do insumo Carne. Nenhuma baixa foi gravada.</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">A recusa acontece na passagem para em preparo, quando falta saldo de algum insumo. Pedido recusado não pode ser alterado.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Detalhe do pedido · estado recusado</b> · F10 RN 5 · F10 RN 6 (recusa libera o uso do cupom)</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

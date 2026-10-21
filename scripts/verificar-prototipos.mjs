@@ -6,7 +6,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const proto = path.join(root, 'docs/prototipos');
 const walk = dir => fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => e.isDirectory() ? walk(path.join(dir,e.name)) : [path.join(dir,e.name)]);
 const htmls = walk(proto).filter(p => p.endsWith('.html'));
-const pastasNovas = ['atendimento', 'cardapio', 'compras', 'fidelidade', 'recorrencia'].map(nome => path.join('prototipos', nome) + path.sep);
+const pastasNovas = ['atendimento', 'cardapio', 'compras', 'fidelidade', 'recorrencia', 'cupom', 'preparo'].map(nome => path.join('prototipos', nome) + path.sep);
 const novos = htmls.filter(p => pastasNovas.some(pasta => p.includes(pasta)));
 const erros = [];
 let marcadoresAntigos = 0, cenarios = 0, especificacoes = 0;
@@ -65,6 +65,15 @@ for (const [sufixo,id,quantidade,vegetariano] of [['tres','2402',3,false],['dupl
   const s=ler('pedidos/'+nome+'-'+sufixo+'.html');
   if(!s.includes('Pedido #'+id)||!s.includes('<td>Clássico</td><td>'+quantidade+'</td>')||s.includes('<td>Vegetariano</td>')!==vegetariano) erros.push(nome+'-'+sufixo+': composição divergente');
  }
+}
+// Regressões das telas de cupom (F10) e preparo (F11): o mesmo pedido mostra os mesmos valores em telas diferentes.
+const lerProto = rel => fs.readFileSync(path.join(proto, rel), 'utf8');
+for (const rel of ['cupom/novo-pedido-cupom-aplicado.html', 'cupom/novo-pedido-confirmado.html', 'cupom/pedido-detalhe.html']) {
+ const s = lerProto(rel);
+ if(!s.includes('R$&nbsp;41,50') || !s.includes('R$&nbsp;35,50') || !s.includes('R$&nbsp;6,00')) erros.push(rel + ': valores do #3107 divergentes');
+}
+for (const rel of ['cupom/novo-pedido-confirmado.html', 'cupom/pedido-detalhe.html', 'preparo/fila.html']) {
+ if(!lerProto(rel).includes('19:41')) erros.push(rel + ': prazo prometido do #3107 divergente');
 }
 assert.equal(erros.length, 0, erros.join('\n'));
 console.log(JSON.stringify({paginasGrupo:htmls.length,paginasNovas:novos.length,estadosComBDD:cenarios,estadosComEspecificacaoF8F9:especificacoes,linksSemDestinoNoLegado:marcadoresAntigos,erros:erros.length},null,2));

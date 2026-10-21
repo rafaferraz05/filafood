@@ -35,8 +35,8 @@
       </div>
     </div>
     <div class="topbar-pills">
-      <span class="pill pill-clara">195 páginas de protótipo</span>
-      <span class="pill pill-amarela">9 funcionalidades do grupo</span>
+      <span class="pill pill-clara">253 páginas de protótipo</span>
+      <span class="pill pill-amarela">11 funcionalidades do grupo</span>
     </div>
   </header>
 
@@ -145,6 +145,28 @@
 </div>
 <!-- F8/F9: fim -->
 
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="card" id="fluxo-cupom">
+        <div class="card-titulo">F10 · Cupom e total do pedido <span class="dir">4 telas · 31 estados</span></div>
+        <ul class="lista-exemplos">
+          <li><b><a class="link-vermelho" href="cupom/cupons.html">Cupons</a></b><span>Gestor · cadastro, erros com código repetido, edição, desativar e reativar · 10 estados</span></li>
+          <li><b><a class="link-vermelho" href="cupom/novo-pedido.html">Novo pedido</a></b><span>Cliente · cupom aceito ou recusado, retirada, taxa sobre o valor com desconto · 9 estados</span></li>
+          <li><b><a class="link-vermelho" href="cupom/pedidos.html">Pedidos</a></b><span>Gestor · estados, filtro e cancelamento com motivo · 7 estados</span></li>
+          <li><b><a class="link-vermelho" href="cupom/pedido-detalhe.html">Detalhe do pedido</a></b><span>Valores gravados, histórico com data e hora, cupom liberado e total final · 5 estados</span></li>
+        </ul>
+      </div>
+      <div class="card" id="fluxo-preparo">
+        <div class="card-titulo">F11 · Fila de preparo e prazo prometido <span class="dir">4 telas · 27 estados</span></div>
+        <ul class="lista-exemplos">
+          <li><b><a class="link-vermelho" href="preparo/estacoes.html">Estações</a></b><span>Gestor · capacidade, carga, desativação recusada com itens na fila · 10 estados</span></li>
+          <li><b><a class="link-vermelho" href="preparo/produtos.html">Preparo dos produtos</a></b><span>Gestor · estação e tempo de cada produto, produto sem configuração · 6 estados</span></li>
+          <li><b><a class="link-vermelho" href="preparo/fila.html">Fila de preparo</a></b><span>Cozinha · ordem por atraso e folga, iniciar, itens prontos e conclusão · 8 estados</span></li>
+          <li><b><a class="link-vermelho" href="preparo/painel.html">Painel do gestor</a></b><span>Atrasados, alertas acima de 15 min e carga por estação · 3 estados</span></li>
+        </ul>
+      </div>
+    </div>
+
+
     <div class="card" style="margin-top:16px;">
       <div class="card-titulo">Rafael · F3 unidades, F4 pedido do cliente e F5 funcionários</div>
       <div class="card-corpo">
@@ -241,6 +263,24 @@
         </ul>
       </div>
 
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-titulo">
+        Roteiro C
+        <span class="dir">do pedido com cupom à conclusão na cozinha</span>
+      </div>
+      <ul class="lista-exemplos">
+        <li><b>1</b><span><a class="link-vermelho" href="cupom/cupons.html">Cupons</a> — FILA10, R$ 10,00 acima de R$ 39,00</span></li>
+        <li><b>2</b><span><a class="link-vermelho" href="cupom/novo-pedido.html">Novo pedido da Ana</a> — R$ 45,50, taxa isenta</span></li>
+        <li><b>3</b><span><a class="link-vermelho" href="cupom/novo-pedido-cupom-aplicado.html">Aplicar FILA10</a> — o desconto faz o pedido perder a isenção: total R$ 41,50</span></li>
+        <li><b>4</b><span><a class="link-vermelho" href="cupom/novo-pedido-confirmado.html">#3107 enviado</a> — prazo prometido 19:41, calculado pela cozinha</span></li>
+        <li><b>5</b><span><a class="link-vermelho" href="preparo/fila.html">Fila de preparo às 19:30</a> — #3107 em 3º, depois do atrasado #3108 e do #3110, de folga menor</span></li>
+        <li><b>6</b><span><a class="link-vermelho" href="preparo/fila-iniciado.html">Iniciar o #3108</a> — baixa de insumos aceita</span></li>
+        <li><b>7</b><span><a class="link-vermelho" href="preparo/fila-concluido.html">#3101 concluído</a> — entra na fila de despacho da F2</span></li>
+        <li><b>8</b><span><a class="link-vermelho" href="preparo/painel.html">Painel do gestor</a> — alertas acima de 15 min e a Chapa como estação de maior carga</span></li>
+        <li><b>9</b><span><a class="link-vermelho" href="cupom/pedido-detalhe-despachado.html">#3107 despachado</a> — total final com a taxa gravada no despacho</span></li>
+      </ul>
     </div>
 
     <div class="rodape">

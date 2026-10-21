@@ -1,5 +1,5 @@
 
-> Nível preliminar do DDD. Gabriel Rocha responde por F1/F2; Rafael Ferraz Silva por F3/F4/F5; F6 (Cardápio) e F7 (Compras) foram incorporadas conforme o documento de requisitos.
+> Nível preliminar do DDD. Gabriel Rocha responde por F1/F2; Rafael Ferraz Silva por F3/F4/F5; F6 (Cardápio) e F7 (Compras) foram incorporadas conforme o documento de requisitos; Abner responde por F10 (Cupom e total) e F11 (Fila de preparo).
 >
 > O vocabulário segue `docs/dominio.md`, e cada história aponta para a regra de negócio que a
 > implementa, em `docs/funcionalidades.md`.
@@ -20,7 +20,7 @@ montagem, envio e cancelamento. Algumas histórias isoladas são consulta dentro
 | # | Etapa da jornada | Responsável |
 | --- | --- | --- |
 | 1 | Cliente monta, envia, acompanha e cancela enquanto permitido | Rafael Ferraz Silva (Funcionalidade 4) |
-| 2 | Unidade recebe e prepara o pedido | pendente |
+| 2 | Unidade recebe e prepara o pedido | Abner (Funcionalidade 11) |
 | 3 | Insumos são consumidos pela ficha técnica | Gabriel Rocha (Funcionalidade 1) |
 | 4 | Estoque é reposto a partir do consumo | Gabriel Rocha (Funcionalidade 1) |
 | 5 | Pedido pronto entra na fila de despacho | Gabriel Rocha (Funcionalidade 2) |
@@ -29,8 +29,10 @@ montagem, envio e cancelamento. Algumas histórias isoladas são consulta dentro
 | 8 | Cliente consulta o cardápio e escolhe produtos disponíveis com preço vigente | F6 — Cardápio |
 | 9 | Gestor acompanha necessidades de compra e seleciona fornecedor | F7 — Compras |
 | 10 | Gestor formaliza a compra e registra recebimento de insumos | F7 — Compras |
+| 11 | Cliente aplica cupom e confere o total do pedido | Abner (Funcionalidade 10) |
 
-A etapa 2 continua com a operação da unidade, a ser integrada pelo grupo. Rafael também mantém
+A etapa 2 é a fila de preparo da F11: o pedido chega com prazo prometido, espera na fila e é preparado
+estação por estação até a conclusão. A etapa 11 acontece dentro da etapa 1, no momento do envio. Rafael também mantém
 os cadastros de unidades (F3) e funcionários (F5), que alimentam essa jornada.
 
 ## 3. Atores
@@ -46,6 +48,9 @@ os cadastros de unidades (F3) e funcionários (F5), que alimentam essa jornada.
 | **Administrador da rede** | Mantém produtos e categorias do cardápio (F6) |
 | **Gestor da unidade** | Habilita produtos, define preços, mantém fornecedores e catálogo e confirma ordens de compra (F6/F7) |
 | **Cliente** | Consulta o cardápio publicado, seus preços e a disponibilidade dos produtos (F6) |
+| **Cliente** | Aplica cupom, confere subtotal, desconto, taxa estimada e total, e cancela com motivo enquanto o pedido está enviado (F10) |
+| **Gestor da unidade** | Mantém cupons, estações de preparo e a configuração de preparo dos produtos, cancela pedidos e acompanha atrasos e alertas (F10/F11) |
+| **Atendente ou cozinheiro** | Inicia o preparo pela fila e marca os itens prontos na sua estação (F11) |
 
 ---
 
@@ -146,6 +151,18 @@ saber quando comprar.
 | F7 RN 4 | CP-04 |
 | F7 RN 5 | CP-05 |
 | F7 RN 6 | CP-06 |
+| F10 RN 1 | CU-01 |
+| F10 RN 2 | CU-02 |
+| F10 RN 3 | CU-03 |
+| F10 RN 4 | CU-04 |
+| F10 RN 5 | CU-05 |
+| F10 RN 6 | CU-06 |
+| F11 RN 1 | CZ-01 |
+| F11 RN 2 | CZ-02 |
+| F11 RN 3 | CZ-03 |
+| F11 RN 4 | CZ-04 |
+| F11 RN 5 | CZ-05 |
+| F11 RN 6 | CZ-06 |
 
 Toda regra de negócio tem pelo menos uma história, e toda história aponta para uma regra.
 
@@ -232,3 +249,57 @@ Os protótipos e seus cenários estão mapeados em [ATENDIMENTO.md](prototipos/A
 
 **Protótipos:** [Fornecedores](prototipos/compras/fornecedores.html), [fornecedor escolhido](prototipos/compras/fornecedor-escolhido.html), [empate](prototipos/compras/fornecedor-empate.html), [atraso previsto](prototipos/compras/fornecedor-atraso.html), [sem fornecedor](prototipos/compras/sem-fornecedor.html), [sugestões](prototipos/compras/sugestoes.html), [sugestão calculada](prototipos/compras/sugestao-calculada.html) e [sem necessidade](prototipos/compras/sugestoes-sem-necessidade.html). Ver também o [mapa geral](prototipos/index.html).
 
+---
+
+# 12. Mapa da Funcionalidade 10: Cupom e total do pedido
+
+| Épico (backbone) | Entrega 1 | Entrega 2 |
+| --- | --- | --- |
+| **Montar e enviar** | CU-02 Montagem do pedido · CU-04 Desconto e total | |
+| **Acompanhar** | CU-05 Estados do pedido | CU-06 Cancelamento e liberação do cupom |
+| **Promover** | | CU-01 Cadastro de cupom · CU-03 Validação do cupom |
+
+**Entrega 1** cria o pedido com os preços do momento, a modalidade e o total com a taxa estimada, e registra
+os estados com data e hora. **Entrega 2** traz os cupons: o cadastro, a validação com o motivo da recusa e a
+liberação do uso quando o pedido não chega a ser produzido.
+
+## 12.1 Catálogo da Funcionalidade 10
+
+| ID | História | Ator | Regra | Entrega |
+| --- | --- | --- | --- | --- |
+| CU-01 | Como gestor da unidade, quero cadastrar, editar, desativar e reativar cupons com tipo, valor, validade, valor mínimo, limites de uso e unidades, para controlar as promoções sem perder o histórico de usos. | gestor da unidade | F10 RN 1 | 2 |
+| CU-02 | Como cliente, quero montar o pedido com os produtos da unidade e escolher entrega ou retirada, com o preço do momento gravado, para saber exatamente o que estou pagando. | cliente | F10 RN 2 | 1 |
+| CU-03 | Como cliente, quero informar um cupom e saber na hora se ele vale ou por que foi recusado, para decidir se sigo sem desconto. | cliente | F10 RN 3 | 2 |
+| CU-04 | Como cliente, quero ver subtotal, desconto, taxa estimada e total antes de confirmar, para conferir o valor do pedido, inclusive quando o desconto faz perder a isenção da taxa. | cliente | F10 RN 4 | 1 |
+| CU-05 | Como gestor da unidade, quero acompanhar os pedidos por estado, com data e hora de cada transição, para saber onde cada pedido está e por que foi recusado. | gestor da unidade | F10 RN 5 | 1 |
+| CU-06 | Como cliente ou gestor da unidade, quero cancelar o pedido informando o motivo, e que o cupom volte a valer quando o pedido não foi produzido, para não perder o desconto. | cliente e gestor | F10 RN 6 | 2 |
+
+**Protótipos:** [Cupons](prototipos/cupom/cupons.html), [Novo pedido](prototipos/cupom/novo-pedido.html), [Pedidos](prototipos/cupom/pedidos.html) e [Detalhe do pedido](prototipos/cupom/pedido-detalhe.html). Ver o [mapa de estados](prototipos/CUPOM-E-PREPARO.md).
+
+---
+
+# 13. Mapa da Funcionalidade 11: Fila de preparo e prazo prometido
+
+| Épico (backbone) | Entrega 1 | Entrega 2 |
+| --- | --- | --- |
+| **Preparar a cozinha** | CZ-01 Estações de preparo · CZ-02 Configuração de preparo | |
+| **Receber e ordenar** | | CZ-03 Prazo prometido · CZ-04 Ordem da fila |
+| **Preparar e concluir** | CZ-05 Início e conclusão | |
+| **Acompanhar** | | CZ-06 Atraso e alerta |
+
+**Entrega 1** já prepara de verdade: a cozinha tem estações, cada produto sabe onde é feito, e o pedido é
+iniciado com a baixa de insumos e concluído item a item. **Entrega 2** promete o prazo, ordena a fila pelo
+que é mais urgente e avisa o gestor quando o atraso passa do tolerável.
+
+## 13.1 Catálogo da Funcionalidade 11
+
+| ID | História | Ator | Regra | Entrega |
+| --- | --- | --- | --- | --- |
+| CZ-01 | Como gestor da unidade, quero cadastrar, desativar e reativar estações de preparo com capacidade, para representar a cozinha sem deixar itens sem quem os prepare. | gestor da unidade | F11 RN 1 | 1 |
+| CZ-02 | Como gestor da unidade, quero definir a estação e o tempo de preparo de cada produto, para que o sistema saiba onde e em quanto tempo cada item é feito. | gestor da unidade | F11 RN 2 | 1 |
+| CZ-03 | Como cliente, quero receber um prazo prometido calculado pela carga da cozinha, para saber quando o pedido fica pronto. | sistema | F11 RN 3 | 2 |
+| CZ-04 | Como cozinheiro, quero ver a fila de preparo ordenada por atraso, folga, quantidade de itens e chegada, para preparar primeiro o que é mais urgente. | atendente ou cozinheiro | F11 RN 4 | 2 |
+| CZ-05 | Como cozinheiro, quero iniciar o preparo, marcar os itens prontos na minha estação e concluir o pedido, para que ele siga para a entrega ou para a retirada. | atendente ou cozinheiro | F11 RN 5 | 1 |
+| CZ-06 | Como gestor da unidade, quero ver os pedidos atrasados e receber um alerta quando o atraso passar de 15 minutos, com a estação mais carregada, para agir onde está o gargalo. | gestor da unidade | F11 RN 6 | 2 |
+
+**Protótipos:** [Estações](prototipos/preparo/estacoes.html), [Preparo dos produtos](prototipos/preparo/produtos.html), [Fila de preparo](prototipos/preparo/fila.html) e [Painel do gestor](prototipos/preparo/painel.html). Ver o [mapa de estados](prototipos/CUPOM-E-PREPARO.md).

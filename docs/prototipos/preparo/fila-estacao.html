@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Fila de preparo</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F11 · preparo</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-preparo">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav b-nav-atual" href="fila.html">Fila de preparo</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="fila.html">com dados</a>
+        <a class="b-estado b-estado-atual" href="fila-estacao.html">fila da Fritadeira</a>
+        <a class="b-estado" href="fila-iniciado.html">preparo iniciado</a>
+        <a class="b-estado" href="fila-recusado.html">baixa recusada</a>
+        <a class="b-estado" href="fila-item-pronto.html">item pronto</a>
+        <a class="b-estado" href="fila-concluido.html">concluído entrega</a>
+        <a class="b-estado" href="fila-retirada.html">concluído retirada</a>
+        <a class="b-estado" href="fila-vazia.html">fila vazia</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="painel.html">‹ Tela do gestor</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Atendente ou cozinheiro</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Fila da Fritadeira</h1>
+        <p class="subtitulo">Capacidade 2 · carga de 24 min · 20/10/2026 às 19:30.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">2 na fila da estação</span>
+        <span class="badge badge-alerta">1 em preparo</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">Fila da estação<span class="dir">mesma ordem da fila geral</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pedido</th>
+            <th>Prazo prometido</th>
+            <th>Folga</th>
+            <th>Itens da estação</th>
+            <th class="acoes">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td class="destaque">#3110<span class="unidade">retirada</span></td>
+            <td>19:38</td>
+            <td>8 min</td>
+            <td>2 Batata Frita</td>
+            <td class="acoes"><a>Iniciar preparo</a></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td class="destaque">#3109<span class="unidade">entrega</span></td>
+            <td>20:11</td>
+            <td>41 min</td>
+            <td>1 Batata Frita</td>
+            <td class="acoes"><a>Iniciar preparo</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">Itens em preparo na estação<span class="dir">F11 RN 5</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Item</th>
+            <th>Estação</th>
+            <th>Prazo prometido</th>
+            <th>Situação</th>
+            <th class="acoes">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="destaque">#3106</td>
+            <td>1 Batata Frita</td>
+            <td>Fritadeira</td>
+            <td>19:19</td>
+            <td><span class="badge badge-repor"><span class="bolinha"></span>atrasado</span></td>
+            <td class="acoes"><a href="fila-item-pronto.html">Marcar pronto</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="acoes-form">
+      <a class="btn btn-claro" href="fila.html">Ver todas as estações</a>
+    </div>
+
+    <div class="rodape">A fila de cada estação segue a ordem dos pedidos que têm item nela: #3110 e #3109 estão nesta ordem na fila geral.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Fila de preparo · estado fila da Fritadeira</b> · F11 RN 4 (fila por estação)</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

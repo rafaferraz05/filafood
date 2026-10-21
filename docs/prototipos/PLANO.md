@@ -238,3 +238,13 @@ F3/F4/F5 acrescentam 73 estados em 5 telas, documentados em [ATENDIMENTO.md](ATE
 O mapa geral soma 13 telas e 115 estados; [atendimento/index.html](atendimento/index.html)
 é a entrada dos três perfis novos. A folha original é reutilizada; somente os complementos
 responsivos das telas novas ficam em `atendimento.css`.
+
+## 10. Inclusão das funcionalidades de Abner
+
+F10 (cupom e total do pedido) e F11 (fila de preparo e prazo prometido) acrescentam 58 estados em 8 telas,
+documentados em [CUPOM-E-PREPARO.md](CUPOM-E-PREPARO.md), nas pastas `cupom/` e `preparo/`. Com as F8 e F9
+de Vitor (62 estados em 9 telas, nas pastas `fidelidade/` e `recorrencia/`), o mapa geral soma 34 telas e
+251 estados. As telas seguem as de estoque e entrega: mesma folha, mesma barra de navegação, tabelas, cards,
+indicadores e formulários do `estilo.css`; `cupom-preparo.css` só permite a quebra da barra em janelas estreitas
+e adapta as telas ao celular. A Fila de preparo é a "fila da unidade" que a decisão 3 da seção 8 deixou para
+outro integrante: ela termina onde o Fluxo B começa, com o pedido concluído entrando na fila de despacho.

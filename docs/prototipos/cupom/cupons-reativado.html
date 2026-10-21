@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Cupons</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F10 · cupom</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-cupom">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav b-nav-atual" href="cupons.html">Cupons</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="pedidos.html">Pedidos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="pedido-detalhe.html">Detalhe do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="cupons.html">com dados</a>
+        <a class="b-estado" href="cupons-vazio.html">sem cupons</a>
+        <a class="b-estado" href="cupons-formulario.html">formulário</a>
+        <a class="b-estado" href="cupons-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="cupons-cadastrado.html">cadastrado</a>
+        <a class="b-estado" href="cupons-editar.html">editar</a>
+        <a class="b-estado" href="cupons-editado.html">editado</a>
+        <a class="b-estado" href="cupons-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="cupons-desativado.html">desativado</a>
+        <a class="b-estado b-estado-atual" href="cupons-reativado.html">reativado</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="novo-pedido.html">Tela do cliente ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Cupons</h1>
+        <p class="subtitulo">Cupons de desconto da rede que o cliente informa no pedido.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">5 cupons</span>
+        <span class="badge badge-ok">3 ativos</span>
+      </div>
+    </div>
+
+    <div class="aviso-ok">Cupom <b>FILA10</b> reativado. Os 47 usos do histórico continuam contando nos limites.</div>
+
+    <div class="barra">
+      <div class="busca">
+        <svg class="lupa" width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="7.6" cy="7.6" r="5.2"></circle>
+          <line x1="11.6" y1="11.6" x2="15.6" y2="15.6"></line>
+        </svg>
+        <input type="text" placeholder="Buscar pelo código">
+      </div>
+      <select>
+        <option>Estado: todos</option>
+        <option>Estado: ativo</option>
+        <option>Estado: expirado</option>
+        <option>Estado: desativado</option>
+      </select>
+      <a class="btn btn-primario" href="cupons-formulario.html">Novo cupom</a>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Cupom</th>
+          <th>Desconto</th>
+          <th>Validade</th>
+          <th>Valor mínimo</th>
+          <th>Usos</th>
+          <th>Estado</th>
+          <th class="acoes">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="destaque">BEMVINDO<span class="unidade">Boa Viagem e Centro · só no 1º pedido</span></td>
+          <td>10%<span class="unidade">percentual, até R$ 15,00</span></td>
+          <td>até 31/12/2026<span class="unidade">desde 01/10</span></td>
+          <td>R$&nbsp;30,00</td>
+          <td>128 de 500<span class="unidade">1 por cliente</span></td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativo</span></td>
+          <td class="acoes"><a>Editar</a><a class="apagada">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">FILA10<span class="unidade">Boa Viagem</span></td>
+          <td>R$ 10,00<span class="unidade">valor fixo</span></td>
+          <td>até 31/10/2026<span class="unidade">desde 01/10</span></td>
+          <td>R$&nbsp;39,00</td>
+          <td>47 de 200<span class="unidade">1 por cliente</span></td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativo</span></td>
+          <td class="acoes"><a href="cupons-editar.html">Editar</a><a class="apagada" href="cupons-confirmar-desativacao.html">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">CENTRO15<span class="unidade">Centro</span></td>
+          <td>15%<span class="unidade">percentual</span></td>
+          <td>até 15/11/2026<span class="unidade">desde 15/10</span></td>
+          <td>R$&nbsp;50,00</td>
+          <td>9 de 100<span class="unidade">2 por cliente</span></td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativo</span></td>
+          <td class="acoes"><a>Editar</a><a class="apagada">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">VERAO25<span class="unidade">Boa Viagem e Centro</span></td>
+          <td>25%<span class="unidade">percentual, até R$ 20,00</span></td>
+          <td>até 31/03/2026<span class="unidade">desde 01/01</span></td>
+          <td>R$&nbsp;60,00</td>
+          <td>200 de 200<span class="unidade">1 por cliente</span></td>
+          <td><span class="badge badge-alerta"><span class="bolinha"></span>expirado</span></td>
+          <td class="acoes"><a>Editar</a><a class="apagada">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">PRIMAVERA<span class="unidade">Boa Viagem</span></td>
+          <td>R$ 5,00<span class="unidade">valor fixo</span></td>
+          <td>até 21/12/2026<span class="unidade">desde 22/09</span></td>
+          <td>R$&nbsp;25,00</td>
+          <td>12 de 100<span class="unidade">3 por cliente</span></td>
+          <td><span class="badge badge-neutro"><span class="bolinha"></span>desativado</span></td>
+          <td class="acoes"><a>Reativar</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rodape">O código é único na rede. Cupom desativado não é aceito em novos pedidos, mantém o histórico de usos e pode ser reativado. <b>Usos</b> são os pedidos que aplicaram o cupom e cujo uso não foi liberado.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Cupons · estado reativado</b> · F10 RN 1 (reativação mantém os usos)</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

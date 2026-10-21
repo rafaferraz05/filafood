@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Nova estação</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F11 · preparo</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-preparo">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav b-nav-atual" href="estacoes.html">Estações</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="produtos.html">Preparo dos produtos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="painel.html">Painel do gestor</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="estacoes.html">com dados</a>
+        <a class="b-estado" href="estacoes-vazio.html">sem estações</a>
+        <a class="b-estado" href="estacoes-formulario.html">formulário</a>
+        <a class="b-estado b-estado-atual" href="estacoes-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="estacoes-cadastrada.html">cadastrada</a>
+        <a class="b-estado" href="estacoes-editar.html">editar</a>
+        <a class="b-estado" href="estacoes-editada.html">editada</a>
+        <a class="b-estado" href="estacoes-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="estacoes-desativada.html">desativada</a>
+        <a class="b-estado" href="estacoes-desativacao-recusada.html">com itens na fila</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="fila.html">Tela da cozinha ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Nova estação</h1>
+        <p class="subtitulo">Cadastro de estação de preparo da unidade Boa Viagem.</p>
+      </div>
+    </div>
+
+    <div class="aviso-erro">O cadastro foi recusado e <b>nenhuma estação foi gravada</b>. Corrija os campos indicados e salve de novo.</div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-titulo">Dados da estação</div>
+          <div class="card-corpo">
+            <div class="linha-campos-2">
+              <div class="campo">
+                <label>Nome</label>
+                <input type="text" class="erro" placeholder="Ex.: Chapa">
+                <div class="campo-erro">informe o nome da estação</div>
+              </div>
+              <div class="campo">
+                <label>Capacidade</label>
+                <input type="text" class="erro" value="0" placeholder="Ex.: 4">
+                <div class="campo-erro">a capacidade deve ser maior que zero</div>
+              </div>
+            </div>
+            <div class="acoes-form">
+              <a class="btn btn-primario" href="estacoes-cadastrada.html">Salvar estação</a>
+              <a class="btn btn-claro" href="estacoes.html">Cancelar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-titulo">Como a estação entra no prazo prometido<span class="dir">F11 RN 3</span></div>
+          <div class="card-corpo">
+            <ul class="lista-exemplos">
+              <li><b>Capacidade</b><span>unidades de produto preparadas ao mesmo tempo</span></li>
+              <li><b>Tempo na estação</b><span>tempo dos itens do pedido ÷ capacidade, arredondado para cima</span></li>
+              <li><b>Fim estimado</b><span>carga atual + tempo na estação</span></li>
+            </ul>
+            <p class="anotacao">O prazo prometido é a hora de recebimento mais o maior fim estimado entre as estações do pedido, que trabalham em paralelo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">Duas coisas são verificadas no cadastro: o nome não pode ficar vazio nem repetir outro da unidade, e a capacidade tem de ser maior que zero.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Estações · estado com erros</b> · F11 RN 1 (validação do cadastro)</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

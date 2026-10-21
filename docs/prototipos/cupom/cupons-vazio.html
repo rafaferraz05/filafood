@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Cupons</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F10 · cupom</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-cupom">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav b-nav-atual" href="cupons.html">Cupons</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="pedidos.html">Pedidos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="pedido-detalhe.html">Detalhe do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="cupons.html">com dados</a>
+        <a class="b-estado b-estado-atual" href="cupons-vazio.html">sem cupons</a>
+        <a class="b-estado" href="cupons-formulario.html">formulário</a>
+        <a class="b-estado" href="cupons-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="cupons-cadastrado.html">cadastrado</a>
+        <a class="b-estado" href="cupons-editar.html">editar</a>
+        <a class="b-estado" href="cupons-editado.html">editado</a>
+        <a class="b-estado" href="cupons-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="cupons-desativado.html">desativado</a>
+        <a class="b-estado" href="cupons-reativado.html">reativado</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="novo-pedido.html">Tela do cliente ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Cupons</h1>
+        <p class="subtitulo">Cupons de desconto da rede que o cliente informa no pedido.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">0 cupons</span>
+        <span class="badge badge-ok">0 ativos</span>
+      </div>
+    </div>
+
+    <div class="vazio">
+      <div class="vazio-titulo">Nenhum cupom cadastrado</div>
+      <div class="vazio-nota">A rede ainda não tem cupons. Cadastre o primeiro com código, desconto, validade, limites e as unidades onde vale.</div>
+      <a class="btn btn-primario" href="cupons-formulario.html">Novo cupom</a>
+    </div>
+
+    <div class="rodape">Um cupom nasce <b>ativo</b> e com <b>zero usos</b>. Ele só desconta em pedidos das unidades marcadas, dentro da validade e a partir do valor mínimo.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Cupons · estado sem cupons</b> · F10 RN 1</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

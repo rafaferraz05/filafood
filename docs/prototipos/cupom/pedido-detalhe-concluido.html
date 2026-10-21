@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Detalhe do pedido</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F10 · cupom</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-cupom">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav" href="cupons.html">Cupons</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="pedidos.html">Pedidos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="pedido-detalhe.html">Detalhe do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="pedido-detalhe.html">enviado</a>
+        <a class="b-estado b-estado-atual" href="pedido-detalhe-concluido.html">concluído</a>
+        <a class="b-estado" href="pedido-detalhe-recusado.html">recusado</a>
+        <a class="b-estado" href="pedido-detalhe-cancelado.html">cancelado</a>
+        <a class="b-estado" href="pedido-detalhe-despachado.html">total final</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="novo-pedido.html">Tela do cliente ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Pedido #3105</h1>
+        <p class="subtitulo">Carla · retirada no balcão · prazo prometido 18:42</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-ok"><span class="bolinha"></span>concluído</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-rotulo">Subtotal</div>
+          <div class="kpi-valor">R$&nbsp;19,50</div>
+          <div class="kpi-nota">gravado na criação</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Desconto</div>
+          <div class="kpi-valor">R$&nbsp;0,00</div>
+          <div class="kpi-nota">sem cupom</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Valor do pedido</div>
+          <div class="kpi-valor">R$&nbsp;19,50</div>
+          <div class="kpi-nota">subtotal − desconto</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Taxa estimada</div>
+          <div class="kpi-valor">—</div>
+          <div class="kpi-nota">retirada não tem taxa</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Total</div>
+          <div class="kpi-valor">R$&nbsp;19,50</div>
+          <div class="kpi-nota">sem taxa</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-titulo">Itens<span class="dir">preços do momento da criação</span></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Qtd.</th>
+                <th>Preço gravado</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">Clássico</td>
+                <td>1</td>
+                <td>R$&nbsp;19,50</td>
+                <td>R$&nbsp;19,50</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-titulo">Cupom<span class="dir">F10 RN 3 e RN 6</span></div>
+          <div class="card-corpo">
+            <p class="subtitulo" style="margin:0">Nenhum cupom neste pedido.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-titulo">Histórico de estados<span class="dir">toda transição grava data e hora</span></div>
+          <div class="card-corpo">
+            <ul class="linha-tempo">
+              <li class="feito"><span class="lt-titulo">enviado</span> · 20/10 18:40<div class="lt-nota">Prazo prometido: 18:42.</div></li>
+              <li class="feito"><span class="lt-titulo">em preparo</span> · 20/10 18:42<div class="lt-nota">Baixa dos insumos aceita.</div></li>
+              <li class="atual"><span class="lt-titulo">concluído</span> · 20/10 18:51<div class="lt-nota">Disponível para retirada, 9 minutos depois do prazo prometido.</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">A sequência normal é enviado, em preparo e concluído, sem pular etapa. Toda transição grava data e hora.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Detalhe do pedido · estado concluído</b> · F10 RN 5 (sequência enviado, em preparo, concluído)</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>
