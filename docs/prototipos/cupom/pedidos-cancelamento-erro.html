@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Pedidos</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F10 · cupom</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-cupom">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav" href="cupons.html">Cupons</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="pedidos.html">Pedidos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="pedido-detalhe.html">Detalhe do pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="pedidos.html">com dados</a>
+        <a class="b-estado" href="pedidos-vazio.html">sem pedidos</a>
+        <a class="b-estado" href="pedidos-filtro-enviados.html">só enviados</a>
+        <a class="b-estado" href="pedidos-confirmar-cancelamento.html">confirmar</a>
+        <a class="b-estado b-estado-atual" href="pedidos-cancelamento-erro.html">sem motivo</a>
+        <a class="b-estado" href="pedidos-cancelado.html">cancelado</a>
+        <a class="b-estado" href="pedidos-cancelamento-concluido.html">concluído não cancela</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="novo-pedido.html">Tela do cliente ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Pedidos</h1>
+        <p class="subtitulo">Pedidos de hoje na unidade Boa Viagem, às 19:30.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">9 pedidos hoje</span>
+        <span class="badge badge-alerta">4 enviados</span>
+        <span class="badge badge-alerta">2 em preparo</span>
+      </div>
+    </div>
+
+    <div class="barra">
+      <div class="busca">
+        <svg class="lupa" width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="7.6" cy="7.6" r="5.2"></circle>
+          <line x1="11.6" y1="11.6" x2="15.6" y2="15.6"></line>
+        </svg>
+        <input type="text" placeholder="Buscar por número ou cliente">
+      </div>
+      <select>
+        <option>Estado: todos</option>
+        <option>Estado: enviado</option>
+        <option>Estado: em preparo</option>
+        <option>Estado: concluído</option>
+        <option>Estado: recusado</option>
+        <option>Estado: cancelado</option>
+      </select>
+      <select>
+        <option>Hoje</option>
+        <option>Ontem</option>
+        <option>Últimos 7 dias</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Pedido</th>
+          <th>Cliente</th>
+          <th>Modalidade</th>
+          <th>Cupom</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th class="acoes">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="destaque">#3110</td>
+          <td>Helena</td>
+          <td>retirada</td>
+          <td>—</td>
+          <td>R$&nbsp;18,00</td>
+          <td><span class="badge badge-alerta"><span class="bolinha"></span>enviado</span></td>
+          <td class="acoes"><a>Detalhar</a><a class="apagada">Cancelar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">#3109</td>
+          <td>Gustavo</td>
+          <td>entrega</td>
+          <td>—</td>
+          <td>R$&nbsp;35,00</td>
+          <td><span class="badge badge-alerta"><span class="bolinha"></span>enviado</span></td>
+          <td class="acoes"><a>Detalhar</a><a class="apagada">Cancelar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">#3108</td>
+          <td>Fernanda</td>
+          <td>retirada</td>
+          <td>—</td>
+          <td>R$&nbsp;14,00</td>
+          <td><span class="badge badge-alerta"><span class="bolinha"></span>enviado</span></td>
+          <td class="acoes"><a>Detalhar</a><a class="apagada">Cancelar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">#3107</td>
+          <td>Ana</td>
+          <td>entrega</td>
+          <td>FILA10</td>
+          <td>R$&nbsp;41,50</td>
+          <td><span class="badge badge-alerta"><span class="bolinha"></span>enviado</span></td>
+          <td class="acoes"><a href="pedido-detalhe.html">Detalhar</a><a class="apagada">Cancelar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">#3106</td>
+          <td>Bruno</td>
+          <td>retirada</td>
+          <td>BEMVINDO</td>
+          <td>R$&nbsp;54,90</td>
+          <td><span class="badge badge-alerta"><span class="bolinha"></span>em preparo</span></td>
+          <td class="acoes"><a>Detalhar</a><a class="apagada" href="pedidos-confirmar-cancelamento.html">Cancelar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">#3101</td>
+          <td>Eduardo</td>
+          <td>entrega</td>
+          <td>—</td>
+          <td>R$&nbsp;48,00</td>
+          <td><span class="badge badge-alerta"><span class="bolinha"></span>em preparo</span></td>
+          <td class="acoes"><a>Detalhar</a><a class="apagada">Cancelar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">#3104</td>
+          <td>Diego</td>
+          <td>entrega</td>
+          <td>BEMVINDO</td>
+          <td>R$&nbsp;37,50</td>
+          <td><span class="badge badge-repor"><span class="bolinha"></span>recusado</span></td>
+          <td class="acoes"><a href="pedido-detalhe-recusado.html">Detalhar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">#3105</td>
+          <td>Carla</td>
+          <td>retirada</td>
+          <td>—</td>
+          <td>R$&nbsp;19,50</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>concluído</span></td>
+          <td class="acoes"><a href="pedido-detalhe-concluido.html">Detalhar</a><a class="apagada" href="pedidos-cancelamento-concluido.html">Cancelar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">#3103</td>
+          <td>Ana</td>
+          <td>retirada</td>
+          <td>—</td>
+          <td>R$&nbsp;19,50</td>
+          <td><span class="badge badge-neutro"><span class="bolinha"></span>cancelado</span></td>
+          <td class="acoes"><a>Detalhar</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rodape">O cliente cancela só o pedido enviado; o gestor cancela o em preparo, com motivo e devolução do estoque.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Pedidos · estado sem motivo</b> · F10 RN 6 (motivo obrigatório)</p>
+
+    <div class="fundo-modal">
+      <div class="confirmacao">
+        <div class="confirmacao-titulo">Cancelar o pedido #3106?</div>
+        <p class="confirmacao-texto">O #3106 está <b>em preparo</b>: cancelar devolve ao estoque os insumos da baixa e libera o uso do cupom BEMVINDO, porque o pedido não chegou a ser concluído.</p>
+        <div class="campo">
+          <label>Motivo do cancelamento</label>
+          <input type="text" class="erro" placeholder="obrigatório">
+          <div class="campo-erro">informe o motivo do cancelamento</div>
+        </div>
+        <div class="acoes-form">
+          <a class="btn btn-perigo" href="pedidos-cancelado.html">Cancelar pedido</a>
+          <a class="btn btn-claro" href="pedidos.html">Voltar</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

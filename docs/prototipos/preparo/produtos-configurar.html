@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Preparo dos produtos</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F11 · preparo</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-preparo">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav" href="estacoes.html">Estações</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="produtos.html">Preparo dos produtos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="painel.html">Painel do gestor</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="produtos.html">com dados</a>
+        <a class="b-estado" href="produtos-editar.html">editar</a>
+        <a class="b-estado" href="produtos-erro.html">tempo inválido</a>
+        <a class="b-estado" href="produtos-salvo.html">salvo</a>
+        <a class="b-estado b-estado-atual" href="produtos-configurar.html">configurar</a>
+        <a class="b-estado" href="produtos-estacao-inativa.html">estação inativa</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="fila.html">Tela da cozinha ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Preparo dos produtos</h1>
+        <p class="subtitulo">Estação e tempo de preparo unitário de cada produto na unidade Boa Viagem.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">8 produtos</span>
+        <span class="badge badge-repor">2 com aviso</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-titulo">Preparo · Batata Rústica<span class="dir">F11 RN 2</span></div>
+          <div class="card-corpo">
+            <div class="linha-campos">
+              <div class="campo">
+                <label>Produto</label>
+                <input type="text" value="Batata Rústica" readonly>
+              </div>
+              <div class="campo">
+                <label>Estação</label>
+                <select>
+                  <option>Forno (inativa)</option>
+                  <option>Chapa</option>
+                  <option>Fritadeira</option>
+                  <option>Montagem</option>
+                  <option>Sucos</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label>Tempo de preparo (min)</label>
+                <input type="text" value="15">
+              </div>
+            </div>
+            <div class="acoes-form">
+              <a class="btn btn-primario" href="produtos-estacao-inativa.html">Salvar</a>
+              <a class="btn btn-claro" href="produtos.html">Cancelar</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-titulo">Por que a Batata Rústica não é vendida<span class="dir">F11 RN 1 e RN 2</span></div>
+          <div class="card-corpo">
+            <ul class="lista-exemplos">
+              <li><b>Preparo</b><span>sem estação e sem tempo nesta unidade</span></li>
+              <li><b>Ficha técnica</b><span>também ausente, pela F1 RN 2</span></li>
+            </ul>
+            <p class="anotacao">Escolha uma estação ativa: estação inativa não recebe produtos novos.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-titulo">Produtos da unidade<span class="dir">F11 RN 2</span></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Estação</th>
+                <th>Tempo de preparo</th>
+                <th>Situação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">Clássico</td>
+                <td>Chapa</td>
+                <td>8 min</td>
+                <td><span class="badge badge-ok"><span class="bolinha"></span>pode ser vendido</span></td>
+              </tr>
+              <tr>
+                <td class="destaque">Duplo</td>
+                <td>Chapa</td>
+                <td>10 min</td>
+                <td><span class="badge badge-ok"><span class="bolinha"></span>pode ser vendido</span></td>
+              </tr>
+              <tr>
+                <td class="destaque">Vegetariano</td>
+                <td>Chapa</td>
+                <td>7 min</td>
+                <td><span class="badge badge-ok"><span class="bolinha"></span>pode ser vendido</span></td>
+              </tr>
+              <tr>
+                <td class="destaque">Batata Frita</td>
+                <td>Fritadeira</td>
+                <td>6 min</td>
+                <td><span class="badge badge-ok"><span class="bolinha"></span>pode ser vendido</span></td>
+              </tr>
+              <tr>
+                <td class="destaque">Salada da Casa</td>
+                <td>Montagem</td>
+                <td>4 min</td>
+                <td><span class="badge badge-ok"><span class="bolinha"></span>pode ser vendido</span></td>
+              </tr>
+              <tr>
+                <td class="destaque">Suco de Laranja</td>
+                <td>Sucos</td>
+                <td>3 min</td>
+                <td><span class="badge badge-ok"><span class="bolinha"></span>pode ser vendido</span></td>
+              </tr>
+              <tr>
+                <td class="destaque">Petit Gâteau</td>
+                <td>Forno</td>
+                <td>12 min</td>
+                <td><span class="badge badge-alerta"><span class="bolinha"></span>estação inativa</span></td>
+              </tr>
+              <tr>
+                <td class="destaque">Batata Rústica</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge badge-repor"><span class="bolinha"></span>sem configuração</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">Em cada unidade, o produto tem uma única estação e um tempo de preparo unitário maior que zero. Produto sem configuração não pode ser vendido. A mudança vale para os pedidos criados depois dela.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Preparo dos produtos · estado configurar</b> · F11 RN 2 (produto sem configuração não é vendido)</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

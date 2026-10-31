@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Painel do gestor</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F11 · preparo</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-preparo">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav" href="estacoes.html">Estações</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="produtos.html">Preparo dos produtos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav b-nav-atual" href="painel.html">Painel do gestor</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="painel.html">com dados</a>
+        <a class="b-estado" href="painel-alerta-novo.html">novo alerta</a>
+        <a class="b-estado b-estado-atual" href="painel-sem-atrasos.html">sem atrasos</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="fila.html">Tela da cozinha ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Painel do gestor</h1>
+        <p class="subtitulo">Atrasos, alertas e carga da cozinha em 20/10/2026 às 18:56.</p>
+      </div>
+    </div>
+
+    <div class="aviso-ok">Nenhum pedido atrasado: o #3101 chegou às 18:55 com prazo prometido às 18:59.</div>
+
+    <div class="card">
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-rotulo">Atrasados</div>
+          <div class="kpi-valor">0</div>
+          <div class="kpi-nota">todos no prazo</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Alertas hoje</div>
+          <div class="kpi-valor">0</div>
+          <div class="kpi-nota">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Na fila</div>
+          <div class="kpi-valor">1</div>
+          <div class="kpi-nota">#3101</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Em preparo</div>
+          <div class="kpi-valor">0</div>
+          <div class="kpi-nota">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Concluídos hoje</div>
+          <div class="kpi-valor">1</div>
+          <div class="kpi-nota">#3105</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-titulo">Pedidos atrasados<span class="dir">enviados ou em preparo</span></div>
+          <div class="card-corpo">
+            <p class="subtitulo" style="margin:0">Nenhum pedido atrasado.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-titulo">Alertas gravados<span class="dir">atraso acima de 15 min</span></div>
+          <div class="card-corpo">
+            <p class="subtitulo" style="margin:0">Nenhum alerta gravado hoje.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-titulo">Carga por estação<span class="dir">minutos pendentes</span></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Estação</th>
+                <th>Capacidade</th>
+                <th>Carga</th>
+                <th>Itens</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">Chapa</td>
+                <td>4</td>
+                <td>16 min</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td class="destaque">Fritadeira</td>
+                <td>2</td>
+                <td>6 min</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td class="destaque">Montagem</td>
+                <td>2</td>
+                <td>0 min</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td class="destaque">Sucos</td>
+                <td>2</td>
+                <td>0 min</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td class="destaque">Forno</td>
+                <td>1 (inativa)</td>
+                <td>—</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-titulo">Conclusão real e prazo<span class="dir">para os relatórios</span></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Prazo</th>
+                <th>Concluído</th>
+                <th>Diferença</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">#3105</td>
+                <td>18:42</td>
+                <td>18:51</td>
+                <td>9 min depois</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">Atrasado: passou do prazo prometido. Acima de 15 minutos, um alerta é gravado, uma vez por pedido, com a estação de maior carga.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Painel do gestor · estado sem atrasos</b> · F11 RN 6 (pedido na hora exata do prazo não está atrasado)</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Novo pedido</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F10 · cupom</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-cupom">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav b-nav-atual" href="novo-pedido.html">Novo pedido</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="novo-pedido.html">com itens</a>
+        <a class="b-estado" href="novo-pedido-cupom-aplicado.html">com cupom</a>
+        <a class="b-estado" href="novo-pedido-cupom-recusado.html">cupom recusado</a>
+        <a class="b-estado" href="novo-pedido-retirada.html">retirada</a>
+        <a class="b-estado" href="novo-pedido-erros.html">com erros</a>
+        <a class="b-estado b-estado-atual" href="novo-pedido-estacao-inativa.html">estação inativa</a>
+        <a class="b-estado" href="novo-pedido-confirmado.html">enviado</a>
+        <a class="b-estado" href="novo-pedido-confirmado-sem-cupom.html">enviado isento</a>
+        <a class="b-estado" href="novo-pedido-confirmado-retirada.html">retirada enviada</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="pedidos.html">‹ Tela do gestor</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Cliente: Ana</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Novo pedido</h1>
+        <p class="subtitulo">Pedido da Ana na unidade Boa Viagem, em 20/10/2026 às 19:00.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">2 itens</span>
+      </div>
+    </div>
+
+    <div class="aviso-erro">O pedido não foi enviado: <b>a estação Forno está inativa</b>. Retire o Petit Gâteau para seguir.</div>
+
+    <div class="card">
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-rotulo">Subtotal</div>
+          <div class="kpi-valor">R$&nbsp;35,50</div>
+          <div class="kpi-nota">preço vigente × quantidade</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Desconto</div>
+          <div class="kpi-valor">R$&nbsp;0,00</div>
+          <div class="kpi-nota">sem cupom</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Valor do pedido</div>
+          <div class="kpi-valor">R$&nbsp;35,50</div>
+          <div class="kpi-nota">subtotal − desconto</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Taxa estimada</div>
+          <div class="kpi-valor">—</div>
+          <div class="kpi-nota">retirada não tem taxa</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Total</div>
+          <div class="kpi-valor">R$&nbsp;35,50</div>
+          <div class="kpi-nota">valor do pedido</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-titulo">Itens do pedido<span class="dir">preço vigente na unidade</span></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Qtd.</th>
+                <th>Preço</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="destaque">Clássico</td>
+                <td>1</td>
+                <td>R$&nbsp;19,50</td>
+                <td>R$&nbsp;19,50</td>
+              </tr>
+              <tr>
+                <td class="destaque">Petit Gâteau</td>
+                <td>1</td>
+                <td>R$&nbsp;16,00</td>
+                <td>R$&nbsp;16,00</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="card-corpo">
+            <div class="linha-campos">
+              <div class="campo">
+                <label>Produto do cardápio</label>
+                <select>
+                  <option>Clássico</option>
+                  <option>Duplo</option>
+                  <option>Vegetariano</option>
+                  <option>Batata Frita</option>
+                  <option>Salada da Casa</option>
+                  <option>Petit Gâteau</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label>Quantidade</label>
+                <input type="text" value="1">
+              </div>
+              <div class="campo">
+                <label>&nbsp;</label>
+                <a class="btn btn-claro" href="novo-pedido.html">Adicionar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-titulo">Entrega e cupom<span class="dir">F10 RN 2 e RN 3</span></div>
+          <div class="card-corpo">
+            <div class="linha-campos-2">
+              <div class="campo">
+                <label>Modalidade</label>
+                <select>
+                  <option>Retirada na unidade</option>
+                  <option>Entrega</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label>Retirada</label>
+                <input type="text" value="Balcão da unidade Boa Viagem" readonly>
+              </div>
+            </div>
+            <div class="linha-campos-2">
+              <div class="campo">
+                <label>Código do cupom</label>
+                <input type="text" placeholder="Ex.: FILA10">
+              </div>
+              <div class="campo">
+                <label>&nbsp;</label>
+                <a class="btn btn-claro" href="novo-pedido-cupom-aplicado.html">Aplicar cupom</a>
+              </div>
+            </div>
+            <div class="acoes-form">
+              <a class="btn btn-primario" href="novo-pedido-estacao-inativa.html">Enviar pedido</a>
+              <span class="espaco"></span>
+              <a class="btn btn-claro" href="novo-pedido.html">Descartar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">Ao receber o pedido, a cozinha estima o prazo pelas estações dos itens. Se alguma estiver inativa, o pedido não é criado e o motivo aparece para o cliente.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Novo pedido · estado estação inativa</b> · F11 RN 3 (pedido não é criado com estação inativa)</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

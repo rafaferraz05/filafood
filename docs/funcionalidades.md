@@ -3,6 +3,10 @@
 > F6 (Cardápio) e F7 (Compras) seguem o documento de requisitos `FilaFood_Funcionalidades_Cardapio_e_Compras.pdf`.
 > Os números são globais neste repositório. No formulário individual de Rafael, F3/F4/F5
 > correspondem, respectivamente, às funcionalidades 1/2/3 aprovadas com o professor.
+> Abner: F10 e F11 (altas), do documento `FilaFood: funcionalidades e regras de negócio (3 e 4)`; no
+> formulário individual, F10/F11 correspondem às funcionalidades 3/4, que já se referem a F1 e F2 por esses números.
+> F8 (fidelidade) e F9 (refeições recorrentes), de Vitor Veloso, existem por enquanto só como protótipos em
+> `docs/prototipos/fidelidade` e `docs/prototipos/recorrencia`, sem seção neste documento; por isso o sumário salta de F7 para F10.
 >
 > O vocabulário segue `docs/dominio.md`. Este é o nível tático do DDD.
 
@@ -17,6 +21,8 @@
 | 5 | [Gerenciar funcionários](#funcionalidade-5-baixa) | baixa | 4 |
 | 6 | [Gerenciamento do cardápio, preço vigente e disponibilidade](#funcionalidade-6-alta) | alta | 6 |
 | 7 | [Compra de insumos por fornecedor](#funcionalidade-7-alta) | alta | 6 |
+| 10 | [Pedido com cupom de desconto e cálculo do total](#funcionalidade-10-alta) | alta | 6 |
+| 11 | [Fila de preparo na cozinha e prazo prometido](#funcionalidade-11-alta) | alta | 6 |
 
 ---
 
@@ -493,3 +499,189 @@ Protótipos estáticos em HTML, com `estilo.css`, navegação por links e um arq
 
 **Histórias:** CP-01 a CP-06. **BDD:** [sugestao-quantidade.feature](../dominio-compras/src/test/resources/br/edu/cesar/filafood/dominio/compras/sugestao-quantidade.feature) (`@f7-rn3`) e [escolha-fornecedor.feature](../dominio-compras/src/test/resources/br/edu/cesar/filafood/dominio/compras/escolha-fornecedor.feature) (`@f7-rn4`). O BDD desta etapa cobre as duas regras de maior complexidade; as demais regras seguem documentadas para as entregas seguintes.
 
+---
+
+# Funcionalidade 10 (alta)
+
+**Responsável: Abner.** Corresponde à Funcionalidade 3 do formulário individual. O formulário chama de
+**recebido** o estado em que o pedido nasce; aqui ele é `enviado`, porque o glossário descarta "recebido"
+como nome de estado (seção 3.3 de `docs/dominio.md`). O significado é o mesmo: pedido aceito pela unidade
+e aguardando o início do preparo.
+
+**Complexidade da funcionalidade: alta.** São 2 regras de complexidade alta (RN 3 e RN 4): a validação do
+cupom, que cruza validade, unidade, valor mínimo, limites de uso e histórico do cliente, e o cálculo do
+total, que combina desconto percentual ou fixo, teto de desconto e o valor do pedido usado na isenção da
+taxa de entrega.
+
+| Título | Pedido com cupom de desconto e cálculo do total |
+| --- | --- |
+| Descrição | O cliente monta o pedido com produtos da unidade, escolhe entrega ou retirada e pode informar um cupom. O sistema valida o cupom, calcula o subtotal, o desconto e o total, e registra o pedido com os preços do momento. O gestor mantém o cadastro de cupons e acompanha os pedidos por estado. O pedido percorre os estados enviado, em preparo, concluído, recusado e cancelado: a passagem para em preparo e a recusa por falta de saldo seguem a F1, e o cancelamento após a produção segue a F2. |
+| Entidades envolvidas | **Mantidas:** Cupom, Pedido, ItemPedido, UsoCupom. **Referenciadas:** Produto, Unidade, Cliente, EnderecoEntrega e ZonaEntrega. |
+
+**Definições usadas nas regras**
+
+- **subtotal**: soma, para todos os itens do pedido, do preço unitário gravado multiplicado pela quantidade.
+- **desconto**: valor abatido do subtotal pelo cupom aplicado.
+- **valor do pedido**: subtotal menos o desconto. É o valor comparado ao mínimo da zona na F2 RN 3.
+- **uso do cupom**: pedido que aplicou o cupom e cujo uso não foi liberado.
+
+## Regras de negócio
+
+### RN 1: Cadastro de cupom
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Todo cupom tem código único e não vazio, tipo (percentual ou valor fixo), valor maior que zero, validade com data inicial e final, valor mínimo de subtotal maior ou igual a zero, limite total de usos e limite de usos por cliente, ambos maiores que zero, e as unidades onde vale. O percentual fica entre 1 e 100. O cupom pode ter desconto máximo maior que zero e pode ser restrito ao primeiro pedido do cliente. Cupom desativado não é aceito em novos pedidos, mantém o histórico e pode ser reativado a qualquer momento. |
+| Consultas | consultar o cupom pelo código, para garantir a unicidade. |
+| Complexidade | baixa |
+
+### RN 2: Montagem do pedido
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Todo pedido tem unidade, cliente, modalidade (entrega ou retirada) e ao menos um item. Cada item exige produto ativo e vendido na unidade, com ficha técnica na unidade, e quantidade inteira maior que zero. O mesmo produto pode aparecer em mais de um item. O preço unitário de cada item é gravado no momento da criação e não muda depois. Pedido para entrega exige endereço contido em alguma zona de entrega ativa. O pedido nasce no estado enviado. |
+| Consultas | consultar o produto e seu preço; consultar a ficha técnica do produto na unidade; consultar as zonas que contêm as coordenadas do endereço. |
+| Complexidade | média |
+
+### RN 3: Validação e aplicação do cupom
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | O pedido aceita no máximo um cupom. O cupom é aceito quando todos os critérios valem, avaliados nesta ordem: está ativo; a data atual está dentro da validade; a unidade do pedido está entre as unidades do cupom; o subtotal é maior ou igual ao valor mínimo; os usos totais do cupom são menores que o limite total; os usos do cliente com esse cupom são menores que o limite por cliente; e, se o cupom é restrito ao primeiro pedido, o cliente não tem pedido anterior fora dos estados recusado e cancelado. Se algum critério falha, o cupom é recusado com o motivo do primeiro critério violado e o pedido segue sem desconto, a critério do cliente. Se todos valem, grava-se um uso do cupom ligado ao pedido. |
+| Consultas | consultar o cupom pelo código; consultar os usos do cupom; consultar os usos do cliente com o cupom; consultar os pedidos anteriores do cliente e seus estados; consultar o subtotal do pedido. |
+| Complexidade | alta |
+
+### RN 4: Cálculo do desconto e do total
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | O desconto percentual é o subtotal multiplicado pelo percentual dividido por 100. O desconto de valor fixo é o próprio valor do cupom. Em ambos os tipos, o desconto é limitado ao desconto máximo do cupom, quando houver, e nunca passa do subtotal. O desconto é arredondado ao centavo, com metade para cima. O valor do pedido é o subtotal menos o desconto. Na retirada, o total é o valor do pedido. Na entrega, o total exibido na criação soma a taxa estimada pela F2 RN 3, calculada sobre o valor do pedido já com desconto; o total final usa a taxa gravada no despacho. Desconto, valor do pedido e total são gravados no pedido. |
+| Consultas | consultar os itens do pedido; consultar o cupom aplicado; consultar a zona do endereço, para a taxa estimada. |
+| Complexidade | alta |
+
+### RN 5: Estados do pedido
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Os estados do pedido são enviado, em preparo, concluído, recusado e cancelado. A sequência normal é enviado, em preparo e concluído. A recusa ocorre na passagem para em preparo, quando falta saldo (F1 RN 4). Não é permitido pular etapa nem alterar pedido recusado ou cancelado. Toda transição grava data e hora. Pedido concluído só assume o estado cancelado, e apenas pelo desfecho de entrega da F2 RN 6. |
+| Consultas | consultar o pedido pelo id e seu estado. |
+| Complexidade | média |
+
+### RN 6: Cancelamento do pedido e liberação do cupom
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Cancelar exige motivo. O cliente pode cancelar o pedido apenas no estado enviado. Pedido em preparo só é cancelado pelo gestor e devolve o estoque (F1 RN 5). Pedido recusado ou cancelado antes de concluído libera o uso do cupom, que deixa de contar nos limites da RN 3. Pedido cancelado depois de concluído mantém o uso do cupom consumido, porque o pedido já foi produzido. |
+| Consultas | consultar o pedido e seu estado; consultar o uso do cupom ligado ao pedido. |
+| Complexidade | média |
+
+## Protótipos da interface com o usuário
+
+Protótipos estáticos em HTML, com `estilo.css`, navegação por links e um arquivo por estado, sem JavaScript,
+no mesmo padrão das telas de estoque e entrega. O pedido **#3107** da Ana atravessa as telas da F10 e a fila
+de preparo da F11.
+
+- Tela **Cupons**: lista com código, tipo, valor, validade, usos e limite, e estado (ativo, expirado ou desativado). Busca por código e filtro por estado. Botões Novo cupom, Editar, Desativar e Reativar. [Com dados](prototipos/cupom/cupons.html), sem cupons, formulário, erros (com código repetido), cadastrado, edição, confirmação, desativado e reativado.
+- Tela **Novo pedido**: escolha de produtos e quantidades, modalidade, campo de cupom com botão Aplicar e indicadores de subtotal, desconto, valor do pedido, taxa estimada e total. O motivo da recusa do cupom aparece ao lado do campo. [Com itens](prototipos/cupom/novo-pedido.html), [cupom aplicado](prototipos/cupom/novo-pedido-cupom-aplicado.html), [cupom recusado](prototipos/cupom/novo-pedido-cupom-recusado.html), retirada, erros, estação inativa e os três envios.
+- Tela **Pedidos**: lista com número, cliente, total e estado, com filtro por estado e por período e botão Cancelar. [Com dados](prototipos/cupom/pedidos.html), filtro, confirmação com motivo, sem motivo, cancelado e concluído que não cancela.
+- Tela **Detalhe do pedido**: itens, cupom aplicado, valores e histórico de estados com data e hora. [Enviado](prototipos/cupom/pedido-detalhe.html), concluído, recusado, cancelado e total final.
+- Formulários exibem os erros das RN 1, 2 e 3 ao lado do campo.
+
+**Histórias:** CU-01 a CU-06. Nesta etapa a funcionalidade é entregue como protótipo navegável, documentado em
+[CUPOM-E-PREPARO.md](prototipos/CUPOM-E-PREPARO.md).
+
+---
+
+# Funcionalidade 11 (alta)
+
+**Responsável: Abner.** Corresponde à Funcionalidade 4 do formulário individual, com a mesma troca de
+"recebido" por `enviado`.
+
+**Complexidade da funcionalidade: alta.** São 2 regras de complexidade alta (RN 3 e RN 4): a estimativa
+do prazo prometido, que combina carga, capacidade e paralelismo entre estações, e a ordem da fila de
+preparo, com múltiplos critérios e desempate.
+
+| Título | Fila de preparo na cozinha e prazo prometido |
+| --- | --- |
+| Descrição | O gestor mantém as estações de preparo da cozinha (por exemplo, chapa, fritadeira e montagem) e define, para cada produto, a estação e o tempo de preparo. Quando o pedido é recebido pela unidade, o sistema estima o prazo prometido ao cliente e coloca o pedido na fila de preparo. A cozinha vê a fila ordenada por prioridade, inicia o preparo, marca os itens como prontos e conclui o pedido. O gestor acompanha os pedidos atrasados e recebe alertas. O início do preparo aciona a baixa de estoque da F1, e o pedido concluído segue para a retirada ou para a fila de despacho da F2. |
+| Entidades envolvidas | **Mantidas:** EstacaoPreparo, ConfiguracaoPreparo, ItemPreparo, AlertaAtraso. **Referenciadas:** Pedido, ItemPedido, Produto, Unidade e Insumo. |
+
+**Definições usadas nas regras**
+
+- **capacidade da estação**: quantidade de unidades de produto que a estação prepara ao mesmo tempo.
+- **carga da estação**: soma, em minutos, do tempo de preparo dos itens da estação que ainda não estão prontos, em pedidos nos estados enviado ou em preparo. O tempo de preparo de um item é o tempo unitário multiplicado pela quantidade.
+- **tempo do pedido na estação**: soma, para os itens do pedido da estação, do tempo de preparo unitário multiplicado pela quantidade, dividida pela capacidade e arredondada para cima, em minutos.
+- **folga**: prazo prometido menos a hora atual, em minutos. É negativa quando o pedido está atrasado.
+- **quantidade de itens**: número de itens do pedido, isto é, de linhas, como define a linguagem onipresente.
+
+## Regras de negócio
+
+### RN 1: Cadastro de estação de preparo
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Toda estação tem nome não vazio, único na unidade, e capacidade maior que zero. A estação pode ser desativada sem perder o histórico e reativada a qualquer momento. Estação inativa não recebe produtos novos, e estação com itens na fila não pode ser desativada. |
+| Consultas | consultar os itens em fila da estação, para a desativação. |
+| Complexidade | baixa |
+
+### RN 2: Configuração de preparo do produto
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Em cada unidade, o produto tem uma única estação ativa e um tempo de preparo unitário em minutos, maior que zero. Produto sem configuração de preparo na unidade não pode ser vendido, da mesma forma que o produto sem ficha técnica (F1 RN 2). A mudança de estação ou de tempo vale para os pedidos criados depois dela e não altera prazos já gravados. |
+| Consultas | consultar o produto; consultar a estação informada e seu estado. |
+| Complexidade | média |
+
+### RN 3: Estimativa do prazo prometido
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Ao receber o pedido, o sistema calcula, para cada estação envolvida, o fim estimado como a carga atual da estação mais o tempo do pedido na estação. As estações trabalham em paralelo, então o prazo prometido é o maior fim estimado entre as estações envolvidas, somado à hora de recebimento. O prazo é gravado no pedido e não é recalculado depois, nem quando a fila é reordenada pela RN 4. Se alguma estação envolvida estiver inativa, o pedido não é criado e o motivo é informado ao cliente. |
+| Consultas | consultar os itens do pedido; consultar a configuração de preparo de cada produto; consultar a capacidade e a carga atual de cada estação envolvida. |
+| Complexidade | alta |
+
+### RN 4: Ordem da fila de preparo
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | A fila reúne os pedidos no estado enviado e é ordenada pelos critérios abaixo, aplicados nesta sequência. Primeiro vêm os pedidos atrasados, do mais atrasado para o menos. Entre os demais, vem o de menor folga. Em empate de folga, vem o pedido com menos itens. Persistindo o empate, vem o pedido recebido há mais tempo. A ordem é recalculada a cada consulta, e a fila de cada estação segue a ordem dos pedidos que têm item nela. |
+| Consultas | consultar os pedidos no estado enviado; consultar o prazo prometido e a hora de recebimento de cada um; consultar a quantidade de itens de cada pedido. |
+| Complexidade | alta |
+
+### RN 5: Início e conclusão do preparo
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | Iniciar o preparo aciona a baixa automática da F1 RN 4. Se a baixa for recusada por falta de saldo, o preparo não inicia e o pedido é recusado com o motivo. Em preparo, cada item é marcado como pronto pela sua estação, e a hora é gravada. Quando todos os itens estão prontos, o pedido passa a concluído, com data e hora. O pedido de entrega concluído entra na fila de despacho da F2, e o de retirada fica disponível para o cliente. Não é permitido marcar item pronto em pedido que não esteja em preparo. |
+| Consultas | consultar o pedido e seu estado; consultar os itens do pedido e as estações de cada um. |
+| Complexidade | média |
+
+### RN 6: Atraso e alerta ao gestor
+
+| Campo | Conteúdo |
+| --- | --- |
+| Descrição | O pedido está atrasado quando está no estado enviado ou em preparo e a hora atual passou do prazo prometido. Quando o atraso passa de 15 minutos, o sistema grava um alerta para o gestor, uma única vez por pedido, com a estação de maior carga no momento. Pedido concluído ou cancelado deixa de gerar alerta. O sistema guarda a hora real de conclusão para comparar com o prazo prometido nos relatórios. |
+| Consultas | consultar o pedido, seu estado e o prazo prometido; consultar os alertas já gravados do pedido; consultar a carga atual das estações. |
+| Complexidade | média |
+
+## Protótipos da interface com o usuário
+
+Protótipos estáticos em HTML, no mesmo padrão da F10. Os números de prazo, folga, carga e alertas foram
+calculados pelas regras desta funcionalidade, com os pedidos que chegam entre 18:40 e 19:38, e são os mesmos
+em todas as telas.
+
+- Tela **Estações**: lista com nome, capacidade, carga atual e estado, com botões Nova, Editar, Desativar e Reativar. [Com dados](prototipos/preparo/estacoes.html), sem estações, formulário, erros, cadastrada, edição, confirmação, desativada e desativação recusada.
+- Tela **Preparo dos produtos**: produtos da unidade com estação e tempo de preparo, com botão Editar e aviso para produto sem configuração. [Com dados](prototipos/preparo/produtos.html), edição, tempo inválido, salvo, configurar e estação inativa.
+- Tela **Fila de preparo**: pedidos na ordem da RN 4, com prazo prometido, folga e itens por estação, e as ações Iniciar preparo e Marcar item pronto. Pedidos atrasados aparecem com o selo atrasado. [Com dados](prototipos/preparo/fila.html), fila da estação, iniciado, baixa recusada, item pronto, concluído para entrega e para retirada, e vazia.
+- Tela **Painel do gestor**: pedidos atrasados, alertas gravados e carga por estação. [Com dados](prototipos/preparo/painel.html), novo alerta e sem atrasos.
+- Formulários exibem os erros das RN 1 e 2 ao lado do campo.
+
+**Histórias:** CZ-01 a CZ-06. Nesta etapa a funcionalidade é entregue como protótipo navegável, documentado em
+[CUPOM-E-PREPARO.md](prototipos/CUPOM-E-PREPARO.md).
+
+## Limites de integração da F10 e da F11
+
+A F10 e a F11 usam dados de outras funcionalidades: o cardápio e a ficha técnica (F6 e F1 RN 2), as zonas e a
+taxa (F2 RN 3), a baixa e a devolução de estoque (F1 RN 4 e RN 5) e a fila de despacho (F2). Nos protótipos,
+esses dados aparecem com os mesmos valores das telas dessas funcionalidades; a ligação real entre elas é etapa
+futura.

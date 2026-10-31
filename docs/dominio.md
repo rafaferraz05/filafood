@@ -18,8 +18,9 @@ Quando o pedido fica pronto, ele entra na fila de despacho e um entregador o lev
 O domínio se organiza em quatro preocupações:
 
 1. **Operação da unidade**: quem atende, o que está aberto e quem trabalha ali.
-2. **Pedido do cliente**: montar, enviar, acompanhar e cancelar.
-3. **Produção e suprimento**: transformar produtos vendidos em consumo de insumos e repor o que falta.
+2. **Pedido do cliente**: montar, aplicar cupom, enviar, acompanhar e cancelar.
+3. **Produção e suprimento**: ordenar a fila de preparo e prometer prazo, transformar produtos vendidos em
+   consumo de insumos e repor o que falta.
 4. **Entrega**: despachar, entregar e registrar o desfecho de cada entrega.
 
 ## 2. Atores
@@ -28,8 +29,8 @@ O domínio se organiza em quatro preocupações:
 |---|---|
 | **Cliente** | Monta o pedido, envia, acompanha o andamento e cancela enquanto permitido. |
 | **Administrador da rede** | Cadastra, consulta, altera, desativa, reativa, pausa e retoma o recebimento das unidades, e mantém o cardápio da rede. |
-| **Gestor da unidade** | Mantém os cadastros da própria unidade: funcionários, insumos, ficha técnica, zonas de entrega e entregadores. |
-| **Atendente ou cozinheiro** | Recebe o pedido, inicia o preparo, conclui, cancela ou recusa. |
+| **Gestor da unidade** | Mantém os cadastros da própria unidade: funcionários, insumos, ficha técnica, zonas de entrega, entregadores, cupons, estações de preparo e a configuração de preparo dos produtos. Acompanha os atrasos da cozinha. |
+| **Atendente ou cozinheiro** | Recebe o pedido, inicia o preparo, marca os itens prontos na sua estação, conclui, cancela ou recusa. |
 | **Entregador** | Registra a retirada, a entrega ou a falha. |
 
 ## 3. Linguagem onipresente
@@ -61,6 +62,15 @@ quando ela faz parte dele.
 | **Ficha técnica** | Composição que define quais insumos, e em que quantidade, um produto consome no preparo de uma porção em uma unidade. É o que liga **produto** a **insumo**. | receita, composição, BOM |
 | **Item da ficha técnica** | Linha da ficha técnica: um insumo e a quantidade consumida por porção. | linha, ingrediente |
 | **Unidade de medida** | Unidade em que um insumo é controlado (kg, L, un). | métrica, medida |
+| **Estação de preparo** | Posto da cozinha da unidade que prepara produtos, como chapa, fritadeira e montagem. Tem nome único na unidade, capacidade e estado `ativa` ou `inativa`. | setor, praça, bancada |
+| **Capacidade da estação** | Quantidade de unidades de produto que a estação prepara ao mesmo tempo. | vazão, limite |
+| **Configuração de preparo** | Estação e tempo de preparo de um produto em uma unidade. Produto sem configuração não pode ser vendido, como o produto sem ficha técnica. | roteiro, receita |
+| **Tempo de preparo** | Minutos que a estação leva para preparar uma unidade do produto. | duração, tempo de forno |
+| **Item de preparo** | Item do pedido como a cozinha o enxerga: produto, quantidade, estação e tempo de preparo gravados na chegada do pedido. Fica `pendente` até a estação marcá-lo `pronto`. | tarefa, comanda |
+| **Fila de preparo** | Pedidos enviados que aguardam o início do preparo, ordenados por atraso, folga, quantidade de itens e chegada. Cada estação tem a sua fila, na mesma ordem. | fila da cozinha, backlog |
+| **Prazo prometido** | Data e hora em que a unidade promete o pedido pronto, estimadas na chegada pela carga das estações e gravadas no pedido. Não é recalculado. | previsão, ETA, prazo de entrega |
+| **Atrasado** | Pedido enviado ou em preparo cuja hora atual passou do prazo prometido. | vencido, estourado |
+| **Alerta de atraso** | Registro gravado para o gestor quando o atraso de um pedido passa de 15 minutos, uma única vez por pedido, com a estação de maior carga no momento. | aviso, notificação |
 
 ### 3.3 Pedido
 
@@ -72,14 +82,28 @@ quando ela faz parte dele.
 | **Rascunho** | Estado do pedido ainda editável, que não foi enviado a nenhuma unidade. | carrinho, pendente |
 | **Enviado** | Pedido aceito por uma unidade e aguardando o início do preparo. É o único estado em que o cliente pode cancelar. | aceito, recebido |
 | **Em preparo** | A unidade já consumiu os insumos e está produzindo o pedido. | preparando, em produção |
-| **Concluído** | O pedido foi produzido e seguiu para a entrega. Não é desfecho: o pedido fica concluído enquanto a entrega corre, e passa a cancelado se ela falhar sem nova tentativa. | finalizado, pronto, entregue |
+| **Concluído** | O pedido foi produzido e seguiu para a entrega, ou ficou disponível para retirada na unidade. Não é desfecho: o pedido fica concluído enquanto a entrega corre, e passa a cancelado se ela falhar sem nova tentativa. | finalizado, pronto, entregue |
 | **Recusado** | Desfecho em que o pedido não chegou a ser preparado, por nenhuma unidade atender a região ou por falta de saldo de insumo, sempre com **motivo de recusa** registrado. | rejeitado, negado |
 | **Cancelado** | Desfecho: o pedido foi interrompido pelo cliente, pela unidade ou pelo sistema. O sistema cancela quando a entrega falha sem nova tentativa. | abortado, estornado |
 | **Motivo de recusa** | Justificativa obrigatória registrada quando um pedido é recusado. | erro, observação |
+| **Modalidade** | Como o pedido chega ao cliente: `entrega` ou `retirada`. | tipo de pedido, forma de entrega |
+| **Retirada na unidade** | Modalidade em que o próprio cliente busca o pedido concluído no balcão da unidade. Não tem endereço nem taxa de entrega. | balcão, take-away, coleta |
+| **Motivo do cancelamento** | Justificativa obrigatória registrada quando um pedido é cancelado. | observação |
 
 São **desfechos** do pedido apenas `recusado` e `cancelado`. `concluído` e os estados anteriores
 descrevem a produção; a fase de entrega é acompanhada pelo **estado da entrega**, e o pedido
 permanece `concluído` enquanto ela corre.
+
+### 3.3.1 Cupom
+
+| Termo | Definição | Não usar |
+|---|---|---|
+| **Cupom** | Código que o cliente informa no pedido para obter desconto, do tipo percentual ou valor fixo, com validade, valor mínimo de subtotal, limites de uso e as unidades onde vale. O código é único na rede. | voucher, promoção, código promocional |
+| **Uso do cupom** | Pedido que aplicou o cupom e cujo uso não foi liberado. Conta nos limites do cupom. É liberado quando o pedido é recusado ou cancelado antes de concluído. | resgate, consumo do cupom |
+| **Desconto máximo** | Teto opcional do desconto de um cupom. | limite de desconto |
+
+Subtotal, desconto e valor do pedido são grandezas calculadas pela F10 e ficam definidos na própria
+funcionalidade, como pede a regra 6 da seção 7.
 
 ### 3.4 Estoque
 
@@ -126,6 +150,9 @@ Nomes de estado aceitos no sistema, reunidos aqui para que não exista sinônimo
 | **Estado do insumo** | `ativo` ou `inativo`, no cadastro, e `normal` ou `a repor`, na reposição. O estado de reposição só existe para insumo ativo. | status, situação |
 | **Estado do entregador** | `ativo` ou `inativo`. | status, situação |
 | **Estado da zona** | `ativa` ou `inativa`. | status, situação |
+| **Estado do cupom** | `ativo` ou `desativado`, no cadastro. Na lista de cupons, o cupom ativo cuja validade já terminou aparece como `expirado`. | status, situação |
+| **Estado da estação** | `ativa` ou `inativa`. | status, situação |
+| **Estado do item de preparo** | `pendente` ou `pronto`. | status, situação |
 | **Estado do pedido** | `rascunho`, `enviado`, `em preparo`, `concluído`, `recusado`, `cancelado`. | status, situação |
 | **Estado da entrega** | `aguardando`, `despachada`, `em rota`, `entregue`, `falha`. | status, situação |
 
@@ -171,6 +198,10 @@ Estes pares já causaram ambiguidade na documentação das funcionalidades. Fica
 | **Pedido** × **Compra** | Pedido é do **cliente** e contém produtos. A **compra** é o motivo de uma entrada de insumos, feita pelo gestor. A palavra compra nunca se aplica ao pedido do cliente. |
 | **Produto** × **Insumo** | Produto é o que se **vende**. Insumo é o que se **consome** para produzir. A ficha técnica é a única ponte entre os dois. |
 | **Região de atendimento** × **Zona de entrega** | Região é da **unidade** e diz onde ela aceita pedidos. Zona é da **entrega** e diz quanto se cobra pelo deslocamento. Uma unidade pode atender uma região e ainda assim ter entregas em várias zonas. |
+| **Fila de preparo** × **Fila de despacho** | A fila de preparo é da **cozinha** e reúne pedidos enviados que ainda não começaram a ser preparados. A fila de despacho é da **entrega** e reúne pedidos concluídos que ainda não têm entregador. O pedido passa da primeira para a segunda quando é concluído, se for de entrega. |
+| **Prazo prometido** × **Prazo de entrega do insumo** | O prazo prometido é a hora em que o **pedido do cliente** fica pronto, em minutos a partir da chegada. O prazo de entrega é do **insumo**, em dias, e alimenta o ponto de pedido. |
+| **Retirada na unidade** × **Retirada registrada pelo entregador** | A retirada na unidade é a **modalidade** do pedido: o cliente busca. A retirada que o entregador registra na F2 é o momento em que ele pega o pedido para levar; ela só existe na modalidade entrega. |
+| **Desconto** × **Isenção da taxa** | O desconto vem do **cupom** e reduz o valor do pedido. A isenção vem da **zona** e zera a taxa quando o valor do pedido passa do mínimo. Como a zona compara o valor já com desconto, um cupom pode fazer o pedido perder a isenção. |
 | **Funcionário** × **Entregador** | Entregador é uma pessoa que transporta pedidos. Quando também for funcionário da unidade, são dois cadastros ligados, não um cadastro com dois nomes. |
 
 ## 5. Fluxos principais
@@ -225,6 +256,40 @@ pelos papéis de administração. São insumos de dados para os fluxos acima.
 - O endereço textual e sua região são informados no pedido. Coordenadas e valor do pedido
   são dados de integração com entrega; não são calculados pelos protótipos estáticos.
 
+### 5.5 Do pedido com cupom à conclusão do preparo
+
+```mermaid
+flowchart TD
+    A[Cliente monta o pedido e informa o cupom] --> B{Cupom vale?<br/>ativo, validade, unidade,<br/>mínimo, limites, 1º pedido}
+    B -- não --> C[Cupom recusado com o motivo<br/>o cliente decide seguir sem desconto]
+    C --> D
+    B -- sim --> D[Desconto, valor do pedido<br/>e taxa estimada sobre o valor com desconto]
+    D --> E{Estações envolvidas<br/>estão ativas?}
+    E -- não --> F[Pedido não é criado<br/>motivo informado ao cliente]
+    E -- sim --> G[Pedido enviado com prazo prometido<br/>e uso do cupom gravado]
+    G --> H[Fila de preparo<br/>atrasados, folga, itens e chegada]
+    H --> I{Baixa de insumos<br/>aceita? F1 RN 4}
+    I -- não --> J[Pedido recusado<br/>uso do cupom liberado]
+    I -- sim --> K[Em preparo: estações<br/>marcam os itens prontos]
+    K --> L{Modalidade}
+    L -- entrega --> M[Concluído: fila de despacho da F2]
+    L -- retirada --> N[Concluído: disponível para retirada]
+    H -. atraso acima de 15 min .-> O[Alerta ao gestor<br/>com a estação de maior carga]
+```
+
+### 5.6 Fronteiras das funcionalidades de Abner
+
+- A F10 parte do pedido com unidade definida e grava os valores: preços do momento, desconto, valor do
+  pedido e total. O rascunho, a região e a seleção de unidade continuam na F4.
+- A F10 permite o mesmo produto em mais de um item; o rascunho da F4 soma a quantidade numa linha só.
+  Os dois convivem porque a F10 recebe os itens já compostos.
+- A F11 calcula o prazo prometido na chegada do pedido e dispara a baixa da F1 RN 4 ao iniciar o preparo.
+  Recusa por falta de saldo libera o uso do cupom (F10 RN 6). O cancelamento do preparo pelo gestor
+  continua devolvendo os insumos pela F1 RN 5.
+- A habilitação de produto na unidade (F6 RN 3) já exige a configuração de preparo mantida pela F11 RN 2.
+- O pedido de entrega concluído entra na fila de despacho da F2; a taxa estimada pela F10 vem da F2 RN 3,
+  e o total final usa a taxa gravada no despacho.
+
 ## 6. Fora de escopo
 
 Declarado explicitamente para evitar expectativa errada:
@@ -236,7 +301,8 @@ Declarado explicitamente para evitar expectativa errada:
 - Integração real com mapas ou com API de distância. O cálculo usa coordenadas e distância em linha reta.
 - Lote, validade, vencimento e custo médio de estoque.
 - Perda e ajuste de inventário.
-- Retirada do pedido na unidade, agrupamento de pedidos em uma mesma entrega e turno por entregador.
+- Agrupamento de pedidos em uma mesma entrega e turno por entregador. A retirada do pedido na unidade
+  saiu desta lista e entrou no escopo com a F10 e a F11.
 
 ## 7. Regra de uso do vocabulário
 

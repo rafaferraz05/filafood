@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Estações</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F11 · preparo</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-preparo">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav b-nav-atual" href="estacoes.html">Estações</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="produtos.html">Preparo dos produtos</a>
+        <span class="b-seta">›</span>
+        <a class="b-nav" href="painel.html">Painel do gestor</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="estacoes.html">com dados</a>
+        <a class="b-estado" href="estacoes-vazio.html">sem estações</a>
+        <a class="b-estado" href="estacoes-formulario.html">formulário</a>
+        <a class="b-estado" href="estacoes-formulario-erros.html">com erros</a>
+        <a class="b-estado" href="estacoes-cadastrada.html">cadastrada</a>
+        <a class="b-estado" href="estacoes-editar.html">editar</a>
+        <a class="b-estado" href="estacoes-editada.html">editada</a>
+        <a class="b-estado b-estado-atual" href="estacoes-confirmar-desativacao.html">confirmar</a>
+        <a class="b-estado" href="estacoes-desativada.html">desativada</a>
+        <a class="b-estado" href="estacoes-desativacao-recusada.html">com itens na fila</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="fila.html">Tela da cozinha ›</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Gestor da unidade</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Estações</h1>
+        <p class="subtitulo">Estações de preparo da cozinha da unidade, com a carga às 19:30.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">5 estações</span>
+        <span class="badge badge-ok">4 ativas</span>
+      </div>
+    </div>
+
+    <div class="barra">
+      <div class="busca">
+        <svg class="lupa" width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="7.6" cy="7.6" r="5.2"></circle>
+          <line x1="11.6" y1="11.6" x2="15.6" y2="15.6"></line>
+        </svg>
+        <input type="text" placeholder="Buscar pelo nome">
+      </div>
+      <select>
+        <option>Estado: todas</option>
+        <option>Estado: ativa</option>
+        <option>Estado: inativa</option>
+      </select>
+      <a class="btn btn-primario" href="estacoes-formulario.html">Nova estação</a>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Estação</th>
+          <th>Capacidade</th>
+          <th>Carga atual</th>
+          <th>Itens na fila</th>
+          <th>Estado</th>
+          <th class="acoes">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="destaque">Chapa<span class="unidade">Clássico, Duplo e Vegetariano</span></td>
+          <td>4 ao mesmo tempo</td>
+          <td>61 min</td>
+          <td>5</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a>Editar</a><a class="apagada" href="estacoes-desativacao-recusada.html">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Fritadeira<span class="unidade">Batata Frita</span></td>
+          <td>2 ao mesmo tempo</td>
+          <td>24 min</td>
+          <td>3</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a href="estacoes-editar.html">Editar</a><a class="apagada">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Montagem<span class="unidade">Salada da Casa</span></td>
+          <td>2 ao mesmo tempo</td>
+          <td>4 min</td>
+          <td>1</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a>Editar</a><a class="apagada">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Sucos<span class="unidade">Suco de Laranja</span></td>
+          <td>2 ao mesmo tempo</td>
+          <td>0 min</td>
+          <td>0</td>
+          <td><span class="badge badge-ok"><span class="bolinha"></span>ativa</span></td>
+          <td class="acoes"><a>Editar</a><a class="apagada" href="estacoes-confirmar-desativacao.html">Desativar</a></td>
+        </tr>
+        <tr>
+          <td class="destaque">Forno<span class="unidade">Petit Gâteau</span></td>
+          <td>1 ao mesmo tempo</td>
+          <td>0 min</td>
+          <td>0</td>
+          <td><span class="badge badge-neutro"><span class="bolinha"></span>inativa</span></td>
+          <td class="acoes"><a>Reativar</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="rodape">A carga é a soma, em minutos, do tempo de preparo dos itens da estação que ainda não estão prontos, em pedidos enviados ou em preparo. Estação com itens na fila não pode ser desativada; inativa, não recebe produtos novos.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Estações · estado confirmar</b> · F11 RN 1 (desativar estação sem itens na fila)</p>
+
+    <div class="fundo-modal">
+      <div class="confirmacao">
+        <div class="confirmacao-titulo">Desativar a estação Sucos?</div>
+        <p class="confirmacao-texto">A Sucos não tem itens na fila. Inativa, ela não recebe produtos novos, e pedidos com Suco de Laranja não são criados até a reativação. O histórico dos pedidos continua registrando a estação.</p>
+        <div class="acoes-form">
+          <a class="btn btn-perigo" href="estacoes-desativada.html">Desativar estação</a>
+          <a class="btn btn-claro" href="estacoes.html">Cancelar</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

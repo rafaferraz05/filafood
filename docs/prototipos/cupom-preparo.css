@@ -1,0 +1,22 @@
+/* Complementos apenas das telas de cupom (F10) e preparo (F11); identidade visual em estilo.css. */
+.abner .gui-linha, .abner .gui-estados, .abner .gui-dir { flex-wrap: wrap; }
+.abner .gui-estados { flex: 1; min-width: 0; }
+.abner .marcadores input { width: auto; }
+.abner a:focus-visible, .abner input:focus, .abner select:focus { outline: 3px solid var(--vermelho); outline-offset: 2px; }
+@media (max-width: 760px) {
+  body.abner { height: auto; min-height: 100%; padding: 8px; }
+  .abner .casca { height: auto; min-height: calc(100vh - 16px); }
+  .abner .casca .app { flex: auto; }
+  .abner .conteudo { overflow: visible; padding: 14px; }
+  .abner .grid-2, .abner .linha-campos, .abner .linha-campos-2, .abner .kpis { grid-template-columns: 1fr; gap: 10px; }
+  .abner .topbar { flex-wrap: wrap; padding: 12px; }
+  .abner .topbar-pills { margin-left: 0; flex-wrap: wrap; }
+  .abner .gui-dir { margin-left: 0; }
+  .abner .barra { flex-wrap: wrap; }
+  .abner .cabecalho { flex-wrap: wrap; }
+  .abner .badges { margin-left: 0; flex-wrap: wrap; padding-top: 0; }
+  .abner .grid-2 > *, .abner .card { min-width: 0; }
+  .abner table { display: block; overflow-x: auto; }
+  .abner .fundo-modal { position: fixed; padding: 16px; }
+  .abner .confirmacao { width: min(440px, calc(100vw - 32px)); }
+}

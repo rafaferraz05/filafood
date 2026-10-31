@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FilaFood · Fila de preparo</title>
+<link rel="stylesheet" href="../estilo.css?v=3">
+<link rel="stylesheet" href="../cupom-preparo.css">
+</head>
+<body class="abner">
+<div class="casca">
+
+  <nav class="gui">
+    <div class="gui-linha">
+      <span class="gui-pontos"><i></i><i></i><i></i></span>
+      <span class="gui-titulo">Protótipo FilaFood</span>
+      <span class="gui-fluxo">F11 · preparo</span>
+      <span class="gui-dir">
+        <a class="b-nav" href="../index.html#fluxo-preparo">Mapa</a>
+        <span class="b-seta">·</span>
+        <a class="b-nav b-nav-atual" href="fila.html">Fila de preparo</a>
+      </span>
+    </div>
+    <div class="gui-linha">
+      <span class="gui-rotulo">Estado da tela</span>
+      <span class="gui-estados">
+        <a class="b-estado" href="fila.html">com dados</a>
+        <a class="b-estado" href="fila-estacao.html">fila da Fritadeira</a>
+        <a class="b-estado" href="fila-iniciado.html">preparo iniciado</a>
+        <a class="b-estado" href="fila-recusado.html">baixa recusada</a>
+        <a class="b-estado" href="fila-item-pronto.html">item pronto</a>
+        <a class="b-estado" href="fila-concluido.html">concluído entrega</a>
+        <a class="b-estado" href="fila-retirada.html">concluído retirada</a>
+        <a class="b-estado b-estado-atual" href="fila-vazia.html">fila vazia</a>
+      </span>
+      <span class="gui-dir">
+        <a class="b-nav" href="painel.html">‹ Tela do gestor</a>
+      </span>
+    </div>
+  </nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="marca">
+      <div class="marca-selo">FF</div>
+      <div>
+        <div class="marca-nome">FilaFood</div>
+        <div class="marca-sub">rede de restaurantes</div>
+      </div>
+    </div>
+    <div class="topbar-pills">
+      <span class="pill pill-clara">Unidade: Boa Viagem</span>
+      <span class="pill pill-amarela">Atendente ou cozinheiro</span>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <div class="cabecalho">
+      <div>
+        <h1>Fila de preparo</h1>
+        <p class="subtitulo">Cozinha da unidade Boa Viagem, em 20/10/2026 às 22:10.</p>
+      </div>
+      <div class="badges">
+        <span class="badge badge-neutro">0 na fila</span>
+        <span class="badge badge-alerta">0 em preparo</span>
+      </div>
+    </div>
+
+    <div class="vazio">
+      <div class="vazio-titulo">Nenhum pedido na fila</div>
+      <div class="vazio-nota">Nenhum pedido aguardando ou em preparo, e a carga de todas as estações é zero. Os pedidos enviados aparecem aqui, na ordem em que devem ser preparados.</div>
+    </div>
+
+    <div class="rodape">Primeiro os atrasados, do mais atrasado para o menos; depois a menor folga; em empate, o pedido com menos itens; persistindo, o que chegou antes. A ordem é recalculada a cada consulta.</div>
+
+    <p class="anotacao"><b>Protótipo de alta fidelidade · Tela Fila de preparo · estado fila vazia</b> · F11 RN 4</p>
+
+  </main>
+</div>
+</div>
+</body>
+</html>
