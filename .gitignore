@@ -5,3 +5,7 @@ target/
 .vscode/
 *.log
 /bin/
+
+# Vaadin: frontend gerado pelo dev server e dependências Node
+node_modules/
+app/src/main/frontend/generated/

@@ -1,0 +1,16 @@
+# Postgres do desenvolvimento (D-05). A senha vem do ambiente: nada de segredo no repositório
+# (docs/padroes-do-projeto.md, seção 15). Exemplo: DB_PASSWORD=filafood docker compose up -d db
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${DB_NAME:-filafood}
+      POSTGRES_USER: ${DB_USER:-filafood}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD no ambiente}
+    ports:
+      - "5432:5432"
+    volumes:
+      - filafood-db:/var/lib/postgresql/data
+
+volumes:
+  filafood-db:

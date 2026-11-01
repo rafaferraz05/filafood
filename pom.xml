@@ -16,6 +16,9 @@
     <cucumber.version>7.21.1</cucumber.version>
     <junit.version>5.11.4</junit.version>
     <junit.platform.version>1.11.4</junit.platform.version>
+    <spring-boot.version>4.1.2</spring-boot.version>
+    <vaadin.version>25.3.4</vaadin.version>
+    <archunit.version>1.5.1</archunit.version>
   </properties>
 
   <modules>
@@ -25,6 +28,7 @@
     <module>dominio-atendimento</module>
     <module>dominio-cardapio</module>
     <module>dominio-compras</module>
+    <module>app</module>
   </modules>
 
   <!-- Versões fixadas no pai (docs/padroes-do-projeto.md, seção 2): nenhum módulo declara versão
@@ -56,6 +60,29 @@
         <artifactId>junit-jupiter</artifactId>
         <version>${junit.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit</artifactId>
+        <version>${archunit.version}</version>
+      </dependency>
+      <!-- BOM do JUnit antes do BOM do Boot: o projeto mantém a linha 5.11.4 do Cucumber, e sem
+           isto o Boot puxaria os módulos do Jupiter para o 6.0.3, misturando versões. -->
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- Importado por último de propósito: as entradas próprias acima têm precedência, e o
+           projeto mantém o JUnit 5.11.4 do Cucumber em vez do JUnit 6.0.3 gerenciado pelo Boot. -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -71,6 +98,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>3.2.5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>

@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: filafood
+
+server:
+  port: 8080
