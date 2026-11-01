@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.MovimentacaoEstoque;
 import br.edu.cesar.filafood.dominio.estoque.suporte.MundoDoEstoque;
@@ -28,7 +30,7 @@ public class EntradaSteps {
 
     @Quando("o gestor da unidade registra uma entrada de {int} {string} do insumo {string} com custo unitário {double}")
     public void registrarEntrada(int quantidade, String unidadeDeMedida, String nome, double custoUnitario) {
-        mundo.tentar(() -> mundo.estoque.insumo(nome).receber(quantidade, custoUnitario));
+        mundo.tentar(() -> mundo.estoque.insumo(nome).receber(quantidade, BigDecimal.valueOf(custoUnitario)));
     }
 
     @Então("o saldo do insumo {string} fica {int} {string}")
@@ -45,7 +47,7 @@ public class EntradaSteps {
                 .anyMatch(m -> m.tipo() == MovimentacaoEstoque.Tipo.ENTRADA
                         && m.motivo() == MovimentacaoEstoque.Motivo.COMPRA
                         && m.quantidade() == quantidade
-                        && m.custoUnitario() == custoUnitario);
+                        && m.custoUnitario().compareTo(BigDecimal.valueOf(custoUnitario)) == 0);
         assertTrue(encontrada, "esperava uma movimentação de entrada de " + quantidade + " com custo " + custoUnitario);
     }
 
@@ -58,7 +60,7 @@ public class EntradaSteps {
     @Dado("uma entrada de {int} {string} registrada para o insumo {string}")
     public void entradaRegistrada(int quantidade, String unidadeDeMedida, String nome) {
         insumoDaEntrada = nome;
-        mundo.insumoAtivo(nome).receber(quantidade, 2.00);
+        mundo.insumoAtivo(nome).receber(quantidade, BigDecimal.valueOf(2.00));
     }
 
     @Quando("o gestor da unidade tenta alterar a quantidade da entrada para {int} {string}")

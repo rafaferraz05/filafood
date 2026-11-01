@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.estoque.insumo;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -7,13 +8,13 @@ import java.time.LocalDateTime;
  * ser alterada nem excluída.
  *
  * O campo {@code origem} guarda o pedido que causou a movimentação, o que permite devolver
- * exatamente o que foi consumido.
+ * exatamente o que foi consumido. O custo unitário é dinheiro, em {@link BigDecimal}.
  */
 public record MovimentacaoEstoque(
         Tipo tipo,
         Motivo motivo,
         double quantidade,
-        double custoUnitario,
+        BigDecimal custoUnitario,
         String origem,
         LocalDateTime dataHora) {
 
@@ -28,16 +29,18 @@ public record MovimentacaoEstoque(
         CONSUMO
     }
 
-    public static MovimentacaoEstoque compra(double quantidade, double custoUnitario) {
+    public static MovimentacaoEstoque compra(double quantidade, BigDecimal custoUnitario) {
         return new MovimentacaoEstoque(Tipo.ENTRADA, Motivo.COMPRA, quantidade, custoUnitario, "", LocalDateTime.now());
     }
 
     public static MovimentacaoEstoque devolucao(double quantidade, String pedido) {
-        return new MovimentacaoEstoque(Tipo.ENTRADA, Motivo.DEVOLUCAO, quantidade, 0, pedido, LocalDateTime.now());
+        return new MovimentacaoEstoque(Tipo.ENTRADA, Motivo.DEVOLUCAO, quantidade, BigDecimal.ZERO.setScale(2), pedido,
+                LocalDateTime.now());
     }
 
     public static MovimentacaoEstoque consumo(double quantidade, String pedido) {
-        return new MovimentacaoEstoque(Tipo.SAIDA, Motivo.CONSUMO, quantidade, 0, pedido, LocalDateTime.now());
+        return new MovimentacaoEstoque(Tipo.SAIDA, Motivo.CONSUMO, quantidade, BigDecimal.ZERO.setScale(2), pedido,
+                LocalDateTime.now());
     }
 
     public boolean somaAoSaldo() {

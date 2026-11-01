@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.entrega.entrega;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +21,22 @@ public class Entrega {
     private final String pedido;
     private final ZonaDeEntrega zona;
     private final double distanciaKm;
-    private final double valorDoPedido;
+    private final BigDecimal valorDoPedido;
     private final int tentativa;
     private final List<TransicaoDaEntrega> transicoes = new ArrayList<>();
 
     private EstadoDaEntrega estado = EstadoDaEntrega.AGUARDANDO;
     private Entregador entregador;
-    private double taxa;
+    private BigDecimal taxa;
     private String recebedor;
     private MotivoDaFalha motivoDaFalha;
     private String observacaoDaFalha;
 
-    public Entrega(String pedido, ZonaDeEntrega zona, double distanciaKm, double valorDoPedido) {
+    public Entrega(String pedido, ZonaDeEntrega zona, double distanciaKm, BigDecimal valorDoPedido) {
         this(pedido, zona, distanciaKm, valorDoPedido, 1);
     }
 
-    private Entrega(String pedido, ZonaDeEntrega zona, double distanciaKm, double valorDoPedido, int tentativa) {
+    private Entrega(String pedido, ZonaDeEntrega zona, double distanciaKm, BigDecimal valorDoPedido, int tentativa) {
         this.pedido = pedido;
         this.zona = zona;
         this.distanciaKm = distanciaKm;
@@ -121,7 +122,7 @@ public class Entrega {
         return distanciaKm;
     }
 
-    public double valorDoPedido() {
+    public BigDecimal valorDoPedido() {
         return valorDoPedido;
     }
 
@@ -137,7 +138,7 @@ public class Entrega {
         return entregador;
     }
 
-    public double taxa() {
+    public BigDecimal taxa() {
         return taxa;
     }
 

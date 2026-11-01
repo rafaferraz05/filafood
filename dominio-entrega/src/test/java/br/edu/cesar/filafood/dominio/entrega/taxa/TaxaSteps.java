@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.entrega.suporte.MundoDaEntrega;
 import br.edu.cesar.filafood.dominio.entrega.zona.ZonaDeEntrega;
 import io.cucumber.java.pt.Dado;
@@ -15,7 +17,7 @@ public class TaxaSteps {
 
     private final MundoDaEntrega mundo;
     private ZonaDeEntrega zonaCalculada;
-    private double taxaCalculada;
+    private BigDecimal taxaCalculada;
 
     public TaxaSteps(MundoDaEntrega mundo) {
         this.mundo = mundo;
@@ -46,7 +48,7 @@ public class TaxaSteps {
 
     @Então("a taxa de entrega é {double}")
     public void taxaEh(double esperada) {
-        assertEquals(esperada, taxaCalculada, 0.001);
+        assertEquals(0, BigDecimal.valueOf(esperada).compareTo(taxaCalculada));
     }
 
     @Dado("um pedido despachado com taxa de entrega {double} pela zona {string}")
@@ -54,16 +56,17 @@ public class TaxaSteps {
         mundo.pedidoPronto("P1", 25.00, MundoDaEntrega.aoNorte(mundo.zona(zona).centro(), 4));
         mundo.garantirEntregador("Ana", zona, 3);
         assertTrue(mundo.despacharPedido(), "esperava o pedido despachado");
-        assertEquals(taxaEsperada, mundo.entrega.taxa(), 0.001, "a taxa gravada deveria ser a do cenário");
+        assertEquals(0, BigDecimal.valueOf(taxaEsperada).compareTo(mundo.entrega.taxa()),
+                "a taxa gravada deveria ser a do cenário");
     }
 
     @Quando("o gestor da unidade altera o valor base da zona {string} para {double}")
     public void alterarValorBase(String zona, double valorBase) {
-        mundo.zona(zona).alterarValorBase(valorBase);
+        mundo.zona(zona).alterarValorBase(BigDecimal.valueOf(valorBase));
     }
 
     @Então("a taxa de entrega do pedido continua {double}")
     public void taxaContinua(double esperada) {
-        assertEquals(esperada, mundo.entrega.taxa(), 0.001);
+        assertEquals(0, BigDecimal.valueOf(esperada).compareTo(mundo.entrega.taxa()));
     }
 }

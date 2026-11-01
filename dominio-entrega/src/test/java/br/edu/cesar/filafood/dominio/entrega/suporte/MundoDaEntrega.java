@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.entrega.suporte;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -65,8 +66,9 @@ public class MundoDaEntrega {
         if (zonas.zonas().stream().anyMatch(zona -> zona.nome().equals(nome))) {
             return zona(nome);
         }
-        return zonas.cadastrar(new ZonaDeEntrega(nome, CENTRO_PADRAO, raioKm, valorBase, raioGratuitoKm,
-                valorPorKmExcedente, teto, valorMinimoDePedido));
+        return zonas.cadastrar(new ZonaDeEntrega(nome, CENTRO_PADRAO, raioKm, BigDecimal.valueOf(valorBase),
+                raioGratuitoKm, BigDecimal.valueOf(valorPorKmExcedente), BigDecimal.valueOf(teto),
+                BigDecimal.valueOf(valorMinimoDePedido)));
     }
 
     public ZonaDeEntrega zona(String nome) {
@@ -121,11 +123,12 @@ public class MundoDaEntrega {
 
     /** Pedido pronto, com a entrega criada em aguardando e colocada na fila de despacho. */
     public Entrega pedidoPronto(String id, double valorDoPedido, Coordenada endereco) {
-        pedido = new PedidoEmTeste(id, valorDoPedido, endereco);
+        BigDecimal valor = BigDecimal.valueOf(valorDoPedido);
+        pedido = new PedidoEmTeste(id, valor, endereco);
         pedido.marcarConcluido();
         ZonaDeEntrega zona = zonas.zonaDoEndereco(endereco);
         double distancia = zona.centro().distanciaEmKm(endereco);
-        entrega = new Entrega(id, zona, distancia, valorDoPedido);
+        entrega = new Entrega(id, zona, distancia, valor);
         fila.colocar(entrega);
         return entrega;
     }

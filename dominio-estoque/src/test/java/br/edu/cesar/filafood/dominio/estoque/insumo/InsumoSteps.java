@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.estoque.suporte.MundoDoEstoque;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
@@ -31,7 +33,7 @@ public class InsumoSteps {
 
     @Dado("o insumo {string} cadastrado e com movimentações de estoque registradas")
     public void insumoComMovimentacoes(String nome) {
-        mundo.estoque.cadastrarInsumo(nome, "kg", 5, 3).receber(10, 4.00);
+        mundo.estoque.cadastrarInsumo(nome, "kg", 5, 3).receber(10, BigDecimal.valueOf(4.00));
     }
 
     @Dado("o insumo {string} ativo")

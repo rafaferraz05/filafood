@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.entrega.Coordenada;
 import br.edu.cesar.filafood.dominio.entrega.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.entrega.suporte.MundoDaEntrega;
@@ -45,7 +47,8 @@ public class ZonaSteps {
             int raioGratuitoKm, double valorPorKmExcedente, double teto, double valorMinimoDePedido) {
         return new ZonaDeEntrega(nome,
                 new Coordenada(Double.parseDouble(latitude), Double.parseDouble(longitude)),
-                raioKm, valorBase, raioGratuitoKm, valorPorKmExcedente, teto, valorMinimoDePedido);
+                raioKm, BigDecimal.valueOf(valorBase), raioGratuitoKm, BigDecimal.valueOf(valorPorKmExcedente),
+                BigDecimal.valueOf(teto), BigDecimal.valueOf(valorMinimoDePedido));
     }
 
     @Dado("a zona {string} ativa e sem entregas em andamento")

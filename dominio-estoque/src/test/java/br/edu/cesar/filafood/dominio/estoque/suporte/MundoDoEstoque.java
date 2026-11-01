@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.estoque.suporte;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class MundoDoEstoque {
         Insumo insumo = insumoAtivo(nome);
         double diferenca = saldoDesejado - insumo.saldo();
         if (diferenca > 0) {
-            insumo.receber(diferenca, 1.00);
+            insumo.receber(diferenca, BigDecimal.valueOf(1.00));
         }
     }
 

@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.estoque.insumo;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,12 +48,12 @@ public class Insumo {
     }
 
     /** Entrada por compra. Exige insumo ativo, quantidade e custo unitário maiores que zero. */
-    public void receber(double quantidade, double custoUnitario) {
+    public void receber(double quantidade, BigDecimal custoUnitario) {
         exigirAtivo();
         if (quantidade <= 0) {
             throw new RegraDeNegocioException("a quantidade deve ser maior que zero");
         }
-        if (custoUnitario <= 0) {
+        if (custoUnitario.signum() <= 0) {
             throw new RegraDeNegocioException("o custo unitário deve ser maior que zero");
         }
         movimentacoes.add(MovimentacaoEstoque.compra(quantidade, custoUnitario));

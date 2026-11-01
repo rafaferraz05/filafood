@@ -1,5 +1,7 @@
 package br.edu.cesar.filafood.dominio.entrega.suporte;
 
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.entrega.Coordenada;
 import br.edu.cesar.filafood.dominio.entrega.EstadoDoPedido;
 
@@ -13,11 +15,11 @@ import br.edu.cesar.filafood.dominio.entrega.EstadoDoPedido;
 public class PedidoEmTeste {
 
     private final String id;
-    private final double valorDoPedido;
+    private final BigDecimal valorDoPedido;
     private final Coordenada endereco;
     private EstadoDoPedido estado = EstadoDoPedido.ENVIADO;
 
-    public PedidoEmTeste(String id, double valorDoPedido, Coordenada endereco) {
+    public PedidoEmTeste(String id, BigDecimal valorDoPedido, Coordenada endereco) {
         this.id = id;
         this.valorDoPedido = valorDoPedido;
         this.endereco = endereco;
@@ -36,7 +38,7 @@ public class PedidoEmTeste {
         return id;
     }
 
-    public double valorDoPedido() {
+    public BigDecimal valorDoPedido() {
         return valorDoPedido;
     }
 

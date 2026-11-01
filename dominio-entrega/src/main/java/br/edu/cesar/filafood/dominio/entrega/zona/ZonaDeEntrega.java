@@ -1,5 +1,7 @@
 package br.edu.cesar.filafood.dominio.entrega.zona;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -12,21 +14,24 @@ import br.edu.cesar.filafood.dominio.entrega.RegraDeNegocioException;
  *
  * <p>A taxa é o valor base mais o valor por quilômetro que excede o raio gratuito, limitada ao teto,
  * e é zerada quando o valor do pedido passa do valor mínimo de pedido da zona.
+ *
+ * <p>Dinheiro é {@link BigDecimal} com escala 2, como manda docs/padroes-do-projeto.md; distância
+ * continua {@code double}.
  */
 public class ZonaDeEntrega {
 
     private final String nome;
     private final Coordenada centro;
     private final double raioKm;
-    private double valorBase;
+    private BigDecimal valorBase;
     private final double raioGratuitoKm;
-    private final double valorPorKmExcedente;
-    private final double teto;
-    private final double valorMinimoDePedido;
+    private final BigDecimal valorPorKmExcedente;
+    private final BigDecimal teto;
+    private final BigDecimal valorMinimoDePedido;
     private boolean ativa = true;
 
-    public ZonaDeEntrega(String nome, Coordenada centro, double raioKm, double valorBase, double raioGratuitoKm,
-            double valorPorKmExcedente, double teto, double valorMinimoDePedido) {
+    public ZonaDeEntrega(String nome, Coordenada centro, double raioKm, BigDecimal valorBase, double raioGratuitoKm,
+            BigDecimal valorPorKmExcedente, BigDecimal teto, BigDecimal valorMinimoDePedido) {
         this.nome = nome;
         this.centro = centro;
         this.raioKm = raioKm;
@@ -41,16 +46,17 @@ public class ZonaDeEntrega {
         return centro.distanciaEmKm(endereco) <= raioKm;
     }
 
-    public double taxaPara(Coordenada endereco, double valorDoPedido) {
+    public BigDecimal taxaPara(Coordenada endereco, BigDecimal valorDoPedido) {
         return taxaParaDistancia(centro.distanciaEmKm(endereco), valorDoPedido);
     }
 
-    public double taxaParaDistancia(double distanciaKm, double valorDoPedido) {
-        if (valorDoPedido > valorMinimoDePedido) {
-            return 0;
+    public BigDecimal taxaParaDistancia(double distanciaKm, BigDecimal valorDoPedido) {
+        if (valorDoPedido.compareTo(valorMinimoDePedido) > 0) {
+            return BigDecimal.ZERO.setScale(2);
         }
         double quilometrosExcedentes = Math.max(0, distanciaKm - raioGratuitoKm);
-        return Math.min(valorBase + quilometrosExcedentes * valorPorKmExcedente, teto);
+        BigDecimal excedente = valorPorKmExcedente.multiply(BigDecimal.valueOf(quilometrosExcedentes));
+        return valorBase.add(excedente).min(teto).setScale(2, RoundingMode.HALF_UP);
     }
 
     public void desativar() {
@@ -58,7 +64,7 @@ public class ZonaDeEntrega {
     }
 
     /** Edita o valor base pelo cadastro da zona. */
-    public void alterarValorBase(double valorBase) {
+    public void alterarValorBase(BigDecimal valorBase) {
         this.valorBase = valorBase;
     }
 
