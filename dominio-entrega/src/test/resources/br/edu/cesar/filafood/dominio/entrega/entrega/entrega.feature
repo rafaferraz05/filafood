@@ -13,6 +13,11 @@ Funcionalidade: Estados e desfecho da entrega
     Quando o entregador "Ana" registra a entrega com o recebedor "Maria"
     Então a entrega fica entregue
 
+  Cenário: Liberar a carga do entregador ao registrar a entrega
+    Dado o entregador "Ana" com carga em andamento 2 e uma entrega em rota
+    Quando o entregador "Ana" registra a entrega com o recebedor "Maria"
+    Então a carga em andamento do entregador "Ana" fica 1
+
   Cenário: Registrar o desfecho de falha com o motivo
     Dado uma entrega em rota com o entregador "Ana"
     Quando o entregador "Ana" registra uma falha com o motivo "ausência do cliente"

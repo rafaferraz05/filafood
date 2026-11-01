@@ -66,6 +66,10 @@ public class Entrega {
         transitarPara(EstadoDaEntrega.EM_ROTA);
     }
 
+    /**
+     * Registra a entrega e libera a carga do entregador: a entrega entregue deixa de ser "carga em
+     * andamento", que são só as despachadas ou em rota (definição de carga em andamento da F2).
+     */
     public void registrarEntrega(String recebedor) {
         exigirNaoFinalizada();
         if (estado != EstadoDaEntrega.EM_ROTA) {
@@ -76,6 +80,7 @@ public class Entrega {
         }
         this.recebedor = recebedor;
         transitarPara(EstadoDaEntrega.ENTREGUE);
+        entregador.liberarCarga();
     }
 
     public void registrarFalha(MotivoDaFalha motivo, String observacao) {
