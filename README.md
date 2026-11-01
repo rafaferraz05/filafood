@@ -10,14 +10,26 @@ Protótipo acadêmico de um sistema de distribuição de pedidos entre unidades 
 | Mapa da história do usuário | [`docs/historia-do-usuario.md`](docs/historia-do-usuario.md) | preliminar |
 | Protótipos de alta fidelidade | `docs/prototipos/` | preliminar |
 | Funcionalidades e regras de negócio | [`docs/funcionalidades.md`](docs/funcionalidades.md) | tático |
-| Modelo do domínio (Context Mapper) | `filafood.cml` | estratégico e tático |
+| Modelo do domínio (Context Mapper) | [`filafood.cml`](filafood.cml) | tático (F1 e F2) |
+| Decisões de arquitetura (ADRs) | [`docs/adr/`](docs/adr/) | estrutural |
 | Diário de uso da IA | [`DIARIO-IA.md`](DIARIO-IA.md) | — |
 
-O modelo em Context Mapper ainda não existe no repositório.
+O CML cobre hoje o modelo tático de F1 e F2; os contextos de F3–F11 entram no mesmo arquivo quando
+seus donos escreverem o modelo. A decisão de escopo — sem ContextMap por ora — está em
+[`docs/adr/0008-cml-escopo-tatico-f1-f2.md`](docs/adr/0008-cml-escopo-tatico-f1-f2.md).
 
 Convenção: o CML fica na **raiz**, como no exemplo `sgb-2025-01`. A documentação fica em `docs/`.
 Os arquivos `.feature` do Cucumber ficam dentro do módulo de domínio correspondente, em
 `src/test/resources`, espelhando o pacote do conceito.
+
+Build: o `pom.xml` da raiz agrega o `parte1`, os `dominio-*` e o `app`; `.\mvnw.cmd test` roda tudo.
+Cada módulo continua rodando sozinho com `-f`, e a Parte 1 continua executável por
+`java -cp parte1/target/classes`.
+
+Aplicação: `.\mvnw.cmd -pl app spring-boot:run` sobe a tela inicial em `http://localhost:8080`.
+Nesta máquina a porta 8080 é do `tailscaled`, então use
+`"-Dspring-boot.run.arguments=--server.port=8081"`. O Postgres do dev está em `docker-compose.yml`
+e ainda não é usado pela aplicação (D-05).
 
 As seções abaixo descrevem a Parte 1 do trabalho — o protótipo local de concorrência em Java puro.
 
@@ -87,7 +99,7 @@ O servidor sincroniza somente a decisão rápida de roteamento. O preparo dos pe
 
 ## Comunicação e dados
 
-Nesta etapa single-node, a comunicação entre o servidor central e os restaurantes acontece por chamadas de métodos Java. O arquivo `src/main/proto/pedido.proto` registra o contrato gRPC planejado para a evolução distribuída.
+Nesta etapa single-node, a comunicação entre o servidor central e os restaurantes acontece por chamadas de métodos Java. O arquivo `parte1/src/main/proto/pedido.proto` registra o contrato gRPC planejado para a evolução distribuída.
 
 O método `EnviarPedido` é unário: recebe um `PedidoRequest` e devolve um `PedidoResponse`. Essa escolha é suficiente porque cada pedido gera uma única confirmação.
 

@@ -1,0 +1,426 @@
+/*
+ * FilaFood — modelo tático de F1 (estoque) e F2 (entrega)
+ *
+ * Fonte de verdade: docs/dominio.md (vocabulário) e docs/funcionalidades.md (regras F1 e F2).
+ * Cada regra cita a tag da feature que a verifica (@f1-rn1 ... @f2-rn6).
+ *
+ * Como ler este arquivo:
+ * - Agregado é a fronteira de consistência: de fora, só a raiz é referenciada.
+ * - Entity tem identidade; ValueObject é imutável e sem identidade; enum com aggregateLifecycle
+ *   são os estados do agregado.
+ * - ": write [ A -> B ]" é a transição que a regra permite; ": read-only" é consulta.
+ * - A linguagem não tem construtor de "regra de negócio": cada regra fica como comentário acima
+ *   da operação que a guarda, com a mensagem exata que o domínio devolve — a mesma dos cenários que
+ *   a verificam. Se a mensagem mudar no código, muda aqui e na feature.
+ * - Dinheiro aparece como BigDecimal com escala 2, como manda docs/padroes-do-projeto.md, e é o que
+ *   os módulos de F1 e F2 já fazem (D-10). Quantidade e distância continuam double no código; a
+ *   escala da quantidade entra no G-09.
+ * - O modelo é o alvo, não um retrato do código: identidade (InsumoId, FichaId, ...), unidadeId,
+ *   Repository e DomainEvent seguem os requisitos G-05..G-14 e entram nas fases P1..P4. Hoje o
+ *   código usa o nome como chave e ainda não tem camada de repositório.
+ *
+ * Escopo: funcionalidades 1 e 2. F3–F11 entram neste arquivo, no mesmo formato, quando seus donos
+ * escreverem o modelo tático. Não há ContextMap aqui de propósito: ele responde outra pergunta
+ * (quem fala com quem) e não descreve o domínio; a decisão está em
+ * docs/adr/0008-cml-escopo-tatico-f1-f2.md.
+ */
+
+BoundedContext Estoque {
+    domainVisionStatement = "Mantém os insumos de cada unidade, o saldo que a ficha técnica consome e a reposição antes de faltar."
+
+    Aggregate Insumo {
+        Entity Insumo {
+            aggregateRoot
+
+            // @f1-rn1: nome obrigatório ("informe o nome do insumo"), estoque mínimo maior que zero
+            // ("o estoque mínimo deve ser maior que zero"), unidade de medida e prazo de entrega em dias.
+            - InsumoId id
+            String unidadeId
+            String nome
+            String unidadeDeMedida
+            BigDecimal estoqueMinimo
+            int prazoDeEntregaEmDias
+            - EstadoDoInsumo estado
+            - List<MovimentacaoEstoque> movimentacoes
+
+            def BigDecimal saldo();
+            def BigDecimal consumidoPeloPedido(String pedido);
+
+            // @f1-rn6: média das saídas dos últimos 30 dias dividida por 30, sempre por 30 para que
+            // insumo parado não tenha a média inflada.
+            def BigDecimal consumoMedioDiario(Date referencia);
+
+            // @f1-rn6: ponto de pedido = consumo médio diário x prazo de entrega + estoque mínimo.
+            def BigDecimal pontoDePedido(Date referencia);
+
+            // @f1-rn6: a repor quando saldo <= ponto de pedido; insumo inativo não é monitorado.
+            def boolean estaARepor(Date referencia);
+
+            Repository InsumoRepository {
+                @Insumo find(@InsumoId id);
+                List<@Insumo> doEstoqueDaUnidade(String unidadeId);
+                List<@Insumo> aRepor(String unidadeId);
+            }
+        }
+
+        Entity MovimentacaoEstoque {
+            // Append-only: gravada, não pode ser alterada nem excluída (@f1-rn3,
+            // "a movimentação de estoque não pode ser alterada").
+            - TipoMovimentacao tipo
+            - MotivoMovimentacao motivo
+            BigDecimal quantidade
+            BigDecimal custoUnitario
+            String origem
+            DateTime dataHora
+        }
+
+        ValueObject InsumoId {
+            String valor key
+        }
+
+        enum TipoMovimentacao {
+            ENTRADA, SAIDA
+        }
+
+        enum MotivoMovimentacao {
+            COMPRA, CONSUMO, DEVOLUCAO
+        }
+
+        enum EstadoDoInsumo {
+            aggregateLifecycle
+            ATIVO, INATIVO
+        }
+
+        // Cópia mínima do pedido, como no código: o pedido pertence à F4, mas a baixa e a devolução
+        // precisam da linha do item e do estado sem arrastar o agregado Pedido para dentro do estoque.
+        ValueObject ItemDoPedido {
+            String produto
+            int quantidade
+        }
+
+        enum EstadoDoPedido {
+            RASCUNHO, ENVIADO, EM_PREPARO, CONCLUIDO, RECUSADO, CANCELADO
+        }
+
+        Service MovimentacaoDoInsumo {
+            // @f1-rn3: entrada exige insumo ativo ("o insumo está inativo"), quantidade maior que zero
+            // ("a quantidade deve ser maior que zero") e custo unitário maior que zero
+            // ("o custo unitário deve ser maior que zero").
+            void receber(@InsumoId insumo, BigDecimal quantidade, BigDecimal custoUnitario);
+
+            // @f1-rn4: saída por consumo. Não confere saldo de propósito: quem confere é a explosão da
+            // ficha técnica, que precisa ver todos os insumos antes de gravar qualquer movimentação.
+            void consumir(@InsumoId insumo, BigDecimal quantidade, String pedido);
+
+            // @f1-rn5: entrada por devolução, na mesma quantidade que o pedido consumiu.
+            void devolver(@InsumoId insumo, BigDecimal quantidade, String pedido);
+
+            // @f1-rn1: desativar preserva o histórico (as movimentações continuam), recusa novas
+            // movimentações e impede item novo na ficha; o item já lançado continua na ficha, e o
+            // bloqueio dele no preparo é pendência da G-25.
+            void desativar(@InsumoId insumo) : write [ ATIVO -> INATIVO ];
+            void reativar(@InsumoId insumo) : write [ INATIVO -> ATIVO ];
+        }
+
+        DomainEvent InsumoDesativado {
+            - InsumoId insumo
+        }
+
+        DomainEvent EntradaDeEstoqueRegistrada {
+            - InsumoId insumo
+            BigDecimal quantidade
+            BigDecimal custoUnitario
+        }
+    }
+
+    Aggregate FichaTecnica {
+        Entity FichaTecnica {
+            aggregateRoot
+
+            - FichaId id
+            String unidadeId
+            String produto
+            - List<ItemDaFicha> itens
+
+            def int quantidadeDeItens();
+
+            Repository FichaTecnicaRepository {
+                @FichaTecnica find(@FichaId id);
+                @FichaTecnica doProduto(String unidadeId, String produto);
+                List<@FichaTecnica> daUnidade(String unidadeId);
+            }
+        }
+
+        Entity ItemDaFicha {
+            - Insumo insumo
+            BigDecimal quantidadePorPorcao
+        }
+
+        ValueObject FichaId {
+            String valor key
+        }
+
+        Service ComposicaoDaFicha {
+            // @f1-rn2: ficha é por unidade e por produto; item exige insumo ativo ("o insumo está
+            // inativo"), quantidade maior que zero ("a quantidade deve ser maior que zero") e nenhuma
+            // duplicidade ("o insumo já está na ficha técnica").
+            void definirItem(@FichaId ficha, @Insumo insumo, BigDecimal quantidade);
+
+            // @f1-rn2: produto sem ficha nesta unidade não é vendável
+            // ("produto sem ficha técnica na unidade").
+            @FichaTecnica exigirFicha(String unidadeId, String produto);
+        }
+
+        DomainEvent ItemDaFichaDefinido {
+            - FichaId ficha
+            String produto
+        }
+    }
+
+    // Baixa e devolução ficam no contexto, e não em um agregado, porque atravessam vários insumos:
+    // não há uma raiz única que as possua.
+    Service BaixaDoPreparo {
+        // @f1-rn4: explosão da ficha — cada item do pedido multiplica a quantidade da ficha por porção
+        // e as contribuições dos produtos que usam o mesmo insumo são somadas antes da baixa.
+        // É tudo ou nada: falta de saldo de qualquer insumo ("falta de saldo do insumo <nome>") ou
+        // produto sem ficha ("produto sem ficha técnica na unidade") não grava movimentação alguma.
+        void darBaixa(String pedido, List<@ItemDoPedido> itens);
+    }
+
+    Service DevolucaoDoPreparo {
+        // @f1-rn5: só para pedido EM_PREPARO ("a devolução só é aceita para pedido em preparo").
+        // Devolve exatamente o que aquele pedido consumiu: o cálculo soma as saídas do pedido e grava
+        // uma entrada de devolução por insumo. Uma segunda devolução não é barrada pelo cálculo — as
+        // saídas continuam lá — e sim pelo estado, que chega de fora; a idempotência real depende do
+        // caso de uso que passa o estado (G-39). O estado vem da F4 por cópia mínima, como no código.
+        void devolver(String pedido, @EstadoDoPedido estado);
+    }
+}
+
+BoundedContext Entrega {
+    domainVisionStatement = "Decide quem leva o pedido pronto, quanto custa a entrega pela zona e como ela termina."
+
+    Aggregate Entregador {
+        Entity Entregador {
+            aggregateRoot
+
+            // @f2-rn1: nome obrigatório ("informe o nome do entregador") e carga máxima maior que zero
+            // ("a carga máxima deve ser maior que zero").
+            - EntregadorId id
+            String unidadeId
+            String nome
+            List<String> zonasAtendidas
+            int cargaMaxima
+            int cargaEmAndamento
+            - EstadoDoEntregador estado
+            DateTime ultimaEntregaEm
+
+            def boolean atende(String zona);
+
+            // @f2-rn4: disponível quando a carga em andamento é menor que a carga máxima.
+            def boolean temCargaDisponivel();
+
+            Repository EntregadorRepository {
+                @Entregador find(@EntregadorId id);
+                List<@Entregador> daUnidade(String unidadeId);
+            }
+        }
+
+        ValueObject EntregadorId {
+            String valor key
+        }
+
+        enum EstadoDoEntregador {
+            aggregateLifecycle
+            ATIVO, INATIVO
+        }
+
+        Service CadastroDeEntregador {
+            // @f2-rn1: desativar tira o entregador de novos despachos sem cancelar a rota em andamento.
+            void desativar(@EntregadorId entregador) : write [ ATIVO -> INATIVO ];
+            void reativar(@EntregadorId entregador) : write [ INATIVO -> ATIVO ];
+        }
+
+        Service CargaDoEntregador {
+            // @f2-rn4: assumir soma um à carga e registra o momento, que é o critério de desempate;
+            // liberar subtrai um quando a entrega termina em entregue ou em falha, para a carga em
+            // andamento continuar sendo só as entregas despachadas ou em rota.
+            void assumirEntrega(@EntregadorId entregador, DateTime momento);
+            void liberarCarga(@EntregadorId entregador);
+        }
+    }
+
+    Aggregate ZonaDeEntrega {
+        Entity ZonaDeEntrega {
+            aggregateRoot
+
+            // @f2-rn2: zona tem centro, raio, valor base, raio gratuito, valor por quilômetro
+            // excedente, teto e valor mínimo de pedido. O código ainda não valida campo obrigatório.
+            - ZonaId id
+            String unidadeId
+            String nome
+            - Coordenada centro
+            BigDecimal raioKm
+            BigDecimal valorBase
+            BigDecimal raioGratuitoKm
+            BigDecimal valorPorKmExcedente
+            BigDecimal teto
+            BigDecimal valorMinimoDePedido
+            - EstadoDaZona estado
+
+            def boolean contem(@Coordenada endereco);
+            def BigDecimal taxaPara(@Coordenada endereco, BigDecimal valorDoPedido);
+
+            // @f2-rn3: taxa = min(base + max(0, distância - raio gratuito) x valor por km excedente,
+            // teto), e zero quando o valor do pedido passa do valor mínimo de pedido da zona.
+            def BigDecimal taxaParaDistancia(BigDecimal distanciaKm, BigDecimal valorDoPedido);
+
+            Repository ZonaRepository {
+                @ZonaDeEntrega find(@ZonaId id);
+                List<@ZonaDeEntrega> daUnidade(String unidadeId);
+            }
+        }
+
+        ValueObject ZonaId {
+            String valor key
+        }
+
+        ValueObject Coordenada {
+            BigDecimal latitude
+            BigDecimal longitude
+
+            // Distância em linha reta, em quilômetros: o escopo não tem serviço de mapas nem rota real.
+            def BigDecimal distanciaEmKm(@Coordenada outra);
+        }
+
+        enum EstadoDaZona {
+            aggregateLifecycle
+            ATIVA, INATIVA
+        }
+
+        Service CadastroDeZona {
+            void alterarValorBase(@ZonaId zona, BigDecimal valorBase) : write;
+
+            // @f2-rn2: zona desativada não recebe novas entregas e pode ser reativada.
+            void desativar(@ZonaId zona) : write [ ATIVA -> INATIVA ];
+            void reativar(@ZonaId zona) : write [ INATIVA -> ATIVA ];
+        }
+
+        Service EscolhaDaZona {
+            // @f2-rn2: a zona do endereço é a de menor raio entre as ativas que o contêm, para que a
+            // zona mais específica ganhe na sobreposição; sem zona ativa, "nenhuma zona atende o endereço".
+            @ZonaDeEntrega zonaDoEndereco(@Coordenada endereco);
+        }
+    }
+
+    // Nome do agregado diferente do nome do contexto para a referência não ficar ambígua no CML.
+    Aggregate EntregaDoPedido {
+        Entity Entrega {
+            aggregateRoot
+
+            - EntregaId id
+            String unidadeId
+            String pedido
+            - ZonaDeEntrega zona
+            BigDecimal distanciaKm
+            BigDecimal valorDoPedido
+            int tentativa
+            - EstadoDaEntrega estado
+            - Entregador entregador
+            BigDecimal taxa
+            String recebedor
+            - MotivoDaFalha motivoDaFalha
+            String observacaoDaFalha
+            - List<TransicaoDaEntrega> transicoes
+
+            Repository EntregaRepository {
+                @Entrega find(@EntregaId id);
+                @Entrega doPedido(String pedido);
+                List<@Entrega> aguardando(String unidadeId);
+            }
+        }
+
+        Entity TransicaoDaEntrega {
+            - EstadoDaEntrega estado
+            DateTime dataHora
+        }
+
+        ValueObject EntregaId {
+            String valor key
+        }
+
+        enum EstadoDaEntrega {
+            aggregateLifecycle
+            AGUARDANDO, DESPACHADA, EM_ROTA, ENTREGUE, FALHA
+        }
+
+        enum MotivoDaFalha {
+            AUSENCIA_DO_CLIENTE, ENDERECO_NAO_ENCONTRADO, RECUSA_DO_CLIENTE, PROBLEMA_NO_TRANSPORTE
+        }
+
+        enum DesfechoDaFalha {
+            NOVA_TENTATIVA, PEDIDO_CANCELADO
+        }
+
+        Service FluxoDaEntrega {
+            // @f2-rn5: não pula etapa e não altera entrega já finalizada ("a entrega já foi finalizada").
+            // Despachar exige entregador ("a entrega despachada exige um entregador") e grava a taxa.
+            void despachar(@EntregaId entrega, @Entregador entregador) : write [ AGUARDANDO -> DESPACHADA ];
+            void registrarRetirada(@EntregaId entrega) : write [ DESPACHADA -> EM_ROTA ];
+
+            // @f2-rn5: entregue exige recebedor ("informe o nome do recebedor") e libera a carga do
+            // entregador (CargaDoEntregador), porque a entrega deixa de estar em rota.
+            void registrarEntrega(@EntregaId entrega, String recebedor) : write [ EM_ROTA -> ENTREGUE* ];
+        }
+
+        Service FalhaDaEntrega {
+            // @f2-rn5: falha exige motivo ("informe o motivo da falha") e observação
+            // ("informe a observação da falha"); toda transição grava estado e data/hora.
+            // @f2-rn6: falha libera a carga do entregador. Recusa do cliente (RECUSA_DO_CLIENTE) cancela
+            // o pedido já na primeira falha; nas demais, a primeira falha gera nova tentativa e a
+            // segunda cancela.
+            @DesfechoDaFalha registrar(@EntregaId entrega, @MotivoDaFalha motivo, String observacao) : write [ EM_ROTA -> FALHA* ];
+
+            // @f2-rn6: nova tentativa é uma entrega nova, em aguardando, para o mesmo pedido.
+            @Entrega novaTentativa(@EntregaId entrega) : write [ -> AGUARDANDO ];
+        }
+
+        DomainEvent EntregaDespachada {
+            - EntregaId entrega
+            - EntregadorId entregador
+            BigDecimal taxa
+        }
+
+        DomainEvent EntregaConcluida {
+            - EntregaId entrega
+            String recebedor
+        }
+
+        DomainEvent EntregaFalhou {
+            - EntregaId entrega
+            - MotivoDaFalha motivo
+            String observacao
+        }
+    }
+
+    // @f2-rn4: a fila de despacho não é agregado próprio: é a lista das entregas em AGUARDANDO.
+    // As operações são as do código; a consulta por unidade entra com o unidadeId da G-08.
+    Service FilaDeDespacho {
+        void colocar(@Entrega entrega);
+        void remover(@Entrega entrega);
+        List<@Entrega> entregasDaUnidade(String unidadeId);
+        @Entrega entregaDoPedido(String pedido);
+        boolean contemPedido(String pedido);
+    }
+
+    Service Despacho {
+        // @f2-rn4: é elegível o entregador ativo, que atende a zona e cuja carga em andamento é menor que
+        // a máxima. Entre os elegíveis, o de menor carga; no empate, o que está há mais tempo sem receber
+        // entrega. Sem elegível, o pedido continua na fila.
+        @Entregador escolher(String zona, List<@Entregador> entregadores);
+
+        // @f2-rn3: o despacho grava a taxa calculada pela zona; a taxa não é recalculada depois.
+        // No código a fila entra como parâmetro porque o despacho também retira a entrega dela.
+        boolean despachar(@Entrega entrega, List<@Entregador> entregadores) : write;
+    }
+}

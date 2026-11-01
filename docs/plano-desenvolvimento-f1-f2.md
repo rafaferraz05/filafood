@@ -151,10 +151,11 @@ padrões têm teste e justificativa.
 | --- | --- | --- |
 | D-36 | Fechar caso de uso, DTO e validação para cada uma das 16 histórias | ES-01..07, EN-01..09 rastreados |
 | D-37 | `ProblemDetail`/erros de view com as mensagens de negócio em português | teste por família de erro |
-| D-38 | `filafood.cml` com os cinco contextos e relacionamentos | abre no Context Mapper |
+| D-38 | Revisar o `filafood.cml` contra o código: o tático de F1 e F2 já está escrito; escopo no ADR 0008 | modelo sem divergência |
 | D-39 | `docs/arquitetura.md`: camadas, C4, ER, ADRs, padrões, rastreabilidade | documento único de arquitetura |
 
-**Pronto quando:** ArchUnit sem violação; nenhuma história órfã; o CML cobre F1–F7.
+**Pronto quando:** ArchUnit sem violação; nenhuma história órfã; o modelo de F1 e F2 fecha sem
+divergência do código.
 
 ### P7 — Qualidade e entrega · esforço 3–4 · G-40..G-48
 
@@ -246,7 +247,7 @@ quando o pedido é cancelado durante o preparo. Sem isso, o P5 vira retrabalho.
 | Funcionalidade completa (não só leitura) | P1..P4 |
 | Java + Spring Boot + JPA + Vaadin | P0 |
 | Descrição do domínio, mapa de histórias, protótipos | já existem |
-| Modelo CML | P6 |
+| Modelo CML | tático de F1 e F2 já escrito; revisão em P6 |
 | BDD + Cucumber (domínio e aplicação) | P7 |
 | Níveis preliminar, estratégico, tático e operacional | P6 |
 | Arquitetura limpa | P0 (regras) + P6 (fechamento) |
