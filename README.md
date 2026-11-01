@@ -28,8 +28,11 @@ Cada módulo continua rodando sozinho com `-f`, e a Parte 1 continua executável
 
 Aplicação: `.\mvnw.cmd -pl app spring-boot:run` sobe a tela inicial em `http://localhost:8080`.
 Nesta máquina a porta 8080 é do `tailscaled`, então use
-`"-Dspring-boot.run.arguments=--server.port=8081"`. O Postgres do dev está em `docker-compose.yml`
-e ainda não é usado pela aplicação (D-05).
+`"-Dspring-boot.run.arguments=--server.port=8081"`.
+
+Banco do dev: copie `.env.example` para `.env` (não versionado), rode `docker compose up -d --wait db` e
+exporte a mesma senha para o app (`$env:DB_PASSWORD = "..."`). O perfil `dev` é o padrão, e o schema é
+aplicado pelo Flyway a partir de `app/src/main/resources/db/migration`.
 
 As seções abaixo descrevem a Parte 1 do trabalho — o protótipo local de concorrência em Java puro.
 

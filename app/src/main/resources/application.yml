@@ -1,6 +1,9 @@
 spring:
   application:
     name: filafood
+  profiles:
+    # O perfil dev é o padrão para quem roda localmente; produção define o seu por ambiente.
+    default: dev
 
 server:
   port: 8080

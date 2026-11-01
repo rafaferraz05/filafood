@@ -9,3 +9,6 @@ target/
 # Vaadin: frontend gerado pelo dev server e dependências Node
 node_modules/
 app/src/main/frontend/generated/
+
+# Segredo local do dev (o modelo com as chaves é o .env.example)
+.env
