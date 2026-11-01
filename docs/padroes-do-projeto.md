@@ -298,8 +298,8 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 
 ## 17. Comandos do dia a dia
 
-> Os comandos da raiz pressupõem o agregador da seção 3. Até o PR de build ser mergeado, rode cada
-> módulo com `-f`, como já é feito hoje.
+> Os comandos da raiz pressupõem o agregador da seção 3, já aplicado (ADR 0001). Os módulos também
+> rodam sozinhos com `-f`.
 
 ```powershell
 .\mvnw.cmd test                                  # raiz + todos os módulos
