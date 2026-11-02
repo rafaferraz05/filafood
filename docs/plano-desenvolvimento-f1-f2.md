@@ -75,6 +75,9 @@ Regras que o ArchUnit passa a cobrar a partir do P0:
 **Pronto quando:** `.\mvnw.cmd test` verde; `java -cp parte1/target/classes br.edu.cesar.filafood.Main`
 continua rodando; app sobe e mostra a tela inicial; `CenarioDeCarga` continua passando.
 
+**Status (2026-11-01):** concluído. O D-06 cobre por enquanto só as regras do `app`; as que envolvem
+`dominio-*` entram na P1, quando o `app` passar a depender dos módulos de domínio.
+
 ### P1 — F1, primeira fatia vertical: insumos e entrada · esforço 4–5 · G-05 (parcial), G-07..G-09, G-12, G-14 (parcial), G-23, G-24, G-28
 
 | # | Tarefa | Saída |
@@ -88,6 +91,10 @@ continua rodando; app sobe e mostra a tela inicial; `CenarioDeCarga` continua pa
 
 **Pronto quando:** cadastrar um insumo, registrar entrada e ver o saldo somado no banco; tentar
 alterar ou apagar a movimentação não é possível (nem pela tela nem pelo repositório).
+
+**Status (2026-11-01):** em andamento. D-08 (migração `insumo`/`movimentacao_estoque`) e D-10
+(`BigDecimal`) concluídos; o próximo é o D-09, que precisa do G-08 (identidade e `unidade_id` no
+domínio) antes.
 
 ### P2 — F1 completa: ficha, baixa, devolução e reposição · esforço 5–6 · G-10, G-11, G-13 (parcial), G-14 (parcial), G-25..G-28
 

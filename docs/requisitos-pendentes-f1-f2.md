@@ -11,19 +11,24 @@
 - Mapa da história do usuário e catálogo ES-01..ES-07 / EN-01..EN-09 em `docs/historia-do-usuario.md`.
 - Regras de negócio de F1/F2 em `docs/funcionalidades.md`.
 - Protótipos de alta fidelidade em HTML/CSS em `docs/prototipos/`.
-- Cenários BDD e automação Cucumber de F1/F2, atualmente verdes.
-- Lógica de domínio de F1/F2 em memória nos módulos `dominio-estoque` e `dominio-entrega`.
+- Cenários BDD e automação Cucumber de F1/F2, atualmente verdes (136 testes no reactor).
+- Lógica de domínio de F1/F2 em memória nos módulos `dominio-estoque` e `dominio-entrega`, já com dinheiro em `BigDecimal`.
+- Aplicação `app` com Spring Boot 4.1.2, Vaadin 25.3.4, JPA, Flyway e Actuator, subindo no perfil `dev`.
+- Postgres 16 de desenvolvimento em `docker-compose.yml` e a migração `V001__insumo.sql` (`insumo` e `movimentacao_estoque`).
+- Modelo tático de F1/F2 em `filafood.cml` e os ADRs 0001–0008.
 
 **Parcial**
-- DDD tático/operacional: entidades e regras existem, mas não há camada de aplicação, persistência nem integração real entre contextos.
-- Rastreabilidade: os documentos ligam histórias e RNs, mas não há ligação com endpoints, telas e testes de integração.
+- DDD tático/operacional: entidades e regras existem; faltam camada de aplicação, persistência com IDs e integração real entre contextos.
+- Modelo CML: tático de F1/F2 pronto; falta o ContextMap (nível estratégico), decidido no ADR 0008.
+- Persistência: schema inicial e Flyway funcionando; faltam entidades JPA, portas de repositório e identidade no domínio.
+- Arquitetura limpa: `app` tem os pacotes e três regras ArchUnit; faltam camada `application`, adaptadores de persistência e as regras que envolvem `dominio-*`.
+- Camada web: tela inicial com os três perfis; faltam as telas de F1/F2.
+- Tipos: dinheiro em `BigDecimal` no domínio de F1/F2; escala das quantidades e os módulos de F3–F7 seguem pendentes.
 
 **Falta**
-- Spring Boot, JPA, banco relacional, migrações e camada web.
-- Arquitetura limpa em camadas e 4+ padrões exigidos pelo Spec.
-- Modelo CML (DDD estratégico).
+- Arquitetura limpa completa e 4+ padrões exigidos pelo Spec.
 - Integração F1↔F4 (pedido/preparo), F2↔F4 (pedido concluído/falha), F1↔F6 (produto/ficha) e F2↔F3 (unidade/zonas).
-- Persistência com IDs, escopo por unidade, transações, concorrência e histórico.
+- Identidade e escopo por unidade no domínio, transações, concorrência e histórico.
 - Testes de persistência, web, integração e concorrência.
 - README de execução e documentação de arquitetura, ER e API.
 
@@ -31,19 +36,21 @@
 
 ### 2.1 Fundação Spring Boot e build
 
-- [ ] **G-01 — Criar o módulo da aplicação Spring Boot e o build agregado.**
+- [x] **G-01 — Criar o módulo da aplicação Spring Boot e o build agregado.**
   O POM raiz atual não agrega os módulos `dominio-*`. Definir se a aplicação será um novo módulo (`app`/`web`) ou o próprio raiz; alinhar versões e dependências.
   **Pronto quando:** um comando sobe a aplicação; `.\mvnw.cmd test` executa raiz + módulos; o protótipo da Parte 1 continua executável.
 
 - [ ] **G-02 — Adicionar as dependências da stack.**
   Spring Boot (BOM/parent), `spring-boot-starter-web` ou Vaadin, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, driver do banco, Flyway ou Liquibase, `spring-boot-starter-test` e integração Cucumber/Spring.
   **Pronto quando:** build limpo resolve tudo; a aplicação inicia com o schema criado.
+  **Feito:** Spring Boot 4.1.2, Vaadin 25.3.4, JPA, driver Postgres, Flyway e Actuator; a aplicação inicia e o Flyway cria o schema. **Falta:** `spring-boot-starter-validation`, `spring-boot-starter-test` e `cucumber-spring`.
 
 - [ ] **G-03 — Configurar profiles e banco relacional.**
   `dev` (H2 ou Postgres local), `test` (H2 ou Testcontainers/Postgres) e `prod` (Postgres por variáveis de ambiente); configuração em `application.yml`; migrações versionadas.
   **Pronto quando:** a aplicação sobe em `dev` e `test`; a migração funciona em banco vazio; nenhuma credencial fica versionada.
+  **Feito:** perfil `dev` com Postgres local, Flyway rodando em base vazia e credenciais fora do repositório (`.env`). **Falta:** perfis `test` (Testcontainers) e `prod`.
 
-- [ ] **G-04 — Decidir e registrar a camada de apresentação.**
+- [x] **G-04 — Decidir e registrar a camada de apresentação.**
   O Spec aceita Angular ou Vaadin. Registrar a decisão (ADR) e o contrato: se Angular, REST + OpenAPI + CORS; se Vaadin, views server-side.
   **Pronto quando:** a decisão está documentada e uma tela inicial carrega no navegador.
 
@@ -52,6 +59,7 @@
 - [ ] **G-05 — Criar o schema de F1.**
   Tabelas para `unidade` (referência), `insumo`, `movimentacao_estoque`, `ficha_tecnica`, `item_ficha_tecnica` e `produto` (referência). Incluir FKs, `unidade_id`, ativo/inativo e histórico.
   **Pronto quando:** a migração cria o schema; o modelo cobre as RN 1–6.
+  **Feito:** `insumo` e `movimentacao_estoque` na `V001`, com `unidade_id`, unique por unidade/nome e checks das RN 1–3. **Falta:** `unidade`, `ficha_tecnica`, `item_ficha_tecnica` e `produto`.
 
 - [ ] **G-06 — Criar o schema de F2.**
   Tabelas para `entregador`, `entregador_zona`, `zona_entrega`, `entrega`, `transicao_entrega` e `pedido` (referência). Incluir tentativa, taxa, estado, motivo/observação e timestamps.
@@ -68,6 +76,7 @@
 - [ ] **G-09 — Corrigir tipos e precisão.**
   Dinheiro com `BigDecimal` (`numeric(12,2)`), quantidades com escala definida, timestamps com fuso consistente e enums persistidos como texto.
   **Pronto quando:** não há `double` para dinheiro; testes cobrem arredondamento e comparação.
+  **Feito:** dinheiro em `BigDecimal` no domínio de F1/F2 e `numeric(12,2)` na `V001`; enums como `varchar` com `check`. **Falta:** escala definida das quantidades.
 
 - [ ] **G-10 — Garantir transações e atomicidade.**
   `@Transactional` na baixa de estoque (tudo ou nada), devolução, despacho e transições de entrega. Falha em qualquer item não grava movimentação parcial.
@@ -94,6 +103,7 @@
 - [ ] **G-15 — Aplicar arquitetura limpa.**
   Separar `domain`, `application` (casos de uso/portas), `adapters` (JPA, web, integrações) e `config`. Dependências apontam para dentro.
   **Pronto quando:** teste ArchUnit impede `dominio-*` de importar Spring/JPA/web; controllers não usam entidades JPA diretamente.
+  **Feito:** `app` com `adapter/in/web`, três regras ArchUnit e domínio sem framework. **Falta:** camada `application`, adaptadores de persistência e as regras que envolvem `dominio-*`.
 
 - [ ] **G-16 — Criar casos de uso para todas as histórias.**
   ES-01..ES-07 e EN-01..EN-09, cada operação de escrita com caso de uso, DTO de entrada/saída, validação e limite transacional.
@@ -102,6 +112,7 @@
 - [ ] **G-17 — Criar o modelo CML (DDD estratégico).**
   `filafood.cml` com os contextos Atendimento, Estoque, Entrega, Cardápio e Compras, e os relacionamentos (upstream/downstream, ACL, shared kernel quando fizer sentido).
   **Pronto quando:** o arquivo abre no Context Mapper sem erros e o README aponta para ele.
+  **Feito:** `filafood.cml` tático de F1/F2, abrindo no Context Mapper, e README apontando. **Falta:** ContextMap e os contextos de F3–F11, conforme o ADR 0008.
 
 - [ ] **G-18 — Documentar o nível operacional.**
   Mapear histórias/RNs → casos de uso → classes → endpoints/telas → testes. Explicitar o que é domínio, aplicação e adaptador.
@@ -252,24 +263,24 @@
 
 | Exigência | Situação | Requisitos |
 | --- | --- | --- |
-| Aplicação web + banco relacional | Falta | G-01..G-14, G-28, G-35 |
+| Aplicação web + banco relacional | Parcial (app e banco de pé; faltam telas e schema completo) | G-01..G-14, G-28, G-35 |
 | Funcionalidade completa (não só leitura) | Parcial (só domínio) | G-23..G-39 |
-| Java + Spring Boot + JPA + Angular ou Vaadin | Falta | G-01..G-07 |
+| Java + Spring Boot + JPA + Angular ou Vaadin | Parcial (Spring Boot, JPA e Vaadin; falta validação e testes de app) | G-01..G-07 |
 | Descrição do domínio | Pronto | `docs/dominio.md` |
 | Mapa da história do usuário | Pronto | `docs/historia-do-usuario.md` |
 | Protótipos de alta fidelidade | Pronto | `docs/prototipos/` |
-| Modelo CML | Falta | G-17 |
+| Modelo CML | Parcial (tático de F1/F2; falta ContextMap) | G-17 |
 | Cenários BDD + Cucumber | Parcial (só domínio) | G-40 |
-| Níveis preliminar, estratégico, tático e operacional | Parcial | G-17, G-18 |
-| Arquitetura limpa | Falta | G-15 |
+| Níveis preliminar, estratégico, tático e operacional | Parcial (preliminar e tático; faltam estratégico e operacional) | G-17, G-18 |
+| Arquitetura limpa | Parcial (pacotes e ArchUnit do app) | G-15 |
 | 4+ padrões do Spec | Falta | G-19 |
-| Persistência com mapeamento objeto-relacional | Falta | G-05..G-14 |
-| Camada de apresentação web | Falta | G-04, G-28, G-35 |
+| Persistência com mapeamento objeto-relacional | Parcial (schema e Flyway; faltam entidades e portas) | G-05..G-14 |
+| Camada de apresentação web | Parcial (tela inicial) | G-04, G-28, G-35 |
 
 ## 5. Riscos e cuidados
 
-- **Refatoração para JPA:** manter o BDD existente verde; o domínio atual usa `double`, nomes como chave e objetos aninhados, o que não mapeia diretamente para tabelas.
+- **Refatoração para JPA:** manter o BDD existente verde; o domínio usa nome como chave e objetos aninhados, o que não mapeia diretamente para tabelas (o dinheiro já está em `BigDecimal`).
 - **Integração entre contextos:** é o maior risco. F1 e F2 hoje recebem strings/objetos de teste; não há pedido real compartilhado nem atualização do pedido na falha da entrega.
 - **Concorrência:** baixa de estoque e despacho precisam de transação e lock; os testes atuais são de uma thread só.
-- **Build:** o POM raiz não agrega módulos; introduzir a aplicação sem quebrar o protótipo da Parte 1 exige decisão explícita de layout.
+- **Build:** o POM raiz agrega tudo (ADR 0001); a Parte 1 saiu para `parte1/` e continua executável por `java -cp parte1/target/classes`.
 - **Escopo de segurança:** autenticação não está no Spec; decidir cedo se a demonstração terá login ou seleção de perfil para não retrabalhar as telas.
