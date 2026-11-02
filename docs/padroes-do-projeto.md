@@ -7,7 +7,8 @@
 > **Como usar:** leia uma vez antes de codar; consulte nas revisões. Se uma regra atrapalhar de
 > verdade, a mudança se propõe por ADR (seção 16) — não se ignora em silêncio.
 >
-> **Status:** proposta v1, para ratificar na reunião do grupo.
+> **Status:** v2, atualizada em 2026-11-01 com o P0 aplicado (ADRs 0001–0008). O que ainda é alvo
+> está marcado como "pendente"; o resto descreve o que já está no repositório.
 
 ## 1. As dez regras que não se negociam
 
@@ -27,27 +28,33 @@
 | Item | Escolha | Onde |
 | --- | --- | --- |
 | Linguagem | **Java 21** | todos os módulos |
-| Build | **Maven via wrapper** (`.\mvnw.cmd`) | raiz |
-| Framework | **Spring Boot 3.x** (última estável) | `app` |
-| Persistência | **Spring Data JPA / Hibernate** | `app` |
-| Banco | **PostgreSQL 16** | dev e produção; teste com Testcontainers |
-| Migração | **Flyway** | `app/src/main/resources/db/migration` |
-| Validação | **Jakarta Bean Validation** | `app` |
-| Web | **Vaadin Flow 24.x** | `app/adapter/in/web` |
-| BDD | **Cucumber 7.21.1** + JUnit 5.11.4 | módulos de domínio e `app` |
-| Teste de arquitetura | **ArchUnit** | `app` (test) |
-| Teste de banco | **Testcontainers (PostgreSQL)** | `app` (test) |
-| E2E | **Playwright** (projeto Node em `e2e/`) | fluxo completo |
+| Build | **Maven via wrapper** (`.\mvnw.cmd`), raiz agregadora (ADR 0001) | raiz |
+| Framework | **Spring Boot 4.1.2** | `app` |
+| Persistência | **Spring Data JPA / Hibernate 7** | `app` |
+| Banco | **PostgreSQL 16** | dev (Compose) e produção; `test` com Testcontainers (**pendente**) |
+| Migração | **Flyway 12** (`spring-boot-starter-flyway`) | `app/src/main/resources/db/migration` |
+| Validação | **Jakarta Bean Validation** (**pendente**) | `app` |
+| Web | **Vaadin Flow 25.3.4** | `app/adapter/in/web` |
+| BDD | **Cucumber 7.21.1** + JUnit 5.11.4 | módulos de domínio (no `app`, pendente) |
+| Teste de arquitetura | **ArchUnit 1.5.1** — 3 regras hoje | `app` (test) |
+| Teste de banco | **Testcontainers (PostgreSQL)** (**pendente**) | `app` (test) |
+| E2E | **Playwright** (**pendente**) | projeto `e2e/` |
 | Protótipos | Node 20.11+ apenas para `scripts/verificar-prototipos.mjs` | não é build do app |
 
-**Regra de versão:** versão de biblioteca é fixada **no POM pai**. Nenhum módulo declara versão de
-dependência que o pai já gerencia. Dependência nova exige justificativa no PR.
+**Regra de versão:** o valor da versão fica **no POM pai** (`properties` +
+`dependencyManagement`). Nenhum módulo declara versão de dependência que o pai já gerencia por BOM.
+
+- Importe BOMs na raiz, e a ordem importa: o `junit-bom` 5.11.4 vem **antes** do BOM do Spring Boot,
+  que gerencia JUnit 6.0.3 — sem isso o reactor mistura as duas linhas.
+- Exceção atual: `vaadin-spring-boot-starter` e `vaadin-dev` declaram `${vaadin.version}` no `app`
+  porque o BOM do Vaadin ainda não é importado; migrar para `vaadin-bom` quando o POM for tocado.
 
 ## 3. Estrutura do repositório
 
 ```
 filafood/
-├── pom.xml                  agregador, BOM do Spring Boot e pluginManagement
+├── pom.xml                  agregador, BOMs (Spring Boot, JUnit) e pluginManagement
+├── docker-compose.yml       Postgres 16 do dev
 ├── parte1/                  protótipo de console da Parte 1 (continua executável)
 ├── dominio-estoque/         contexto F1 (domínio puro)
 ├── dominio-entrega/         contexto F2 (domínio puro)
@@ -55,7 +62,7 @@ filafood/
 ├── dominio-cardapio/        contexto F6
 ├── dominio-compras/         contexto F7
 ├── app/                     aplicação: casos de uso, adaptadores, views, config
-├── e2e/                     testes Playwright
+├── e2e/                     testes Playwright (pendente)
 ├── docs/                    domínio, histórias, regras, protótipos, ADRs
 └── scripts/                 verificadores
 ```
@@ -66,6 +73,9 @@ filafood/
 - Um módulo `dominio-*` = **um contexto**. Se a funcionalidade é de outro dono, o módulo é dele.
 - O domínio de um contexto vive em `src/main`. Dublê em `src/test` serve para teste; **não substitui
   o domínio**.
+- **Exceção registrada:** `dominio-cardapio` e `dominio-compras` ainda não têm `src/main`; as regras
+  vivem nos dublês de teste até os donos promoverem o domínio (decisão anterior a este documento,
+  registrada no `AGENTS.md`).
 - `app` é o **composition root**: é o único lugar com Spring, JPA e Vaadin.
 - Não existe dependência entre `dominio-*`. Se precisar de um tipo comum (dinheiro, id), esse tipo
   nasce em um módulo `shared-kernel` **só com value objects**, sem regra de negócio.
@@ -96,7 +106,12 @@ app/
 
 **Direção das dependências:** `adapter → application → domínio`. Nunca ao contrário.
 
-**ArchUnit cobra, no build:**
+Hoje só existem `Application` e `adapter/in/web` (a tela inicial); `application` e `persistence`
+nascem na P1, com os casos de uso de insumo e a porta `Insumos`.
+
+**ArchUnit cobra, no build.** Hoje existem três regras no `app` (Vaadin só em `adapter.in.web`;
+`application` não depende de `adapter`; view não acessa persistência). As regras que envolvem os
+módulos de domínio entram na P1, quando o `app` depender deles:
 
 1. `dominio-*` não importa `org.springframework`, `jakarta.persistence`, `com.vaadin`.
 2. `application` não importa `adapter` nem `com.vaadin`.
@@ -109,8 +124,9 @@ app/
 - **Vocabulário:** nomes de classe, campo, tela, cenário e mensagem saem de `docs/dominio.md`.
   A coluna "não usar" é proibição para conceitos **novos**.
 - **Prosa e mensagens:** português. Classes e métodos em português também, como já está no código.
-- **Tipos:** `BigDecimal` para dinheiro (escala 2), `BigDecimal`/`int` para quantidade conforme a
-  unidade de medida, `LocalDate`/`Instant` para tempo, `UUID` para identidade.
+- **Tipos:** `BigDecimal` para dinheiro (escala 2) — aplicado em F1/F2; quantidade hoje é `double`
+  no código e ganha escala definida no G-09 (`BigDecimal`, `numeric(12,3)`); `LocalDate`/`Instant`
+  para tempo; `UUID` para identidade (a introduzir no G-08).
 - **Sem chave natural:** nome não é id. O id é substituto e imutável.
 - **Estados:** enum com nome do domínio (`RASCUNHO`, `ENVIADO`, `EM_PREPARO`…). Transição inválida é
   `RegraDeNegocioException` com a mensagem exata da regra.
@@ -138,6 +154,9 @@ app/
 - **Sem `ddl-auto`:** schema só por migração. `spring.jpa.hibernate.ddl-auto=validate`.
 - **Seed:** apenas `dev`, em migração separada ou `data-dev.sql`. Nunca em produção.
 
+**Estado atual:** a `V001__insumo.sql` cria `insumo` e `movimentacao_estoque` com as regras acima.
+Entidades JPA, portas e mapper entram no D-09; o lock otimista, no G-11.
+
 ### 6.1 Transação, concorrência e idempotência
 
 - `@Transactional` **no caso de uso** (`application`). Uma operação = uma transação.
@@ -164,6 +183,8 @@ app/
   **não se importa** `docs/prototipos/estilo.css` na aplicação — o CSS é do protótipo.
 - **Acessibilidade mínima:** rótulo em todo campo, foco visível, contraste do protótipo, navegação
   por teclado nos formulários.
+- **Modo dev:** o Vaadin exige `com.vaadin:vaadin-dev` (opcional) e roda com `spring-boot:run`; o
+  build de produção (`vaadin-maven-plugin` + `build-frontend`) ainda não está configurado.
 
 ## 8. Integração entre contextos
 
@@ -193,6 +214,9 @@ app/
 | Arquitetura | limites de camada e contexto | ArchUnit |
 | Concorrência | oversell, despacho duplo, devolução dupla | JUnit com executor |
 
+**Números atuais:** 136 testes verdes no reactor (132 cenários BDD + 1 JUnit de concorrência + 3
+ArchUnit). Testcontainers, Playwright e Cucumber rodando no `app` ainda não existem.
+
 **Regras de teste**
 
 - Feature file: `# language: pt`, `Funcionalidade`/`Cenário` em português, tags por regra.
@@ -206,6 +230,8 @@ app/
 ## 10. Git, PR e revisão
 
 - `main` está sempre verde e é a única base.
+- Até o grupo adotar PRs, os commits vão direto na `main` (foi assim no P0); a branch por mudança
+  vale para contribuição em domínio de outro dono ou mudança grande.
 - Branch por mudança: `feat/<contexto>-<assunto>`, `fix/...`, `docs/...`, `chore/...`.
 - Commit em **português, imperativo, primeira linha curta** (`Adiciona baixa transacional...`).
 - **PR pequeno, uma intenção.** Um PR não mistura refatoração com funcionalidade.
@@ -263,7 +289,7 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 
 - Anotar o domínio com `@Entity`, `@Service` ou `@Component`.
 - Importar um `dominio-*` dentro de outro `dominio-*`.
-- Usar `double`/`float` para dinheiro ou quantidade.
+- Usar `double`/`float` para dinheiro; para quantidade, só até o G-09 definir a escala.
 - Colocar `if` de regra na view ou no controller.
 - Editar migração já aplicada, ou usar `ddl-auto=update`.
 - Fazer `join` entre tabelas de contextos diferentes.
@@ -275,11 +301,12 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 
 ## 15. Configuração e segredos
 
-- Perfis: `dev` (Postgres local em Docker), `test` (Testcontainers), `prod` (Postgres por variável
-  de ambiente).
+- Perfis: `dev` é o padrão (Postgres local em Docker); `test` (Testcontainers) e `prod` (Postgres por
+  variável de ambiente) ainda não existem.
 - Credencial só por variável de ambiente ou `.env` **não versionado**. O `.env.example` documenta as
-  chaves, nunca os valores reais.
+  chaves, nunca os valores reais. Hoje o Compose lê o `.env` e o `app` lê `DB_PASSWORD` do ambiente.
 - Nada de senha em `application.yml`, em teste ou em script.
+- Nesta máquina a porta 8080 é do `tailscaled`; rode o app com `--server.port=8081`.
 
 ## 16. Como este documento muda
 
@@ -289,32 +316,35 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 
 ### Pendências de ratificação (primeira reunião)
 
-| Tema | Proposta neste documento |
+| Tema | Situação |
 | --- | --- |
-| Layout do build (raiz agregadora + `parte1`) | Aprovar antes do primeiro PR de infraestrutura |
-| Camada web (Vaadin Flow) | Aprovar; se o grupo preferir Angular, muda o ADR e a seção 7 |
-| Banco (PostgreSQL em dev e teste) | Aprovar; alternativa H2 fica descartada por diferença de dialeto |
-| Perfil sem login (seleção na sessão) | Aprovar; autenticação não está no Spec |
+| Layout do build (raiz agregadora + `parte1`) | Aplicado — ADR 0001 |
+| Camada web (Vaadin Flow) | Aplicado — ADR 0002 |
+| Banco (PostgreSQL em dev e teste) | Aplicado em `dev` — ADR 0003; `test` pendente |
+| Perfil sem login (seleção na sessão) | ADR 0006; implementação pendente (G-22) |
 
 ## 17. Comandos do dia a dia
 
 > Os comandos da raiz pressupõem o agregador da seção 3, já aplicado (ADR 0001). Os módulos também
-> rodam sozinhos com `-f`.
+> rodam sozinhos com `-f`. O app precisa de `DB_PASSWORD` no ambiente e, nesta máquina, de outra
+> porta (a 8080 é do `tailscaled`).
 
 ```powershell
 .\mvnw.cmd test                                  # raiz + todos os módulos
 .\mvnw.cmd -f dominio-estoque/pom.xml test       # um módulo
-.\mvnw.cmd -f app/pom.xml spring-boot:run        # aplicação
-docker compose up -d db                          # Postgres do dev
+docker compose up -d --wait db                   # Postgres do dev (precisa de .env)
+.\mvnw.cmd -pl app spring-boot:run               # aplicação (DB_PASSWORD no ambiente)
 node scripts/verificar-prototipos.mjs            # protótipos
 ```
 
 ## 18. Como adotar (ordem sugerida)
 
-1. Ratificar as quatro pendências da seção 16 e registrar os ADRs.
-2. Mergear **um** PR de infraestrutura: raiz agregadora, `parte1`, `app` vazio e Postgres/Flyway.
-   Ninguém começa funcionalidade nova antes disso, para não conflitar POM.
-3. Mergear dois PRs de referência que todos vão copiar: **ArchUnit** e **uma migração + uma view de
-   perfil**. Eles fixam o formato de camada e de tela.
-4. A partir daí, cada um trabalha nas pastas do seu contexto, com PR pequeno e revisão de outra
+1. **P0 — concluído:** ADRs 0001–0007, raiz agregadora, `parte1`, `app` com Spring Boot e Vaadin,
+   Postgres/Flyway e ArchUnit do `app`.
+2. **P1 — em andamento:** G-08 (identidade e `unidade_id` no domínio), D-09 (porta + JPA + mapper),
+   D-11 (casos de uso de insumo e entrada), D-12 (telas de Insumos e Detalhe) e D-13 (teste de
+   persistência com Testcontainers).
+3. **P2 em diante:** ficha técnica, baixa/devolução, reposição, F2 completa, integração entre
+   contextos e entrega, na ordem do plano de desenvolvimento.
+4. A partir daí, cada dono trabalha na pasta do seu contexto, com build verde e revisão de outra
    pessoa.
