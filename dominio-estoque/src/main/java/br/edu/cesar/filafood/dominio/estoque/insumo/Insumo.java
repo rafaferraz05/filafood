@@ -13,6 +13,8 @@ import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 
 public class Insumo {
 
+    private final InsumoId id;
+    private final String unidadeId;
     private final String nome;
     private final String unidadeDeMedida;
     private final double estoqueMinimo;
@@ -20,13 +22,16 @@ public class Insumo {
     private final List<MovimentacaoEstoque> movimentacoes = new ArrayList<>();
     private boolean ativo = true;
 
-    public Insumo(String nome, String unidadeDeMedida, double estoqueMinimo, int prazoDeEntregaEmDias) {
+    public Insumo(InsumoId id, String unidadeId, String nome, String unidadeDeMedida, double estoqueMinimo,
+            int prazoDeEntregaEmDias) {
         if (nome == null || nome.isBlank()) {
             throw new RegraDeNegocioException("informe o nome do insumo");
         }
         if (estoqueMinimo <= 0) {
             throw new RegraDeNegocioException("o estoque mínimo deve ser maior que zero");
         }
+        this.id = id;
+        this.unidadeId = unidadeId;
         this.nome = nome;
         this.unidadeDeMedida = unidadeDeMedida;
         this.estoqueMinimo = estoqueMinimo;
@@ -131,6 +136,14 @@ public class Insumo {
         throw new RegraDeNegocioException("a movimentação de estoque não pode ser alterada");
     }
 
+    public InsumoId id() {
+        return id;
+    }
+
+    public String unidadeId() {
+        return unidadeId;
+    }
+
     public String nome() {
         return nome;
     }
@@ -154,5 +167,16 @@ public class Insumo {
     /** Histórico de movimentações, consultável mesmo quando o insumo está inativo. */
     public List<MovimentacaoEstoque> movimentacoes() {
         return List.copyOf(movimentacoes);
+    }
+
+    /** Identidade é o id: dois insumos com o mesmo nome em unidades diferentes são diferentes. */
+    @Override
+    public boolean equals(Object outro) {
+        return outro instanceof Insumo insumo && id.equals(insumo.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
