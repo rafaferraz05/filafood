@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Composition root do FilaFood: é o único lugar da aplicação com Spring, JPA e Vaadin
- * (docs/padroes-do-projeto.md, seção 3).
+ * (docs/padroes-do-projeto.md, seção 3). O AppShell do Vaadin vive em adapter.in.web.layout.
  */
 @SpringBootApplication
 public class Application {

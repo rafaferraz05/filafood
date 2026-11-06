@@ -1,0 +1,87 @@
+/*
+ * Delta entre o CSS dos protótipos (docs/prototipos/estilo.css, servido como /estilo.css) e o
+ * runtime do Vaadin. O grosso do visual vem do protótipo; aqui só o que o Flow precisa para
+ * encaixar a casca na página e para os componentes Vaadin (diálogo, select) herdarem as cores.
+ */
+html, body, #outlet { height: 100%; }
+
+body {
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: var(--creme);
+}
+
+#outlet {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 16px 10px;
+  box-sizing: border-box;
+}
+
+#outlet > .casca {
+  width: 100%;
+  max-width: 1120px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* O Lumo define roxo por padrão; o protótipo é vermelho/amarelo. */
+html {
+  --lumo-primary-color: #D62828;
+  --lumo-primary-text-color: #D62828;
+  --lumo-base-color: #FFFFFF;
+  --lumo-body-text-color: #2B2118;
+  --lumo-font-family: "Segoe UI", system-ui, Roboto, sans-serif;
+  --lumo-border-radius: 9px;
+}
+
+/* O estilo do protótipo perde para o Lumo em h1/p; sobe a especificidade. */
+body h1 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  padding-bottom: 4px;
+  border-bottom: 4px solid var(--vermelho);
+  display: inline-block;
+}
+
+body p.subtitulo {
+  margin: 10px 0 0;
+  color: var(--tinta-fraca);
+  font-size: 13.5px;
+}
+
+/* Ações são button nativo no app; o protótipo estiliza links. */
+.acoes .link-acao {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin-left: 14px;
+  color: var(--vermelho);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.acoes .link-acao:hover { text-decoration: underline; }
+.acoes .link-acao.apagada { color: var(--tinta-fraca); font-weight: 500; }
+
+button.btn { border: 0; cursor: pointer; font: inherit; }
+
+.busca input { width: 100%; border: 0; outline: none; background: transparent; }
+.filtro { min-width: 190px; }
+
+.confirmacao .campo { margin-bottom: 10px; }
+.confirmacao .acoes-form { display: flex; gap: 10px; margin-top: 14px; align-items: center; }
+
+vaadin-dialog-overlay::part(overlay) {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+vaadin-dialog-overlay::part(content) { padding: 0; }

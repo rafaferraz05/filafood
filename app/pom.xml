@@ -83,6 +83,19 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <!-- Fonte única do visual: o CSS dos protótipos é servido como /estilo.css, sem cópia. -->
+      <resource>
+        <directory>${project.basedir}/../docs/prototipos</directory>
+        <includes>
+          <include>estilo.css</include>
+        </includes>
+        <targetPath>META-INF/resources</targetPath>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
