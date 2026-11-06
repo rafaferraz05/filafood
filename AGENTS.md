@@ -53,5 +53,6 @@ node scripts/verificar-prototipos.mjs         # prototype guard
 - `.env` is not versioned (copy `.env.example`); `docker compose` reads it, but the app needs `DB_PASSWORD` exported in the shell, and the dev profile is the default.
 - Migrations live in `app/src/main/resources/db/migration` (`V<nnn>__<descricao>.sql`); `ddl-auto=validate`, so the schema comes only from Flyway.
 - Vaadin dev mode requires `com.vaadin:vaadin-dev` (already in `app/pom.xml`); `app/src/main/frontend/generated/` and `node_modules/` are generated and gitignored. The production frontend build (`vaadin-maven-plugin`) is not configured yet.
+- The app's CSS is the prototype stylesheet: `docs/prototipos/estilo.css` is copied into `META-INF/resources` at build time and loaded by `AppShell` as `/estilo.css`; `app.css` is only the Vaadin delta. Screens use `MainLayout` + the helpers in `app/adapter/in/web/layout`, never their own layout/CSS.
 - The root `README.md` documents Part 1; build and module commands are here and in `docs/prototipos/ATENDIMENTO.md`.
 - Windows console can show mojibake for pt-BR accents; source files are UTF-8. Don't re-encode files to fix the console.
