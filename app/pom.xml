@@ -13,6 +13,10 @@
   <artifactId>app</artifactId>
   <name>FilaFood: aplicação web</name>
 
+  <properties>
+    <spring-boot.run.skip>false</spring-boot.run.skip>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.vaadin</groupId>
@@ -45,6 +49,10 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>br.edu.cesar.filafood</groupId>
+      <artifactId>dominio-estoque</artifactId>
     </dependency>
 
     <dependency>

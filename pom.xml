@@ -19,6 +19,8 @@
     <spring-boot.version>4.1.2</spring-boot.version>
     <vaadin.version>25.3.4</vaadin.version>
     <archunit.version>1.5.1</archunit.version>
+    <!-- O spring-boot:run só faz sentido no app; com -am, os outros módulos do reactor pulam. -->
+    <spring-boot.run.skip>true</spring-boot.run.skip>
   </properties>
 
   <modules>
@@ -64,6 +66,11 @@
         <groupId>com.tngtech.archunit</groupId>
         <artifactId>archunit</artifactId>
         <version>${archunit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>br.edu.cesar.filafood</groupId>
+        <artifactId>dominio-estoque</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <!-- BOM do JUnit antes do BOM do Boot: o projeto mantém a linha 5.11.4 do Cucumber, e sem
            isto o Boot puxaria os módulos do Jupiter para o 6.0.3, misturando versões. -->
