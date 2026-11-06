@@ -13,6 +13,6 @@ import com.vaadin.flow.theme.lumo.Lumo;
  */
 @Theme(themeClass = Lumo.class)
 @StyleSheet("estilo.css")
-@StyleSheet("app.css")
+@StyleSheet("filafood-app.css")
 public class AppShell implements AppShellConfigurator {
 }
