@@ -11,7 +11,7 @@
 - Mapa da história do usuário e catálogo ES-01..ES-07 / EN-01..EN-09 em `docs/historia-do-usuario.md`.
 - Regras de negócio de F1/F2 em `docs/funcionalidades.md`.
 - Protótipos de alta fidelidade em HTML/CSS em `docs/prototipos/`.
-- Cenários BDD e automação Cucumber de F1/F2, atualmente verdes (136 testes no reactor).
+- Cenários BDD e automação Cucumber de F1/F2, atualmente verdes (140 testes no reactor).
 - Lógica de domínio de F1/F2 em memória nos módulos `dominio-estoque` e `dominio-entrega`, já com dinheiro em `BigDecimal`.
 - Aplicação `app` com Spring Boot 4.1.2, Vaadin 25.3.4, JPA, Flyway e Actuator, subindo no perfil `dev`.
 - Postgres 16 de desenvolvimento em `docker-compose.yml` e a migração `V001__insumo.sql` (`insumo` e `movimentacao_estoque`).
@@ -29,7 +29,7 @@
 **Falta**
 - Arquitetura limpa completa e 4+ padrões exigidos pelo Spec.
 - Integração F1↔F4 (pedido/preparo), F2↔F4 (pedido concluído/falha), F1↔F6 (produto/ficha) e F2↔F3 (unidade/zonas).
-- Identidade e escopo por unidade no domínio, transações, concorrência e histórico.
+- Transações, concorrência e histórico; ids e escopo por unidade já existem em F1.
 - Testes de persistência, web, integração e concorrência.
 - README de execução e documentação de arquitetura, ER e API.
 
@@ -106,7 +106,7 @@
 - [ ] **G-15 — Aplicar arquitetura limpa.**
   Separar `domain`, `application` (casos de uso/portas), `adapters` (JPA, web, integrações) e `config`. Dependências apontam para dentro.
   **Pronto quando:** teste ArchUnit impede `dominio-*` de importar Spring/JPA/web; controllers não usam entidades JPA diretamente.
-  **Feito:** `app` com `adapter/in/web`, três regras ArchUnit e domínio sem framework. **Falta:** camada `application`, adaptadores de persistência e as regras que envolvem `dominio-*`.
+  **Feito:** `app` com `adapter/in/web`, porta `Insumos` + adaptador JPA, quatro regras ArchUnit (três do `app` + pureza do domínio) e domínio sem framework. **Falta:** camada `application` e a regra de `*Jpa`.
 
 - [ ] **G-16 — Criar casos de uso para todas as histórias.**
   ES-01..ES-07 e EN-01..EN-09, cada operação de escrita com caso de uso, DTO de entrada/saída, validação e limite transacional.
@@ -268,16 +268,16 @@
 | --- | --- | --- |
 | Aplicação web + banco relacional | Parcial (app e banco de pé; faltam telas e schema completo) | G-01..G-14, G-28, G-35 |
 | Funcionalidade completa (não só leitura) | Parcial (só domínio) | G-23..G-39 |
-| Java + Spring Boot + JPA + Angular ou Vaadin | Parcial (Spring Boot, JPA e Vaadin; falta validação e testes de app) | G-01..G-07 |
+| Java + Spring Boot + JPA + Angular ou Vaadin | Parcial (Spring Boot, JPA e Vaadin; falta validação, Cucumber no app e teste de repositório) | G-01..G-07 |
 | Descrição do domínio | Pronto | `docs/dominio.md` |
 | Mapa da história do usuário | Pronto | `docs/historia-do-usuario.md` |
 | Protótipos de alta fidelidade | Pronto | `docs/prototipos/` |
 | Modelo CML | Parcial (tático de F1/F2; falta ContextMap) | G-17 |
 | Cenários BDD + Cucumber | Parcial (só domínio) | G-40 |
 | Níveis preliminar, estratégico, tático e operacional | Parcial (preliminar e tático; faltam estratégico e operacional) | G-17, G-18 |
-| Arquitetura limpa | Parcial (pacotes e ArchUnit do app) | G-15 |
+| Arquitetura limpa | Parcial (pacotes, porta/adaptador e 4 regras ArchUnit; falta camada `application`) | G-15 |
 | 4+ padrões do Spec | Falta | G-19 |
-| Persistência com mapeamento objeto-relacional | Parcial (schema e Flyway; faltam entidades e portas) | G-05..G-14 |
+| Persistência com mapeamento objeto-relacional | Parcial (schema, entidades, mapper e adaptador; faltam teste de repositório e casos de uso) | G-05..G-14 |
 | Camada de apresentação web | Parcial (tela inicial) | G-04, G-28, G-35 |
 
 ## 5. Riscos e cuidados

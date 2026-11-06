@@ -90,7 +90,8 @@ O relatório de atendimento é `dominio-atendimento/target/cucumber-report.html`
 
 A interface real, a autenticação, a persistência e os adaptadores que ligam os módulos não
 estão presentes. Coordenadas e preço são dados de integração de endereço/produto para a entrega;
-não são inventados ou calculados por estas telas. O modelo CML continua uma tarefa do grupo.
+não são inventados ou calculados por estas telas. O modelo CML de F1 e F2 está em `filafood.cml`;
+F3–F5 entram no mesmo arquivo quando o domínio de atendimento for modelado.
 
 
 ## Verificação desta atualização

@@ -37,7 +37,7 @@
 | Web | **Vaadin Flow 25.3.4** | `app/adapter/in/web` |
 | BDD | **Cucumber 7.21.1** + JUnit 5.11.4 | módulos de domínio (no `app`, pendente) |
 | Teste de arquitetura | **ArchUnit 1.5.1** — 4 regras (3 do app + pureza do domínio) | `app` (test) |
-| Teste de banco | **Testcontainers (PostgreSQL)** (**pendente**) | `app` (test) |
+| Teste de banco | **Testcontainers (PostgreSQL)** — profile `integracao` | `app` (test) |
 | E2E | **Playwright** (**pendente**) | projeto `e2e/` |
 | Protótipos | Node 20.11+ apenas para `scripts/verificar-prototipos.mjs` | não é build do app |
 
@@ -46,8 +46,7 @@
 
 - Importe BOMs na raiz, e a ordem importa: o `junit-bom` 5.11.4 vem **antes** do BOM do Spring Boot,
   que gerencia JUnit 6.0.3 — sem isso o reactor mistura as duas linhas.
-- Exceção atual: `vaadin-spring-boot-starter` e `vaadin-dev` declaram `${vaadin.version}` no `app`
-  porque o BOM do Vaadin ainda não é importado; migrar para `vaadin-bom` quando o POM for tocado.
+- O BOM do Vaadin (`vaadin-bom`) também é importado na raiz; nenhum módulo declara versão de Vaadin.
 
 ## 3. Estrutura do repositório
 
@@ -216,8 +215,13 @@ otimista (G-11).
 | Arquitetura | limites de camada e contexto | ArchUnit |
 | Concorrência | oversell, despacho duplo, devolução dupla | JUnit com executor |
 
-**Números atuais:** 136 testes verdes no reactor (132 cenários BDD + 1 JUnit de concorrência + 3
-ArchUnit). Testcontainers, Playwright e Cucumber rodando no `app` ainda não existem.
+**Números atuais:** 140 testes verdes no reactor (132 cenários BDD + 1 JUnit de concorrência + 1
+teste de identidade + 2 do mapper + 4 ArchUnit). Testcontainers, Playwright e Cucumber rodando no
+`app` ainda não existem.
+
+**Teste de integração:** o teste de repositório com Testcontainers roda no profile `integracao`
+(`.\mvnw.cmd -Pintegracao test`), não no build padrão — assim `.\mvnw.cmd test` não passa a exigir
+Docker para todo mundo. O pacote `test` continua cobrindo regra, domínio, aplicação e arquitetura.
 
 **Regras de teste**
 
@@ -333,6 +337,7 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 
 ```powershell
 .\mvnw.cmd test                                  # raiz + todos os módulos
+.\mvnw.cmd -Pintegracao test                     # teste de repositório (D-13, exige Docker)
 .\mvnw.cmd -f dominio-estoque/pom.xml test       # um módulo
 docker compose up -d --wait db                   # Postgres do dev (precisa de .env)
 .\mvnw.cmd -pl app -am spring-boot:run           # aplicação (DB_PASSWORD no ambiente)
@@ -343,9 +348,9 @@ node scripts/verificar-prototipos.mjs            # protótipos
 
 1. **P0 — concluído:** ADRs 0001–0007, raiz agregadora, `parte1`, `app` com Spring Boot e Vaadin,
    Postgres/Flyway e ArchUnit do `app`.
-2. **P1 — em andamento:** G-08 (identidade e `unidade_id` no domínio), D-09 (porta + JPA + mapper),
-   D-11 (casos de uso de insumo e entrada), D-12 (telas de Insumos e Detalhe) e D-13 (teste de
-   persistência com Testcontainers).
+2. **P1 — em andamento:** G-08 (identidade) e D-09 (porta + JPA + mapper) concluídos; faltam D-11
+   (casos de uso de insumo e entrada), D-12 (telas de Insumos e Detalhe) e D-13 (teste de
+   persistência com Testcontainers no profile `integracao`).
 3. **P2 em diante:** ficha técnica, baixa/devolução, reposição, F2 completa, integração entre
    contextos e entrega, na ordem do plano de desenvolvimento.
 4. A partir daí, cada dono trabalha na pasta do seu contexto, com build verde e revisão de outra

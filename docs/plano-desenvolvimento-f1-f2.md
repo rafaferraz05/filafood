@@ -87,7 +87,7 @@ continua rodando; app sobe e mostra a tela inicial; `CenarioDeCarga` continua pa
 | D-10 | Trocar `double` por `BigDecimal` no dinheiro do domínio e ajustar cenários | BDD continua verde |
 | D-11 | Casos de uso: cadastrar, editar, desativar, reativar, registrar entrada, listar/filtrar | testes de caso de uso |
 | D-12 | Views: Insumos (lista, busca, filtro "a repor") e Detalhe (entrada + histórico) | fluxo clicável com banco |
-| D-13 | Testes: `@DataJpaTest` do saldo e do histórico; teste de erro de quantidade/custo | saldo e imutabilidade provados |
+| D-13 | Testes: `@DataJpaTest` do saldo e do histórico; teste de erro de quantidade/custo (profile `integracao`) | saldo e imutabilidade provados |
 
 **Pronto quando:** cadastrar um insumo, registrar entrada e ver o saldo somado no banco; tentar
 alterar ou apagar a movimentação não é possível (nem pela tela nem pelo repositório).
@@ -169,7 +169,7 @@ divergência do código.
 
 | # | Tarefa | Saída |
 | --- | --- | --- |
-| D-40 | Cucumber + Spring no `app` (`cucumber-spring`), mantendo os 60 cenários | BDD e Spring no mesmo build |
+| D-40 | Cucumber + Spring no `app` (`cucumber-spring`), mantendo os 132 cenários | BDD e Spring no mesmo build |
 | D-41 | Testes de migração em base vazia e de consultas críticas | Flyway provado |
 | D-42 | Suíte de concorrência (baixa, despacho, cancelamento × preparo, devolução) | invariantes sob concorrência |
 | D-43 | README de execução + roteiro de demonstração + evidências | clone → sobe → demonstra |
@@ -212,7 +212,7 @@ divergência do código.
 
 | Camada | Ferramenta | O que cobre |
 | --- | --- | --- |
-| Regra | Cucumber dos módulos (60 cenários) | mantém o BDD atual como contrato |
+| Regra | Cucumber dos módulos (132 cenários) | mantém o BDD atual como contrato |
 | Domínio | JUnit | invariantes e bordas que o Gherkin não expressa |
 | Persistência | `@DataJpaTest` + Testcontainers | mapeamento, constraints, migração, saldo |
 | Aplicação | JUnit com fakes das portas | casos de uso, transações e idempotência |

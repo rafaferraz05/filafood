@@ -15,9 +15,10 @@
  * - Dinheiro aparece como BigDecimal com escala 2, como manda docs/padroes-do-projeto.md, e é o que
  *   os módulos de F1 e F2 já fazem (D-10). Quantidade e distância continuam double no código; a
  *   escala da quantidade entra no G-09.
- * - O modelo é o alvo, não um retrato do código: identidade (InsumoId, FichaId, ...), unidadeId,
- *   Repository e DomainEvent seguem os requisitos G-05..G-14 e entram nas fases P1..P4. Hoje o
- *   código usa o nome como chave e ainda não tem camada de repositório.
+ * - O modelo é o alvo, não um retrato do código: identidade, unidadeId, Repository e DomainEvent
+ *   seguem os requisitos G-05..G-14 e entram nas fases P1..P4. No estoque, `InsumoId`,
+ *   `MovimentacaoId` e `unidadeId` já existem no código e na porta `Insumos`; os demais contextos
+ *   ainda usam o nome como chave.
  *
  * Escopo: funcionalidades 1 e 2. F3–F11 entram neste arquivo, no mesmo formato, quando seus donos
  * escreverem o modelo tático. Não há ContextMap aqui de propósito: ele responde outra pergunta
