@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.app.adapter.in.web;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
@@ -23,7 +24,8 @@ public class InicioView extends VerticalLayout {
                 new Paragraph("Pedidos entre unidades de uma rede de restaurantes."),
                 perfil("Gestor da unidade", "Insumos, ficha técnica, entregadores, zonas e despacho."),
                 perfil("Atendente ou cozinheiro", "Fila de preparo, itens prontos e conclusão do pedido."),
-                perfil("Entregador", "Retirada, entrega e falha das entregas atribuídas."));
+                perfil("Entregador", "Retirada, entrega e falha das entregas atribuídas."),
+                new Button("Abrir insumos", evento -> getUI().ifPresent(ui -> ui.navigate("insumos"))));
     }
 
     private VerticalLayout perfil(String titulo, String descricao) {
