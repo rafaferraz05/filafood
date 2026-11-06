@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
  * exatamente o que foi consumido. O custo unitário é dinheiro, em {@link BigDecimal}.
  */
 public record MovimentacaoEstoque(
+        MovimentacaoId id,
         Tipo tipo,
         Motivo motivo,
         double quantidade,
@@ -30,17 +31,18 @@ public record MovimentacaoEstoque(
     }
 
     public static MovimentacaoEstoque compra(double quantidade, BigDecimal custoUnitario) {
-        return new MovimentacaoEstoque(Tipo.ENTRADA, Motivo.COMPRA, quantidade, custoUnitario, "", LocalDateTime.now());
+        return new MovimentacaoEstoque(MovimentacaoId.novo(), Tipo.ENTRADA, Motivo.COMPRA, quantidade, custoUnitario,
+                "", LocalDateTime.now());
     }
 
     public static MovimentacaoEstoque devolucao(double quantidade, String pedido) {
-        return new MovimentacaoEstoque(Tipo.ENTRADA, Motivo.DEVOLUCAO, quantidade, BigDecimal.ZERO.setScale(2), pedido,
-                LocalDateTime.now());
+        return new MovimentacaoEstoque(MovimentacaoId.novo(), Tipo.ENTRADA, Motivo.DEVOLUCAO, quantidade,
+                BigDecimal.ZERO.setScale(2), pedido, LocalDateTime.now());
     }
 
     public static MovimentacaoEstoque consumo(double quantidade, String pedido) {
-        return new MovimentacaoEstoque(Tipo.SAIDA, Motivo.CONSUMO, quantidade, BigDecimal.ZERO.setScale(2), pedido,
-                LocalDateTime.now());
+        return new MovimentacaoEstoque(MovimentacaoId.novo(), Tipo.SAIDA, Motivo.CONSUMO, quantidade,
+                BigDecimal.ZERO.setScale(2), pedido, LocalDateTime.now());
     }
 
     public boolean somaAoSaldo() {

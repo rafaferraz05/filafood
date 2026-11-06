@@ -10,8 +10,8 @@ import com.tngtech.archunit.core.importer.ClassFileImporter;
 /**
  * Regras de camada do app (D-06).
  *
- * <p>As regras que envolvem os módulos {@code dominio-*} entram quando o app passar a depender
- * deles, na fase P1; por enquanto o ArchUnit só vê as classes do próprio app.
+ * <p>O app passa a depender de {@code dominio-estoque} (D-09), então a regra de pureza do domínio
+ * também é cobrada aqui; as demais regras de domínio entram quando os outros módulos forem ligados.
  */
 class ArquiteturaTest {
 
@@ -41,5 +41,14 @@ class ArquiteturaTest {
                 .that().resideInAPackage("br.edu.cesar.filafood.app.adapter.in.web..")
                 .should().dependOnClassesThat().resideInAPackage("br.edu.cesar.filafood.app.adapter.out.persistence..")
                 .check(classes);
+    }
+
+    @Test
+    void dominioNaoConheceFramework() {
+        JavaClasses dominio = new ClassFileImporter().importPackages("br.edu.cesar.filafood.dominio.estoque");
+        noClasses()
+                .should().dependOnClassesThat()
+                .resideInAnyPackage("org.springframework..", "jakarta.persistence..", "com.vaadin..")
+                .check(dominio);
     }
 }

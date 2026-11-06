@@ -38,6 +38,18 @@ public class Insumo {
         this.prazoDeEntregaEmDias = prazoDeEntregaEmDias;
     }
 
+    /**
+     * Reconstitui o insumo a partir da persistência, sem repetir as validações de cadastro: os dados
+     * já foram validados quando entraram.
+     */
+    public static Insumo reconstituir(InsumoId id, String unidadeId, String nome, String unidadeDeMedida,
+            double estoqueMinimo, int prazoDeEntregaEmDias, boolean ativo, List<MovimentacaoEstoque> movimentacoes) {
+        Insumo insumo = new Insumo(id, unidadeId, nome, unidadeDeMedida, estoqueMinimo, prazoDeEntregaEmDias);
+        insumo.ativo = ativo;
+        insumo.movimentacoes.addAll(movimentacoes);
+        return insumo;
+    }
+
     public double saldo() {
         return movimentacoes.stream()
                 .mapToDouble(m -> m.somaAoSaldo() ? m.quantidade() : -m.quantidade())
