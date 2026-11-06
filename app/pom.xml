@@ -17,14 +17,12 @@
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-spring-boot-starter</artifactId>
-      <version>${vaadin.version}</version>
     </dependency>
     <!-- Modo de desenvolvimento do Vaadin (frontend servido pelo dev server), exigido só fora de
          produção; o spring-boot-maven-plugin o deixa fora do jar executável. -->
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-dev</artifactId>
-      <version>${vaadin.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>

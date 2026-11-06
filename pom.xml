@@ -74,6 +74,15 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- BOM do Vaadin: os artefatos do Vaadin saem com versão gerenciada aqui, e o app não
+           declara versão de dependência. -->
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-bom</artifactId>
+        <version>${vaadin.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <!-- Importado por último de propósito: as entradas próprias acima têm precedência, e o
            projeto mantém o JUnit 5.11.4 do Cucumber em vez do JUnit 6.0.3 gerenciado pelo Boot. -->
       <dependency>
