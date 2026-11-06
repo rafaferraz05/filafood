@@ -7,6 +7,7 @@ package br.edu.cesar.filafood.app.config;
 public final class UnidadeDeDemonstracao {
 
     public static final String ID = "00000000-0000-0000-0000-000000000001";
+    public static final String NOME = "Boa Viagem";
 
     private UnidadeDeDemonstracao() {
     }
