@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
@@ -20,6 +21,7 @@ public class ListarInsumos {
         this.insumos = insumos;
     }
 
+    @Transactional(readOnly = true)
     public List<InsumoResumo> executar(String unidadeId) {
         LocalDate hoje = LocalDate.now();
         return insumos.doEstoqueDaUnidade(unidadeId).stream()

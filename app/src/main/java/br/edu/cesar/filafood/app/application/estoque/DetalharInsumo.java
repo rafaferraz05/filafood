@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
@@ -22,6 +23,7 @@ public class DetalharInsumo {
         this.insumos = insumos;
     }
 
+    @Transactional(readOnly = true)
     public InsumoDetalhe executar(String insumoId) {
         Insumo insumo = insumos.porId(new InsumoId(UUID.fromString(insumoId)))
                 .orElseThrow(() -> new RegraDeNegocioException("insumo não encontrado"));
