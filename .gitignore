@@ -13,3 +13,6 @@ app/src/main/frontend/generated/
 
 # Segredo local do dev (o modelo com as chaves é o .env.example)
 .env
+
+# Bundle de desenvolvimento do Vaadin (gerado no build do frontend)
+app/src/main/bundles/

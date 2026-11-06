@@ -180,8 +180,14 @@ otimista (G-11).
   cadastro de gestor; gestor não registra entrega.
 - **Listas paginadas** e sem N+1. Se a tela precisa de dado composto, cria-se uma **consulta de
   leitura** específica, não se carrega agregado inteiro.
-- **Texto e layout em português**, mesma paleta do protótipo. O tema do Vaadin replica as cores;
-  **não se importa** `docs/prototipos/estilo.css` na aplicação — o CSS é do protótipo.
+- **Visual vem do protótipo, não se reescreve.** `docs/prototipos/estilo.css` é a fonte única: o
+  build do `app` copia o arquivo para `META-INF/resources` e o `AppShell` carrega como `/estilo.css`;
+  o `app.css` só traz o delta do runtime (outlet, botões nativos, diálogo, cores do Lumo).
+- **Toda tela usa a casca `MainLayout`** (`.casca > .app > topbar + .conteudo`) e os componentes de
+  layout (`Cabecalho`, `Tabela`, `Badge`, `Acao`, `Campo`, `Busca`). Nenhuma tela define cor, medida
+  ou estrutura própria; tela nova é só conteúdo dentro da casca.
+- **Elementos nativos** (`Div`, `Span`, `Input`, `NativeButton`, `table`) onde o CSS do protótipo
+  mira HTML; componente Vaadin (shadow DOM) só quando não houver equivalente visual.
 - **Acessibilidade mínima:** rótulo em todo campo, foco visível, contraste do protótipo, navegação
   por teclado nos formulários.
 - **Modo dev:** o Vaadin exige `com.vaadin:vaadin-dev` (opcional) e roda com `spring-boot:run`; o
