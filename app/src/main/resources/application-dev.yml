@@ -9,4 +9,4 @@ spring:
       ddl-auto: validate
     open-in-view: false
   flyway:
-    locations: classpath:db/migration
+    locations: classpath:db/migration,classpath:db/seed

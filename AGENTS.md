@@ -15,6 +15,7 @@ The root `pom.xml` is a Maven aggregator (`br.edu.cesar.filafood:filafood`) for 
 .\mvnw.cmd test                               # raiz: parte1 + todos os módulos
 .\mvnw.cmd -q package                         # empacota tudo
 .\mvnw.cmd -pl app -am -Pintegracao test      # inclui o teste de repositório (Docker)
+.\mvnw.cmd -pl app -am spring-boot:run "-Dspring-boot.run.arguments=--spring.profiles.active=dev,verificacao --server.port=8092"  # smoke test das operações no banco de dev
 docker compose up -d --wait db                # Postgres do dev (precisa de .env)
 .\mvnw.cmd -pl app -am spring-boot:run         # app (8080/8081 são do tailscaled; ver gotchas)
 java -cp parte1/target/classes br.edu.cesar.filafood.Main
@@ -51,6 +52,7 @@ node scripts/verificar-prototipos.mjs         # prototype guard
 - Each module has its own gitignored `target/` with possibly stale classes; rebuild before running.
 - Ports 8080 and 8081 are taken by `tailscaled` on this machine; run the app with `"-Dspring-boot.run.arguments=--server.port=8090"`.
 - `.env` is not versioned (copy `.env.example`); `docker compose` reads it, but the app needs `DB_PASSWORD` exported in the shell, and the dev profile is the default.
+- `db/seed` (V900) só entra no perfil `dev`: semeia Pão, Carne, Queijo e Tomate. O runner `verificacao` cadastra um insumo novo a cada execução, então o banco de dev acumula esses insumos de teste.
 - Migrations live in `app/src/main/resources/db/migration` (`V<nnn>__<descricao>.sql`); `ddl-auto=validate`, so the schema comes only from Flyway.
 - Vaadin dev mode requires `com.vaadin:vaadin-dev` (already in `app/pom.xml`); `app/src/main/frontend/generated/` and `node_modules/` are generated and gitignored. The production frontend build (`vaadin-maven-plugin`) is not configured yet.
 - The app's CSS is the prototype stylesheet: `docs/prototipos/estilo.css` is copied into `META-INF/resources` at build time and loaded by `AppShell` as `/estilo.css`; `app.css` is only the Vaadin delta. Screens use `MainLayout` + the helpers in `app/adapter/in/web/layout`, never their own layout/CSS.
