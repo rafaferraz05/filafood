@@ -22,7 +22,7 @@ body {
 
 #outlet > .casca {
   width: 100%;
-  max-width: 1120px;
+  max-width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -85,3 +85,6 @@ vaadin-dialog-overlay::part(overlay) {
 }
 
 vaadin-dialog-overlay::part(content) { padding: 0; }
+
+/* O cartão do protótipo para em 1120px; na aplicação ele ocupa a janela inteira. */
+#outlet .app { max-width: 100%; }
