@@ -92,10 +92,9 @@ continua rodando; app sobe e mostra a tela inicial; `CenarioDeCarga` continua pa
 **Pronto quando:** cadastrar um insumo, registrar entrada e ver o saldo somado no banco; tentar
 alterar ou apagar a movimentação não é possível (nem pela tela nem pelo repositório).
 
-**Status (2026-11-06):** em andamento. D-08 (migração), D-09 (porta `Insumos` + JPA + mapper) e
-D-10 (`BigDecimal`) concluídos; o próximo é o D-11 (casos de uso de insumo e entrada) e o D-12
-(telas de Insumos e Detalhe). O D-13 (teste de repositório) entra junto com o D-11, com
-Testcontainers.
+**Status (2026-11-06):** concluído. D-08 a D-13 entregues: migração, porta `Insumos` com adaptador
+JPA, `BigDecimal`, casos de uso de insumo/entrada, telas de Insumos e Detalhe e o teste de
+integração no profile `integracao` (ADR 0009).
 
 ### P2 — F1 completa: ficha, baixa, devolução e reposição · esforço 5–6 · G-10, G-11, G-13 (parcial), G-14 (parcial), G-25..G-28
 

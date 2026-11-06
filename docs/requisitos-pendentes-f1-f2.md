@@ -11,19 +11,20 @@
 - Mapa da história do usuário e catálogo ES-01..ES-07 / EN-01..EN-09 em `docs/historia-do-usuario.md`.
 - Regras de negócio de F1/F2 em `docs/funcionalidades.md`.
 - Protótipos de alta fidelidade em HTML/CSS em `docs/prototipos/`.
-- Cenários BDD e automação Cucumber de F1/F2, atualmente verdes (140 testes no reactor).
+- Cenários BDD e automação Cucumber de F1/F2, atualmente verdes (144 testes no build padrão).
 - Lógica de domínio de F1/F2 em memória nos módulos `dominio-estoque` e `dominio-entrega`, já com dinheiro em `BigDecimal`.
 - Aplicação `app` com Spring Boot 4.1.2, Vaadin 25.3.4, JPA, Flyway e Actuator, subindo no perfil `dev`.
 - Postgres 16 de desenvolvimento em `docker-compose.yml` e a migração `V001__insumo.sql` (`insumo` e `movimentacao_estoque`).
 - Porta `Insumos` no domínio com adaptador JPA e mapper (`InsumoJpa`, `MovimentacaoEstoqueJpa`), validados pelo Hibernate contra a `V001` ao subir.
-- Modelo tático de F1/F2 em `filafood.cml` e os ADRs 0001–0008.
+- Fatia vertical de insumos contra o banco: cadastro, entrada, saldo e histórico, com as telas de Insumos e Detalhe e teste de integração com Testcontainers.
+- Modelo tático de F1/F2 em `filafood.cml` e os ADRs 0001–0009.
 
 **Parcial**
-- DDD tático/operacional: entidades e regras existem; faltam camada de aplicação, persistência com IDs e integração real entre contextos.
+- DDD tático/operacional: entidades e regras existem; falta a integração real entre contextos.
 - Modelo CML: tático de F1/F2 pronto; falta o ContextMap (nível estratégico), decidido no ADR 0008.
-- Persistência: schema, Flyway, identidade do insumo, porta `Insumos` e adaptador JPA prontos; faltam teste de repositório, transações e os demais agregados.
-- Arquitetura limpa: `app` tem os pacotes e quatro regras ArchUnit; faltam camada `application` e as regras de `*Jpa`.
-- Camada web: tela inicial com os três perfis; faltam as telas de F1/F2.
+- Persistência: schema, Flyway, identidade, porta, adaptador e teste de integração prontos; faltam transações/idempotência e os demais agregados.
+- Arquitetura limpa: `app` tem web, `application` e `persistence` com quatro regras ArchUnit; falta a regra de `*Jpa` e a integração entre contextos.
+- Camada web: tela inicial, Insumos e Detalhe; faltam ficha técnica, preparo e as telas de F2.
 - Tipos: dinheiro em `BigDecimal` no domínio de F1/F2; escala das quantidades e os módulos de F3–F7 seguem pendentes.
 
 **Falta**
@@ -69,7 +70,7 @@
 - [ ] **G-07 — Implementar o mapeamento JPA sem contaminar o domínio.**
   Entidades JPA e repositórios na camada de adaptadores; portas de repositório no domínio/aplicação. Não colocar `@Entity`/`@Repository` nas classes de `dominio-*`.
   **Pronto quando:** o domínio compila sem Spring/JPA; os adaptadores implementam as portas; testes de repositório passam.
-  **Feito:** porta `Insumos`, `InsumoJpa`/`MovimentacaoEstoqueJpa`, mapper e adaptador; o ArchUnit cobra domínio sem framework e o Hibernate valida o mapeamento contra a `V001` ao subir. **Falta:** teste de repositório com Testcontainers (D-13) e as demais portas.
+  **Feito:** porta `Insumos`, entidades JPA, mapper e adaptador; o ArchUnit cobra domínio sem framework, o Hibernate valida o mapeamento contra a `V001` e o teste de integração roda contra Postgres real (profile `integracao`). **Falta:** transações/idempotência (G-10, G-11) e as demais portas.
 
 - [x] **G-08 — Introduzir identidade e escopo por unidade.**
   IDs substitutos (UUID/Long) para insumo, ficha, entregador, zona e entrega; `unidade_id` em todos os dados de F1/F2. Restrições: insumo único por unidade/nome, ficha única por unidade/produto, item único por ficha/insumo, entrega única por pedido/tentativa.
@@ -111,6 +112,7 @@
 - [ ] **G-16 — Criar casos de uso para todas as histórias.**
   ES-01..ES-07 e EN-01..EN-09, cada operação de escrita com caso de uso, DTO de entrada/saída, validação e limite transacional.
   **Pronto quando:** cada história tem um caso de uso identificável e um teste que a prova.
+  **Feito:** cadastrar, registrar entrada, listar, detalhar e desativar/reativar insumo, com testes de caso de uso usando fake da porta. **Falta:** as demais histórias (edição, ficha, baixa, reposição e F2).
 
 - [ ] **G-17 — Criar o modelo CML (DDD estratégico).**
   `filafood.cml` com os contextos Atendimento, Estoque, Entrega, Cardápio e Compras, e os relacionamentos (upstream/downstream, ACL, shared kernel quando fizer sentido).
@@ -142,10 +144,12 @@
 - [ ] **G-23 — Insumos: listar, buscar, filtrar e CRUD.**
   Lista com saldo, mínimo, ponto de pedido e estado normal/a repor; busca por nome; filtro “a repor”; criar, editar, desativar e reativar com as validações da RN 1.
   **Pronto quando:** todas as ações dos protótipos de Insumos funcionam contra o banco.
+  **Feito:** lista com saldo, mínimo e “a repor”, busca, filtro, cadastro, desativar e reativar. **Falta:** editar insumo e o ponto de pedido na lista.
 
 - [ ] **G-24 — Entrada por compra e histórico.**
   Registrar entrada com quantidade/custo > 0, gravar movimentação imutável, somar saldo e listar o histórico do insumo.
   **Pronto quando:** a entrada aparece no histórico e altera o saldo; tentativa de alterar/excluir é recusada.
+  **Feito:** entrada com quantidade/custo, movimentação imutável, saldo e histórico na tela de detalhe. **Falta:** nada além da integração com compras (F7).
 
 - [ ] **G-25 — Ficha técnica por unidade.**
   Manter ficha por produto/unidade; exigir insumo ativo, quantidade > 0 e sem duplicidade; produto sem ficha não pode ser vendido.
@@ -162,6 +166,7 @@
 - [ ] **G-28 — Telas de F1.**
   Implementar Insumos, Detalhe do insumo, Ficha técnica e Preparo do pedido com os estados dos protótipos (vazio, formulário, erros, confirmação e resultado).
   **Pronto quando:** é possível percorrer o Fluxo A dos protótipos na aplicação real, com dados persistidos.
+  **Feito:** Insumos e Detalhe do insumo. **Falta:** Ficha técnica e Preparo do pedido (P2).
 
 ### 2.5 F2 — Entrega (funcional e web)
 
@@ -266,19 +271,19 @@
 
 | Exigência | Situação | Requisitos |
 | --- | --- | --- |
-| Aplicação web + banco relacional | Parcial (app e banco de pé; faltam telas e schema completo) | G-01..G-14, G-28, G-35 |
-| Funcionalidade completa (não só leitura) | Parcial (só domínio) | G-23..G-39 |
-| Java + Spring Boot + JPA + Angular ou Vaadin | Parcial (Spring Boot, JPA e Vaadin; falta validação, Cucumber no app e teste de repositório) | G-01..G-07 |
+| Aplicação web + banco relacional | Parcial (fatia de insumos vertical; faltam as demais telas e schema) | G-01..G-14, G-28, G-35 |
+| Funcionalidade completa (não só leitura) | Parcial (insumos/entrada completos; faltam ficha, baixa e reposição) | G-23..G-39 |
+| Java + Spring Boot + JPA + Angular ou Vaadin | Parcial (Spring Boot, JPA e Vaadin; falta validação e Cucumber no app) | G-01..G-07 |
 | Descrição do domínio | Pronto | `docs/dominio.md` |
 | Mapa da história do usuário | Pronto | `docs/historia-do-usuario.md` |
 | Protótipos de alta fidelidade | Pronto | `docs/prototipos/` |
 | Modelo CML | Parcial (tático de F1/F2; falta ContextMap) | G-17 |
 | Cenários BDD + Cucumber | Parcial (só domínio) | G-40 |
 | Níveis preliminar, estratégico, tático e operacional | Parcial (preliminar e tático; faltam estratégico e operacional) | G-17, G-18 |
-| Arquitetura limpa | Parcial (pacotes, porta/adaptador e 4 regras ArchUnit; falta camada `application`) | G-15 |
+| Arquitetura limpa | Parcial (web, application e persistence, porta/adaptador e 4 regras ArchUnit; falta a 5ª regra e a integração) | G-15 |
 | 4+ padrões do Spec | Falta | G-19 |
-| Persistência com mapeamento objeto-relacional | Parcial (schema, entidades, mapper e adaptador; faltam teste de repositório e casos de uso) | G-05..G-14 |
-| Camada de apresentação web | Parcial (tela inicial) | G-04, G-28, G-35 |
+| Persistência com mapeamento objeto-relacional | Parcial (schema, mapeamento, adaptador e teste de integração; faltam transações e os demais agregados) | G-05..G-14 |
+| Camada de apresentação web | Parcial (Insumos e Detalhe) | G-04, G-28, G-35 |
 
 ## 5. Riscos e cuidados
 

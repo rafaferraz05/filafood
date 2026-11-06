@@ -37,7 +37,7 @@
 | Web | **Vaadin Flow 25.3.4** | `app/adapter/in/web` |
 | BDD | **Cucumber 7.21.1** + JUnit 5.11.4 | módulos de domínio (no `app`, pendente) |
 | Teste de arquitetura | **ArchUnit 1.5.1** — 4 regras (3 do app + pureza do domínio) | `app` (test) |
-| Teste de banco | **Testcontainers (PostgreSQL)** — profile `integracao` | `app` (test) |
+| Teste de banco | **Testcontainers 1.21.4 (PostgreSQL)** — profile `integracao` (ADR 0009) | `app` (test) |
 | E2E | **Playwright** (**pendente**) | projeto `e2e/` |
 | Protótipos | Node 20.11+ apenas para `scripts/verificar-prototipos.mjs` | não é build do app |
 
@@ -215,13 +215,14 @@ otimista (G-11).
 | Arquitetura | limites de camada e contexto | ArchUnit |
 | Concorrência | oversell, despacho duplo, devolução dupla | JUnit com executor |
 
-**Números atuais:** 140 testes verdes no reactor (132 cenários BDD + 1 JUnit de concorrência + 1
-teste de identidade + 2 do mapper + 4 ArchUnit). Testcontainers, Playwright e Cucumber rodando no
-`app` ainda não existem.
+**Números atuais:** 144 testes no build padrão (132 cenários BDD + 1 JUnit de concorrência + 1 de
+identidade + 2 do mapper + 4 de caso de uso + 4 ArchUnit); o profile `integracao` soma 3 testes
+contra um Postgres real. Playwright e Cucumber rodando no `app` ainda não existem.
 
 **Teste de integração:** o teste de repositório com Testcontainers roda no profile `integracao`
-(`.\mvnw.cmd -Pintegracao test`), não no build padrão — assim `.\mvnw.cmd test` não passa a exigir
-Docker para todo mundo. O pacote `test` continua cobrindo regra, domínio, aplicação e arquitetura.
+(`.\mvnw.cmd -pl app -am -Pintegracao test`), não no build padrão — assim `.\mvnw.cmd test` não
+passa a exigir Docker para todo mundo. O teste usa Flyway + Hibernate direto, sem Spring Test,
+porque o Boot 4 exige JUnit 6 e o reactor fica no JUnit 5 (ADR 0009).
 
 **Regras de teste**
 
@@ -348,7 +349,7 @@ node scripts/verificar-prototipos.mjs            # protótipos
 
 1. **P0 — concluído:** ADRs 0001–0007, raiz agregadora, `parte1`, `app` com Spring Boot e Vaadin,
    Postgres/Flyway e ArchUnit do `app`.
-2. **P1 — em andamento:** G-08 (identidade) e D-09 (porta + JPA + mapper) concluídos; faltam D-11
+2. **P1 — concluído:** G-08 (identidade), D-09 (porta + JPA + mapper), D-10 (`BigDecimal`), D-11
    (casos de uso de insumo e entrada), D-12 (telas de Insumos e Detalhe) e D-13 (teste de
    persistência com Testcontainers no profile `integracao`).
 3. **P2 em diante:** ficha técnica, baixa/devolução, reposição, F2 completa, integração entre

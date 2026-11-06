@@ -24,7 +24,8 @@ Os arquivos `.feature` do Cucumber ficam dentro do módulo de domínio correspon
 
 Build: o `pom.xml` da raiz agrega o `parte1`, os `dominio-*` e o `app`; `.\mvnw.cmd test` roda tudo.
 Cada módulo continua rodando sozinho com `-f`, e a Parte 1 continua executável por
-`java -cp parte1/target/classes`.
+`java -cp parte1/target/classes`. O teste de repositório com Testcontainers roda à parte, com
+`.\mvnw.cmd -pl app -am -Pintegracao test` (exige Docker).
 
 Aplicação: `.\mvnw.cmd -pl app -am spring-boot:run` sobe a tela inicial em `http://localhost:8080`.
 Nesta máquina as portas 8080 e 8081 são do `tailscaled`, então use

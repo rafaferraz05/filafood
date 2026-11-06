@@ -14,6 +14,7 @@ The root `pom.xml` is a Maven aggregator (`br.edu.cesar.filafood:filafood`) for 
 ```powershell
 .\mvnw.cmd test                               # raiz: parte1 + todos os módulos
 .\mvnw.cmd -q package                         # empacota tudo
+.\mvnw.cmd -pl app -am -Pintegracao test      # inclui o teste de repositório (Docker)
 docker compose up -d --wait db                # Postgres do dev (precisa de .env)
 .\mvnw.cmd -pl app -am spring-boot:run         # app (8080/8081 são do tailscaled; ver gotchas)
 java -cp parte1/target/classes br.edu.cesar.filafood.Main
