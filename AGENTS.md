@@ -7,7 +7,7 @@ The root `pom.xml` is a Maven aggregator (`br.edu.cesar.filafood:filafood`) for 
 - **`parte1/`**: Part 1 concurrency prototype in plain Java 21 (package `br/edu/cesar/filafood/`). It stays executable with `java -cp parte1/target/classes`.
 - **Domain modules** (`dominio-*/pom.xml`): children of the root POM, each with its own Cucumber/JUnit setup; a single one still runs with `-f`.
   - `dominio-estoque` = F1 (estoque), `dominio-entrega` = F2 (entrega), `dominio-atendimento` = F3–F5 (unidades, pedidos, funcionários), `dominio-cardapio` = F6, `dominio-compras` = F7.
-- **`app/`**: composition root (Spring Boot 4.1.2, Vaadin 25.3.4, JPA, Flyway, Actuator; ArchUnit at test scope). Run it with `.\mvnw.cmd -pl app spring-boot:run`. Profile `dev` is the default and expects the Postgres from `docker-compose.yml`.
+- **`app/`**: composition root (Spring Boot 4.1.2, Vaadin 25.3.4, JPA, Flyway, Actuator; ArchUnit at test scope). Run it with `.\mvnw.cmd -pl app -am spring-boot:run`. Profile `dev` is the default and expects the Postgres from `docker-compose.yml`.
 - `docs/` holds the domain source of truth and static prototypes; `docs/prototipos/` is HTML/CSS only.
 
 ## Commands (Windows PowerShell; use the wrapper)
@@ -15,7 +15,7 @@ The root `pom.xml` is a Maven aggregator (`br.edu.cesar.filafood:filafood`) for 
 .\mvnw.cmd test                               # raiz: parte1 + todos os módulos
 .\mvnw.cmd -q package                         # empacota tudo
 docker compose up -d --wait db                # Postgres do dev (precisa de .env)
-.\mvnw.cmd -pl app spring-boot:run            # app (porta 8080; ver gotchas)
+.\mvnw.cmd -pl app -am spring-boot:run         # app (8080/8081 são do tailscaled; ver gotchas)
 java -cp parte1/target/classes br.edu.cesar.filafood.Main
 java -cp parte1/target/classes br.edu.cesar.filafood.CenarioDeCarga
 
@@ -48,7 +48,7 @@ node scripts/verificar-prototipos.mjs         # prototype guard
 
 ## Gotchas
 - Each module has its own gitignored `target/` with possibly stale classes; rebuild before running.
-- Port 8080 is taken by `tailscaled` on this machine; run the app with `"-Dspring-boot.run.arguments=--server.port=8081"`.
+- Ports 8080 and 8081 are taken by `tailscaled` on this machine; run the app with `"-Dspring-boot.run.arguments=--server.port=8090"`.
 - `.env` is not versioned (copy `.env.example`); `docker compose` reads it, but the app needs `DB_PASSWORD` exported in the shell, and the dev profile is the default.
 - Migrations live in `app/src/main/resources/db/migration` (`V<nnn>__<descricao>.sql`); `ddl-auto=validate`, so the schema comes only from Flyway.
 - Vaadin dev mode requires `com.vaadin:vaadin-dev` (already in `app/pom.xml`); `app/src/main/frontend/generated/` and `node_modules/` are generated and gitignored. The production frontend build (`vaadin-maven-plugin`) is not configured yet.

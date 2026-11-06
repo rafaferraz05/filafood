@@ -66,6 +66,7 @@ BoundedContext Estoque {
         Entity MovimentacaoEstoque {
             // Append-only: gravada, não pode ser alterada nem excluída (@f1-rn3,
             // "a movimentação de estoque não pode ser alterada").
+            - MovimentacaoId id
             - TipoMovimentacao tipo
             - MotivoMovimentacao motivo
             BigDecimal quantidade
@@ -75,6 +76,10 @@ BoundedContext Estoque {
         }
 
         ValueObject InsumoId {
+            String valor key
+        }
+
+        ValueObject MovimentacaoId {
             String valor key
         }
 

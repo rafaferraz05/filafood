@@ -26,9 +26,9 @@ Build: o `pom.xml` da raiz agrega o `parte1`, os `dominio-*` e o `app`; `.\mvnw.
 Cada módulo continua rodando sozinho com `-f`, e a Parte 1 continua executável por
 `java -cp parte1/target/classes`.
 
-Aplicação: `.\mvnw.cmd -pl app spring-boot:run` sobe a tela inicial em `http://localhost:8080`.
-Nesta máquina a porta 8080 é do `tailscaled`, então use
-`"-Dspring-boot.run.arguments=--server.port=8081"`.
+Aplicação: `.\mvnw.cmd -pl app -am spring-boot:run` sobe a tela inicial em `http://localhost:8080`.
+Nesta máquina as portas 8080 e 8081 são do `tailscaled`, então use
+`"-Dspring-boot.run.arguments=--server.port=8090"`.
 
 Banco do dev: copie `.env.example` para `.env` (não versionado), rode `docker compose up -d --wait db` e
 exporte a mesma senha para o app (`$env:DB_PASSWORD = "..."`). O perfil `dev` é o padrão, e o schema é

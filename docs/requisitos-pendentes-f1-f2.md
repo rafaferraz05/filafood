@@ -15,13 +15,14 @@
 - Lógica de domínio de F1/F2 em memória nos módulos `dominio-estoque` e `dominio-entrega`, já com dinheiro em `BigDecimal`.
 - Aplicação `app` com Spring Boot 4.1.2, Vaadin 25.3.4, JPA, Flyway e Actuator, subindo no perfil `dev`.
 - Postgres 16 de desenvolvimento em `docker-compose.yml` e a migração `V001__insumo.sql` (`insumo` e `movimentacao_estoque`).
+- Porta `Insumos` no domínio com adaptador JPA e mapper (`InsumoJpa`, `MovimentacaoEstoqueJpa`), validados pelo Hibernate contra a `V001` ao subir.
 - Modelo tático de F1/F2 em `filafood.cml` e os ADRs 0001–0008.
 
 **Parcial**
 - DDD tático/operacional: entidades e regras existem; faltam camada de aplicação, persistência com IDs e integração real entre contextos.
 - Modelo CML: tático de F1/F2 pronto; falta o ContextMap (nível estratégico), decidido no ADR 0008.
-- Persistência: schema inicial e Flyway funcionando; faltam entidades JPA, portas de repositório e identidade no domínio.
-- Arquitetura limpa: `app` tem os pacotes e três regras ArchUnit; faltam camada `application`, adaptadores de persistência e as regras que envolvem `dominio-*`.
+- Persistência: schema, Flyway, identidade do insumo, porta `Insumos` e adaptador JPA prontos; faltam teste de repositório, transações e os demais agregados.
+- Arquitetura limpa: `app` tem os pacotes e quatro regras ArchUnit; faltam camada `application` e as regras de `*Jpa`.
 - Camada web: tela inicial com os três perfis; faltam as telas de F1/F2.
 - Tipos: dinheiro em `BigDecimal` no domínio de F1/F2; escala das quantidades e os módulos de F3–F7 seguem pendentes.
 
@@ -68,10 +69,12 @@
 - [ ] **G-07 — Implementar o mapeamento JPA sem contaminar o domínio.**
   Entidades JPA e repositórios na camada de adaptadores; portas de repositório no domínio/aplicação. Não colocar `@Entity`/`@Repository` nas classes de `dominio-*`.
   **Pronto quando:** o domínio compila sem Spring/JPA; os adaptadores implementam as portas; testes de repositório passam.
+  **Feito:** porta `Insumos`, `InsumoJpa`/`MovimentacaoEstoqueJpa`, mapper e adaptador; o ArchUnit cobra domínio sem framework e o Hibernate valida o mapeamento contra a `V001` ao subir. **Falta:** teste de repositório com Testcontainers (D-13) e as demais portas.
 
-- [ ] **G-08 — Introduzir identidade e escopo por unidade.**
+- [x] **G-08 — Introduzir identidade e escopo por unidade.**
   IDs substitutos (UUID/Long) para insumo, ficha, entregador, zona e entrega; `unidade_id` em todos os dados de F1/F2. Restrições: insumo único por unidade/nome, ficha única por unidade/produto, item único por ficha/insumo, entrega única por pedido/tentativa.
   **Pronto quando:** duas unidades podem ter o mesmo nome de insumo sem colidir; consultas sempre filtram pela unidade.
+  **Feito em F1:** `InsumoId` e `MovimentacaoId` (UUID), `unidadeId` no agregado e no estoque, teste de domínio provando que o mesmo nome em unidades diferentes não colide. **Falta:** ids de ficha e dos agregados de F2 (entram com as próximas fatias).
 
 - [ ] **G-09 — Corrigir tipos e precisão.**
   Dinheiro com `BigDecimal` (`numeric(12,2)`), quantidades com escala definida, timestamps com fuso consistente e enums persistidos como texto.

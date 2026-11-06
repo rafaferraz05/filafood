@@ -36,7 +36,7 @@
 | Validação | **Jakarta Bean Validation** (**pendente**) | `app` |
 | Web | **Vaadin Flow 25.3.4** | `app/adapter/in/web` |
 | BDD | **Cucumber 7.21.1** + JUnit 5.11.4 | módulos de domínio (no `app`, pendente) |
-| Teste de arquitetura | **ArchUnit 1.5.1** — 3 regras hoje | `app` (test) |
+| Teste de arquitetura | **ArchUnit 1.5.1** — 4 regras (3 do app + pureza do domínio) | `app` (test) |
 | Teste de banco | **Testcontainers (PostgreSQL)** (**pendente**) | `app` (test) |
 | E2E | **Playwright** (**pendente**) | projeto `e2e/` |
 | Protótipos | Node 20.11+ apenas para `scripts/verificar-prototipos.mjs` | não é build do app |
@@ -106,12 +106,13 @@ app/
 
 **Direção das dependências:** `adapter → application → domínio`. Nunca ao contrário.
 
-Hoje só existem `Application` e `adapter/in/web` (a tela inicial); `application` e `persistence`
-nascem na P1, com os casos de uso de insumo e a porta `Insumos`.
+Hoje existem `Application`, `adapter/in/web`, `adapter/out/persistence/estoque` e a porta `Insumos`;
+a camada `application` nasce no D-11, com os casos de uso de insumo e entrada.
 
-**ArchUnit cobra, no build.** Hoje existem três regras no `app` (Vaadin só em `adapter.in.web`;
-`application` não depende de `adapter`; view não acessa persistência). As regras que envolvem os
-módulos de domínio entram na P1, quando o `app` depender deles:
+**ArchUnit cobra, no build.** Hoje existem quatro regras: as três do `app` (Vaadin só em
+`adapter.in.web`; `application` não depende de `adapter`; view não acessa persistência) e a pureza
+do domínio (`dominio-estoque` não importa Spring, JPA nem Vaadin). Faltam a 5ª (ninguém fora de
+`adapter/out/persistence` importa `*Jpa`) e as regras dos outros módulos de domínio:
 
 1. `dominio-*` não importa `org.springframework`, `jakarta.persistence`, `com.vaadin`.
 2. `application` não importa `adapter` nem `com.vaadin`.
@@ -154,8 +155,9 @@ módulos de domínio entram na P1, quando o `app` depender deles:
 - **Sem `ddl-auto`:** schema só por migração. `spring.jpa.hibernate.ddl-auto=validate`.
 - **Seed:** apenas `dev`, em migração separada ou `data-dev.sql`. Nunca em produção.
 
-**Estado atual:** a `V001__insumo.sql` cria `insumo` e `movimentacao_estoque` com as regras acima.
-Entidades JPA, portas e mapper entram no D-09; o lock otimista, no G-11.
+**Estado atual:** a `V001__insumo.sql` cria `insumo` e `movimentacao_estoque`. As entidades JPA, o
+mapper e o adaptador da porta `Insumos` existem; faltam o teste de repositório (D-13) e o lock
+otimista (G-11).
 
 ### 6.1 Transação, concorrência e idempotência
 
@@ -306,7 +308,7 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 - Credencial só por variável de ambiente ou `.env` **não versionado**. O `.env.example` documenta as
   chaves, nunca os valores reais. Hoje o Compose lê o `.env` e o `app` lê `DB_PASSWORD` do ambiente.
 - Nada de senha em `application.yml`, em teste ou em script.
-- Nesta máquina a porta 8080 é do `tailscaled`; rode o app com `--server.port=8081`.
+- Nesta máquina as portas 8080 e 8081 são do `tailscaled`; rode o app com `--server.port=8090`.
 
 ## 16. Como este documento muda
 
@@ -327,13 +329,13 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 
 > Os comandos da raiz pressupõem o agregador da seção 3, já aplicado (ADR 0001). Os módulos também
 > rodam sozinhos com `-f`. O app precisa de `DB_PASSWORD` no ambiente e, nesta máquina, de outra
-> porta (a 8080 é do `tailscaled`).
+> porta (8080 e 8081 são do `tailscaled`). O `-am` entra porque o `app` depende de `dominio-estoque`.
 
 ```powershell
 .\mvnw.cmd test                                  # raiz + todos os módulos
 .\mvnw.cmd -f dominio-estoque/pom.xml test       # um módulo
 docker compose up -d --wait db                   # Postgres do dev (precisa de .env)
-.\mvnw.cmd -pl app spring-boot:run               # aplicação (DB_PASSWORD no ambiente)
+.\mvnw.cmd -pl app -am spring-boot:run           # aplicação (DB_PASSWORD no ambiente)
 node scripts/verificar-prototipos.mjs            # protótipos
 ```
 
