@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
 
-/** Lista os insumos da unidade com saldo e sinal de reposição (D-11). */
+/** Lista os insumos da unidade com saldo, ponto de pedido e sinal de reposição (D-11). */
 @Service
 public class ListarInsumos {
 
@@ -29,6 +29,7 @@ public class ListarInsumos {
                         insumo.unidadeDeMedida(),
                         quantidade(insumo.saldo()),
                         quantidade(insumo.estoqueMinimo()),
+                        quantidade(insumo.pontoDePedido(hoje)),
                         insumo.isAtivo(),
                         insumo.estaARepor(hoje)))
                 .toList();

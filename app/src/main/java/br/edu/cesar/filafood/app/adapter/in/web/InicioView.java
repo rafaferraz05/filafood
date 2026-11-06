@@ -1,38 +1,55 @@
 package br.edu.cesar.filafood.app.adapter.in.web;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-/**
- * Tela inicial mínima com os três perfis (D-07). A guarda e a troca de perfil na sessão entram no
- * G-22; aqui só se prova que a aplicação sobe e a view carrega.
- */
-@Route("")
+import br.edu.cesar.filafood.app.adapter.in.web.layout.Acao;
+import br.edu.cesar.filafood.app.adapter.in.web.layout.Badge;
+import br.edu.cesar.filafood.app.adapter.in.web.layout.Cabecalho;
+import br.edu.cesar.filafood.app.adapter.in.web.layout.MainLayout;
+
+/** Início no layout e no CSS do protótipo: três perfis, com a entrada de F1 liberada. */
+@Route(value = "", layout = MainLayout.class)
 @PageTitle("FilaFood")
-public class InicioView extends VerticalLayout {
+public class InicioView extends Div {
 
     public InicioView() {
-        setPadding(true);
-        setSpacing(true);
-        add(
-                new H1("FilaFood"),
-                new Paragraph("Pedidos entre unidades de uma rede de restaurantes."),
-                perfil("Gestor da unidade", "Insumos, ficha técnica, entregadores, zonas e despacho."),
-                perfil("Atendente ou cozinheiro", "Fila de preparo, itens prontos e conclusão do pedido."),
-                perfil("Entregador", "Retirada, entrega e falha das entregas atribuídas."),
-                new Button("Abrir insumos", evento -> getUI().ifPresent(ui -> ui.navigate("insumos"))));
+        Cabecalho cabecalho = new Cabecalho("FilaFood",
+                "Pedidos entre unidades de uma rede de restaurantes.");
+        cabecalho.badges(Badge.neutro("protótipo acadêmico"));
+
+        Div grid = new Div();
+        grid.addClassName("grid-2");
+        grid.add(card("Gestor da unidade", "Insumos, ficha técnica, entregadores e despacho.",
+                Acao.primario("Abrir insumos", () -> getUI().ifPresent(ui -> ui.navigate("insumos")))));
+        grid.add(card("Atendente ou cozinheiro", "Fila de preparo, itens prontos e conclusão do pedido.", null));
+        grid.add(card("Entregador", "Retirada, entrega e falha das entregas atribuídas.", null));
+
+        add(cabecalho, grid);
     }
 
-    private VerticalLayout perfil(String titulo, String descricao) {
-        VerticalLayout cartao = new VerticalLayout(new H2(titulo), new Paragraph(descricao));
-        cartao.setPadding(true);
-        cartao.setSpacing(false);
-        cartao.getStyle().set("border", "1px solid #d0d0d0").set("border-radius", "8px");
-        return cartao;
+    private Div card(String titulo, String descricao, Component acao) {
+        Div tituloEl = new Div();
+        tituloEl.addClassName("card-titulo");
+        tituloEl.setText(titulo);
+
+        Paragraph texto = new Paragraph(descricao);
+        Div corpo = new Div();
+        corpo.addClassName("card-corpo");
+        corpo.add(texto);
+        if (acao != null) {
+            Div acoes = new Div();
+            acoes.addClassName("acoes-form");
+            acoes.add(acao);
+            corpo.add(acoes);
+        }
+
+        Div card = new Div();
+        card.addClassName("card");
+        card.add(tituloEl, corpo);
+        return card;
     }
 }

@@ -11,6 +11,7 @@ public record InsumoResumo(
         String unidadeDeMedida,
         BigDecimal saldo,
         BigDecimal estoqueMinimo,
+        BigDecimal pontoDePedido,
         boolean ativo,
         boolean aRepor) {
 }

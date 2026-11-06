@@ -11,9 +11,12 @@ public record InsumoDetalhe(
         String nome,
         String unidadeDeMedida,
         BigDecimal saldo,
+        BigDecimal consumoMedioDiario,
         BigDecimal estoqueMinimo,
         BigDecimal pontoDePedido,
+        BigDecimal custoDaUltimaEntrada,
         int prazoDeEntregaEmDias,
         boolean ativo,
+        boolean aRepor,
         List<MovimentacaoResumo> movimentacoes) {
 }
