@@ -1,0 +1,25 @@
+{
+  "name": "FilaFood",
+  "image": "mcr.microsoft.com/devcontainers/java:21",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "forwardPorts": [8090],
+  "portsAttributes": {
+    "8090": {
+      "label": "FilaFood",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "chmod +x mvnw",
+  "postStartCommand": "printf 'DB_PASSWORD=filafood\\n' > .env && docker compose up -d --wait db",
+  "customizations": {
+    "vscode": {
+      "extensions": ["vscjava.vscode-java-pack"],
+      "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic"
+      }
+    }
+  }
+}

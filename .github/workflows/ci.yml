@@ -1,0 +1,68 @@
+name: verificação
+
+# Prova automatizada da entrega: todo push em `main` roda aqui o mesmo build que
+# roda na máquina do autor. É a forma de o professor conferir que a suíte passa
+# sem instalar Java, Maven ou Docker — basta abrir a aba "Actions".
+# Roteiro de validação: docs/entrega/README.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verificacao-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testes:
+    name: Build e BDD (sem Docker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Permissão do wrapper
+        run: chmod +x mvnw
+
+      # Mesmo comando do AGENTS.md: raiz + parte1 + domínios + app.
+      - name: "./mvnw.cmd test (raiz)"
+        run: ./mvnw -B -ntp test
+
+      - name: Relatórios Cucumber
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-cucumber
+          path: "**/target/cucumber-report.html"
+          if-no-files-found: warn
+
+  integracao:
+    name: Persistência com Testcontainers
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Permissão do wrapper
+        run: chmod +x mvnw
+
+      # O runner do GitHub já tem Docker, então o Postgres do teste sobe sozinho.
+      - name: "./mvnw.cmd -pl app -am -Pintegracao test"
+        run: ./mvnw -B -ntp -pl app -am -Pintegracao test
