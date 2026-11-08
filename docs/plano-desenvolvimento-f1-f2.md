@@ -125,8 +125,13 @@ RN 6.
 **Decisões gravadas:** padrões da F1 em [`adr/0010-padroes-de-projeto-em-f1.md`](adr/0010-padroes-de-projeto-em-f1.md);
 pedido de referência enquanto a F4 não existe em [`adr/0011-pedido-de-referencia-na-f1.md`](adr/0011-pedido-de-referencia-na-f1.md).
 
-**Status (2026-11-08):** em andamento por P2.1. O seed de insumos (D-19, parte da P1) já está
+**Status (2026-11-08):** P2.1 entregue — `produto`, `ficha_tecnica` e `item_ficha_tecnica` na
+`V002`; `FichaTecnica` com identidade, `Iterable` e a porta `FichasTecnicas` no domínio; adaptador
+JPA e testes no `EsquemaDoEstoqueIT`. O IT só roda com Docker (`-Pintegracao`), então a execução
+fica para a rodada em que o Postgres estiver de pé. O seed de insumos (D-19, parte da P1) já está
 aplicado no perfil `dev`, e o runner `verificacao` cobre as operações de insumo.
+
+**Próxima fatia:** P2.2 — casos de uso da ficha com as recusas da RN 2 e tela Ficha técnica.
 
 ### P3 — F2, primeira fatia vertical: entregadores, zonas e taxa · esforço 3–4 · G-06 (parcial), G-29..G-31
 

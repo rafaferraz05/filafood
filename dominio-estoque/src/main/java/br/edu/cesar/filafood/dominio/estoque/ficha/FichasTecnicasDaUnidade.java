@@ -13,11 +13,22 @@ import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
  */
 public class FichasTecnicasDaUnidade {
 
+    private final String unidadeId;
     private final Map<String, FichaTecnica> porProduto = new LinkedHashMap<>();
+
+    /** Fichas da unidade; o id é gerado quando o chamador não informa (dublês de teste). */
+    public FichasTecnicasDaUnidade() {
+        this(java.util.UUID.randomUUID().toString());
+    }
+
+    public FichasTecnicasDaUnidade(String unidadeId) {
+        this.unidadeId = unidadeId;
+    }
 
     /** Abre a ficha do produto para edição, criando-a se ainda não existir. */
     public FichaTecnica definir(String produto) {
-        return porProduto.computeIfAbsent(produto, FichaTecnica::new);
+        return porProduto.computeIfAbsent(produto,
+                nome -> new FichaTecnica(FichaTecnicaId.novo(), unidadeId, nome));
     }
 
     /** A ficha do produto nesta unidade. Produto sem ficha técnica não pode ser vendido. */

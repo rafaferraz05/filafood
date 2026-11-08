@@ -50,6 +50,9 @@ class EsquemaDoEstoqueIT {
         Configuration configuracao = new Configuration();
         configuracao.addAnnotatedClass(InsumoJpa.class);
         configuracao.addAnnotatedClass(MovimentacaoEstoqueJpa.class);
+        configuracao.addAnnotatedClass(ProdutoJpa.class);
+        configuracao.addAnnotatedClass(FichaTecnicaJpa.class);
+        configuracao.addAnnotatedClass(ItemFichaTecnicaJpa.class);
         configuracao.setProperty("hibernate.connection.url", POSTGRES.getJdbcUrl());
         configuracao.setProperty("hibernate.connection.username", POSTGRES.getUsername());
         configuracao.setProperty("hibernate.connection.password", POSTGRES.getPassword());
@@ -101,6 +104,73 @@ class EsquemaDoEstoqueIT {
             try (var comando = conexao.prepareStatement(sql)) {
                 comando.setObject(1, UUID.randomUUID());
                 comando.setObject(2, UUID.fromString(UNIDADE));
+                assertThrows(SQLException.class, comando::executeUpdate);
+            }
+        }
+    }
+
+    @Test
+    void persisteFichaTecnicaComItemELeDeVolta() {
+        UUID produtoId = UUID.randomUUID();
+        UUID insumoId = UUID.randomUUID();
+        UUID fichaId = UUID.randomUUID();
+        try (Session sessao = fabrica.openSession()) {
+            sessao.beginTransaction();
+            ProdutoJpa produto = new ProdutoJpa(produtoId, UUID.fromString(UNIDADE), "Hambúrguer Clássico",
+                    new BigDecimal("29.90"), "ATIVO");
+            InsumoJpa insumo = new InsumoJpa(insumoId, UUID.fromString(UNIDADE), "Pão de ficha", "un",
+                    new BigDecimal("20.000"), 2, "ATIVO");
+            FichaTecnicaJpa ficha = new FichaTecnicaJpa(fichaId, UUID.fromString(UNIDADE), produto);
+            ficha.adicionarItem(new ItemFichaTecnicaJpa(UUID.randomUUID(), ficha, insumo,
+                    new BigDecimal("1.000")));
+            sessao.persist(produto);
+            sessao.persist(insumo);
+            sessao.persist(ficha);
+            sessao.getTransaction().commit();
+        }
+
+        try (Session sessao = fabrica.openSession()) {
+            FichaTecnicaJpa carregada = sessao.find(FichaTecnicaJpa.class, fichaId);
+            assertNotNull(carregada);
+            assertEquals(1, carregada.itens().size());
+            assertEquals("Pão de ficha", carregada.itens().get(0).insumo().nome());
+            assertEquals("Hambúrguer Clássico", carregada.produto().nome());
+        }
+    }
+
+    @Test
+    void recusaItemDeFichaComQuantidadeNaoPositiva() throws SQLException {
+        UUID produtoId = UUID.randomUUID();
+        UUID fichaId = UUID.randomUUID();
+        UUID insumoId = UUID.randomUUID();
+        try (Connection conexao = DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(),
+                POSTGRES.getPassword())) {
+            try (var comando = conexao.prepareStatement("insert into produto (id, unidade_id, nome, preco, "
+                    + "estado) values (?, ?, 'Batata Rústica', 18.90, 'ATIVO')")) {
+                comando.setObject(1, produtoId);
+                comando.setObject(2, UUID.fromString(UNIDADE));
+                comando.executeUpdate();
+            }
+            try (var comando = conexao.prepareStatement("insert into ficha_tecnica (id, unidade_id, produto_id) "
+                    + "values (?, ?, ?)")) {
+                comando.setObject(1, fichaId);
+                comando.setObject(2, UUID.fromString(UNIDADE));
+                comando.setObject(3, produtoId);
+                comando.executeUpdate();
+            }
+            try (var comando = conexao.prepareStatement("insert into insumo (id, unidade_id, nome, "
+                    + "unidade_de_medida, estoque_minimo, prazo_de_entrega_em_dias, estado) values (?, ?, "
+                    + "'Batata', 'kg', 5, 3, 'ATIVO')")) {
+                comando.setObject(1, insumoId);
+                comando.setObject(2, UUID.fromString(UNIDADE));
+                comando.executeUpdate();
+            }
+            String sql = "insert into item_ficha_tecnica (id, ficha_id, insumo_id, quantidade) values (?, ?, ?, ?)";
+            try (var comando = conexao.prepareStatement(sql)) {
+                comando.setObject(1, UUID.randomUUID());
+                comando.setObject(2, fichaId);
+                comando.setObject(3, insumoId);
+                comando.setBigDecimal(4, BigDecimal.ZERO);
                 assertThrows(SQLException.class, comando::executeUpdate);
             }
         }
