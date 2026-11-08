@@ -111,6 +111,23 @@ integração no profile `integracao` (ADR 0009).
 contra o banco; cancelar duas vezes não devolve duas vezes; o filtro "a repor" bate com a conta da
 RN 6.
 
+**Fatias (cada uma verde, revisável e demonstrável isolada):**
+
+| Fatia | Entrega | Tarefas | Requisitos |
+| --- | --- | --- | --- |
+| P2.1 | `produto`, `ficha_tecnica` e `item_ficha_tecnica` no schema; identidade e porta `FichasTecnicas` no domínio; adaptador JPA e teste de integração com Testcontainers | D-14 | G-05, G-07, G-25 |
+| P2.2 | Casos de uso da ficha com as recusas da RN 2 e tela **Ficha técnica** (produtos, disponibilidade, itens e remoção) | D-15 | G-16, G-25, G-28 |
+| P2.3 | **Template Method** da movimentação, baixa por explosão em transação única e teste de atomicidade (falta de saldo não grava nada) | D-16 | G-10, G-26 |
+| P2.4 | Devolução idempotente e tela **Preparo do pedido** com os quatro estados do protótipo (dados, recusado, devolvido, concluído) | D-16, D-18 | G-11, G-26, G-28 |
+| P2.5 | Reposição por `PoliticaDeReposicao` (**Strategy**): consumo de 30 dias, ponto de pedido na lista e no detalhe, filtro "a repor" conferido | D-18 | G-14, G-27 |
+| P2.6 | Editar insumo, seed de produtos/fichas/pedido de demonstração e verificação das operações | D-19, D-11 (editar) | G-13, G-23 |
+
+**Decisões gravadas:** padrões da F1 em [`adr/0010-padroes-de-projeto-em-f1.md`](adr/0010-padroes-de-projeto-em-f1.md);
+pedido de referência enquanto a F4 não existe em [`adr/0011-pedido-de-referencia-na-f1.md`](adr/0011-pedido-de-referencia-na-f1.md).
+
+**Status (2026-11-08):** em andamento por P2.1. O seed de insumos (D-19, parte da P1) já está
+aplicado no perfil `dev`, e o runner `verificacao` cobre as operações de insumo.
+
 ### P3 — F2, primeira fatia vertical: entregadores, zonas e taxa · esforço 3–4 · G-06 (parcial), G-29..G-31
 
 | # | Tarefa | Saída |
