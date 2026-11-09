@@ -108,3 +108,33 @@ html body .casca .app {
 html body .casca .conteudo {
   border-radius: 0 !important;
 }
+
+/* Navegação entre telas na topbar. O protótipo não tem menu dentro do app (a navegação dele é a
+   barra de protótipo), então este bloco é delta e não existe em docs/prototipos/estilo.css. */
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-left: 16px;
+}
+
+.topbar-nav a {
+  color: inherit;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 8px;
+  opacity: .82;
+}
+
+.topbar-nav a:hover {
+  background: rgba(255, 255, 255, .14);
+  opacity: 1;
+}
+
+.topbar-nav a.topbar-nav-atual {
+  background: rgba(255, 255, 255, .22);
+  opacity: 1;
+}
