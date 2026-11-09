@@ -153,6 +153,10 @@ do domínio (`dominio-estoque` não importa Spring, JPA nem Vaadin). Faltam a 5�
   Migração aplicada **nunca** é editada; corrige-se com a próxima.
 - **Sem `ddl-auto`:** schema só por migração. `spring.jpa.hibernate.ddl-auto=validate`.
 - **Seed:** apenas `dev`, em migração separada ou `data-dev.sql`. Nunca em produção.
+- **Versão do seed:** o seed ocupa a faixa 900+ (`V900`, `V901`...) para nunca ser confundido com
+  schema. Como um banco de dev que já aplicou o seed fica na versão 901, uma migração nova de schema
+  (`V002`, `V003`...) chega "atrás" da última aplicada e o Flyway recusaria a validação — por isso o
+  perfil `dev` liga `spring.flyway.out-of-order=true`. Produção não tem seed e não liga a flag.
 
 **Estado atual:** a `V001__insumo.sql` cria `insumo` e `movimentacao_estoque`. As entidades JPA, o
 mapper e o adaptador da porta `Insumos` existem; faltam o teste de repositório (D-13) e o lock
@@ -186,6 +190,10 @@ otimista (G-11).
 - **Toda tela usa a casca `MainLayout`** (`.casca > .app > topbar + .conteudo`) e os componentes de
   layout (`Cabecalho`, `Tabela`, `Badge`, `Acao`, `Campo`, `Busca`). Nenhuma tela define cor, medida
   ou estrutura própria; tela nova é só conteúdo dentro da casca.
+- **Navegação entre telas fica na topbar**, em `TelaDoMenu`: cada constante traz título, rota e a
+  classe da view, e a `Topbar` monta os `RouterLink` a partir do enum. Tela nova com frontend entra
+  como mais uma constante — sem mexer no layout — e a tela atual é destacada pelo `MainLayout` a
+  cada `BeforeEnter`.
 - **Elementos nativos** (`Div`, `Span`, `Input`, `NativeButton`, `table`) onde o CSS do protótipo
   mira HTML; componente Vaadin (shadow DOM) só quando não houver equivalente visual.
 - **Acessibilidade mínima:** rótulo em todo campo, foco visível, contraste do protótipo, navegação

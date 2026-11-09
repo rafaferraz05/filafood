@@ -125,13 +125,25 @@ RN 6.
 **Decisões gravadas:** padrões da F1 em [`adr/0010-padroes-de-projeto-em-f1.md`](adr/0010-padroes-de-projeto-em-f1.md);
 pedido de referência enquanto a F4 não existe em [`adr/0011-pedido-de-referencia-na-f1.md`](adr/0011-pedido-de-referencia-na-f1.md).
 
-**Status (2026-11-08):** P2.1 entregue — `produto`, `ficha_tecnica` e `item_ficha_tecnica` na
-`V002`; `FichaTecnica` com identidade, `Iterable` e a porta `FichasTecnicas` no domínio; adaptador
-JPA e testes no `EsquemaDoEstoqueIT`. O IT só roda com Docker (`-Pintegracao`), então a execução
-fica para a rodada em que o Postgres estiver de pé. O seed de insumos (D-19, parte da P1) já está
-aplicado no perfil `dev`, e o runner `verificacao` cobre as operações de insumo.
+**Status (2026-11-08):** P2.1 e P2.2 implementadas.
 
-**Próxima fatia:** P2.2 — casos de uso da ficha com as recusas da RN 2 e tela Ficha técnica.
+- P2.1: `produto`, `ficha_tecnica` e `item_ficha_tecnica` na `V002`; `FichaTecnica` com identidade,
+  `Iterable` e a porta `FichasTecnicas` no domínio; adaptador JPA e testes no `EsquemaDoEstoqueIT`.
+- P2.2: casos de uso `ListarFichasDaUnidade`, `AdicionarItemNaFicha` e `RemoverItemDaFicha`, porta
+  `CatalogoDeProdutos` com adaptador de referência, tela `FichaTecnicaView` e seed `V901` com os
+  produtos e as fichas do protótipo. Testes de caso de uso em `FluxoDeFichaTest` (7 cenários).
+- Pendente de execução: o `EsquemaDoEstoqueIT` só roda com Docker; a validação da tela fica para
+  quando você abrir o navegador.
+- Validação contra o banco de dev (2026-11-08): o Flyway aplicou `V002` e `V901` com o Hibernate em  `validate` (o mapeamento bate com o schema) e o runner `verificacao` confirmou 3 produtos,
+  Clássico com 4 itens e 42 porções cobertas, Batata sem ficha, além de adicionar, recusar item
+  repetido e remover. O grafo das fichas carrega só `produto` e `itens`; as movimentações dos
+  insumos vêm por carregamento preguiçoso dentro da transação, porque dois "bags" na mesma consulta
+  estouram `MultipleBagFetchException`.
+- Navegação entre telas (2026-11-08): `TelaDoMenu` enumera as telas com frontend, a `Topbar` monta os
+  `RouterLink` e o `MainLayout` destaca a tela atual; `TelasDoMenuTest` guarda rota, menu e casca.
+
+**Próxima fatia:** P2.3 — Template Method da movimentação, baixa por explosão em transação única e
+teste de atomicidade.
 
 ### P3 — F2, primeira fatia vertical: entregadores, zonas e taxa · esforço 3–4 · G-06 (parcial), G-29..G-31
 
