@@ -24,14 +24,16 @@ public class InicioView extends Div {
         Div grid = new Div();
         grid.addClassName("grid-2");
         grid.add(card("Gestor da unidade", "Insumos, ficha técnica, entregadores e despacho.",
-                Acao.primario("Abrir insumos", () -> getUI().ifPresent(ui -> ui.navigate("insumos")))));
-        grid.add(card("Atendente ou cozinheiro", "Fila de preparo, itens prontos e conclusão do pedido.", null));
-        grid.add(card("Entregador", "Retirada, entrega e falha das entregas atribuídas.", null));
+                Acao.primario("Abrir insumos", () -> getUI().ifPresent(ui -> ui.navigate("insumos"))),
+                Acao.claro("Abrir ficha técnica",
+                        () -> getUI().ifPresent(ui -> ui.navigate("ficha-tecnica")))));
+        grid.add(card("Atendente ou cozinheiro", "Fila de preparo, itens prontos e conclusão do pedido."));
+        grid.add(card("Entregador", "Retirada, entrega e falha das entregas atribuídas."));
 
         add(cabecalho, grid);
     }
 
-    private Div card(String titulo, String descricao, Component acao) {
+    private Div card(String titulo, String descricao, Component... acoes) {
         Div tituloEl = new Div();
         tituloEl.addClassName("card-titulo");
         tituloEl.setText(titulo);
@@ -40,11 +42,11 @@ public class InicioView extends Div {
         Div corpo = new Div();
         corpo.addClassName("card-corpo");
         corpo.add(texto);
-        if (acao != null) {
-            Div acoes = new Div();
-            acoes.addClassName("acoes-form");
-            acoes.add(acao);
-            corpo.add(acoes);
+        if (acoes.length > 0) {
+            Div linha = new Div();
+            linha.addClassName("acoes-form");
+            linha.add(acoes);
+            corpo.add(linha);
         }
 
         Div card = new Div();

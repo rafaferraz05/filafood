@@ -14,4 +14,10 @@ public interface FichasTecnicas {
     List<FichaTecnica> daUnidade(String unidadeId);
 
     void salvar(FichaTecnica ficha);
+
+    /**
+     * Remove a ficha. Ficha sem itens é igual a produto sem ficha: o produto volta ao estado "sem
+     * ficha" do protótipo e não pode ser vendido.
+     */
+    void remover(FichaTecnica ficha);
 }

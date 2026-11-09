@@ -20,6 +20,11 @@ public final class Badge {
         return criar("badge-repor", texto, true);
     }
 
+    /** Variante de alerta do protótipo, usada quando falta cadastro (produto sem ficha). */
+    public static Span alerta(String texto) {
+        return criar("badge-alerta", texto, true);
+    }
+
     private static Span criar(String variante, String texto, boolean comBolinha) {
         Span badge = new Span();
         badge.addClassNames("badge", variante);

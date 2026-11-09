@@ -8,16 +8,23 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import br.edu.cesar.filafood.app.application.estoque.AdicionarItemNaFicha;
 import br.edu.cesar.filafood.app.application.estoque.AlterarEstadoDoInsumo;
 import br.edu.cesar.filafood.app.application.estoque.CadastrarInsumo;
 import br.edu.cesar.filafood.app.application.estoque.DetalharInsumo;
 import br.edu.cesar.filafood.app.application.estoque.EntradaDeInsumo;
+import br.edu.cesar.filafood.app.application.estoque.FichaDetalhe;
+import br.edu.cesar.filafood.app.application.estoque.FichasDaUnidade;
 import br.edu.cesar.filafood.app.application.estoque.InsumoDetalhe;
 import br.edu.cesar.filafood.app.application.estoque.InsumoResumo;
+import br.edu.cesar.filafood.app.application.estoque.ListarFichasDaUnidade;
 import br.edu.cesar.filafood.app.application.estoque.ListarInsumos;
 import br.edu.cesar.filafood.app.application.estoque.NovoInsumo;
+import br.edu.cesar.filafood.app.application.estoque.ProdutoComFicha;
 import br.edu.cesar.filafood.app.application.estoque.RegistrarEntradaDeInsumo;
+import br.edu.cesar.filafood.app.application.estoque.RemoverItemDaFicha;
 import br.edu.cesar.filafood.app.config.UnidadeDeDemonstracao;
+import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 
 /**
@@ -34,15 +41,22 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
     private final RegistrarEntradaDeInsumo registrarEntrada;
     private final AlterarEstadoDoInsumo alterarEstado;
     private final CadastrarInsumo cadastrar;
+    private final ListarFichasDaUnidade listarFichas;
+    private final AdicionarItemNaFicha adicionarItem;
+    private final RemoverItemDaFicha removerItem;
 
     public VerificacaoDeOperacoes(ListarInsumos listar, DetalharInsumo detalhar,
             RegistrarEntradaDeInsumo registrarEntrada, AlterarEstadoDoInsumo alterarEstado,
-            CadastrarInsumo cadastrar) {
+            CadastrarInsumo cadastrar, ListarFichasDaUnidade listarFichas,
+            AdicionarItemNaFicha adicionarItem, RemoverItemDaFicha removerItem) {
         this.listar = listar;
         this.detalhar = detalhar;
         this.registrarEntrada = registrarEntrada;
         this.alterarEstado = alterarEstado;
         this.cadastrar = cadastrar;
+        this.listarFichas = listarFichas;
+        this.adicionarItem = adicionarItem;
+        this.removerItem = removerItem;
     }
 
     @Override
@@ -74,6 +88,50 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
 
         System.out.println("VERIFICACAO OK: " + insumos.size()
                 + " insumos no seed; cadastro, entrada, saldo, a-repor, desativar e reativar conferidos.");
+        verificarFichas(unidade, pao);
+    }
+
+    /** Ficha técnica do seed: produtos, itens, porções cobertas e as recusas da RN 2. */
+    private void verificarFichas(String unidade, InsumoResumo pao) {
+        FichasDaUnidade fichas = listarFichas.executar(unidade, null);
+        exigir(fichas.produtos().size() == 3, "esperava os 3 produtos do seed, veio " + fichas.produtos().size());
+
+        ProdutoComFicha classico = produto(fichas, "Hambúrguer Clássico");
+        FichaDetalhe fichaDoClassico = listarFichas.executar(unidade, classico.id()).ficha().orElseThrow();
+        exigir(fichaDoClassico.temFicha() && fichaDoClassico.itens().size() == 4,
+                "ficha do Clássico deveria ter 4 itens, veio " + fichaDoClassico.itens().size());
+        exigir(fichaDoClassico.porcoesCobertas() == 42,
+                "Clássico deveria cobrir 42 porções, veio " + fichaDoClassico.porcoesCobertas());
+
+        ProdutoComFicha batata = produto(fichas, "Batata Rústica");
+        exigir(!batata.temFicha(), "Batata Rústica deveria estar sem ficha");
+
+        try {
+            adicionarItem.executar(unidade, classico.id(), pao.id().toString(), BigDecimal.ONE);
+            throw new IllegalStateException("VERIFICACAO FALHOU: item repetido na ficha deveria ser recusado");
+        } catch (RegraDeNegocioException esperada) {
+            exigir("o insumo já está na ficha técnica".equals(esperada.getMessage()),
+                    "mensagem inesperada do item repetido: " + esperada.getMessage());
+        }
+
+        adicionarItem.executar(unidade, batata.id(), pao.id().toString(), new BigDecimal("0.010"));
+        FichaDetalhe fichaDaBatata = listarFichas.executar(unidade, batata.id()).ficha().orElseThrow();
+        exigir(fichaDaBatata.temFicha() && fichaDaBatata.itens().size() == 1,
+                "Batata deveria ter 1 item depois de adicionar, veio " + fichaDaBatata.itens().size());
+
+        removerItem.executar(unidade, batata.id(), pao.id().toString());
+        exigir(!listarFichas.executar(unidade, batata.id()).ficha().orElseThrow().temFicha(),
+                "Batata deveria voltar ao estado sem ficha");
+
+        System.out.println("VERIFICACAO OK: ficha técnica com 3 produtos, Clássico com 4 itens e 42 porções, "
+                + "Batata sem ficha; adicionar, recusar repetido e remover conferidos.");
+    }
+
+    private static ProdutoComFicha produto(FichasDaUnidade fichas, String nome) {
+        return fichas.produtos().stream()
+                .filter(produto -> produto.nome().equals(nome))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("produto não encontrado: " + nome));
     }
 
     private static InsumoResumo buscar(List<InsumoResumo> insumos, String nome) {

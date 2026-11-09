@@ -10,3 +10,8 @@ spring:
     open-in-view: false
   flyway:
     locations: classpath:db/migration,classpath:db/seed
+    # O seed ocupa as versões 900+ para nunca ser confundido com schema. Num banco de dev que já
+    # aplicou o seed, uma migração nova de schema (V002, V003...) fica "atrás" da última aplicada e o
+    # Flyway recusaria a validação; em dev aceitamos a ordem fora de sequência. Produção não tem seed
+    # e não usa esta flag.
+    out-of-order: true

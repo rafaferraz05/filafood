@@ -51,6 +51,11 @@ class FichasJpaAdapter implements FichasTecnicas {
         fichas.save(entidade);
     }
 
+    @Override
+    public void remover(FichaTecnica ficha) {
+        fichas.deleteById(ficha.id().valor());
+    }
+
     private ProdutoJpa produto(UUID produtoId) {
         return produtos.findById(produtoId)
                 .orElseThrow(() -> new RegraDeNegocioException("produto não cadastrado na unidade"));
