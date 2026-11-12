@@ -154,6 +154,14 @@ pedido de referência enquanto a F4 não existe em [`adr/0011-pedido-de-referenc
   `validate`, e a verificação executou a baixa real do pedido #1337 — Pão 3, Carne 0,6, Queijo 0,12 e
   Tomate 0,08 — deixando o pedido em preparo. A verificação não repete a baixa: se o pedido já não
   está `ENVIADO`, ela apenas informa o estado atual.
+- P2.4 implementada e validada (2026-11-12): `DevolucaoDoCancelamento` no mesmo Template Method
+  devolve exatamente o consumido e cancela o pedido; `ConcluirPreparo` fecha o preparo. A tela
+  **Preparo do pedido** (`/preparo`) mostra itens, necessidade, saldo antes/depois e as ações por
+  estado, com `.btn-perigo` no cancelamento. A verificação rodou o ciclo completo contra o banco
+  (baixa e depois cancelamento, com o segundo cancelamento recusado) e, com o volume recriado, o
+  Flyway aplicou as 6 migrações do zero e as quatro telas responderam 200.
+  O modo `out-of-order` do dev aparece como aviso mesmo em schema vazio — é esperado, o seed ocupa a
+  faixa 900+.
 
 **Próxima fatia:** P2.3 — Template Method da movimentação, baixa por explosão em transação única e
 teste de atomicidade.
