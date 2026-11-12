@@ -3,6 +3,8 @@ package br.edu.cesar.filafood.dominio.estoque.consumo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.suporte.MundoDoEstoque;
@@ -24,8 +26,8 @@ public class ConsumoSteps {
     public void fichaTecnicaComDoisItens(String produto, int primeiraQuantidade, String primeiroInsumo,
             int segundaQuantidade, String segundoInsumo) {
         FichaTecnica ficha = mundo.fichas.definir(produto);
-        ficha.definirItem(mundo.insumoAtivo(primeiroInsumo), primeiraQuantidade);
-        ficha.definirItem(mundo.insumoAtivo(segundoInsumo), segundaQuantidade);
+        ficha.definirItem(mundo.insumoAtivo(primeiroInsumo), BigDecimal.valueOf(primeiraQuantidade));
+        ficha.definirItem(mundo.insumoAtivo(segundoInsumo), BigDecimal.valueOf(segundaQuantidade));
     }
 
     @Dado("o pedido tem {int} {string}")
@@ -63,11 +65,11 @@ public class ConsumoSteps {
     @Então("o saldo do insumo {string} fica {int}")
     public void saldoFica(String nome, int saldo) {
         mundo.semRecusa();
-        assertEquals(saldo, mundo.estoque.insumo(nome).saldo());
+        assertEquals(0, mundo.estoque.insumo(nome).saldo().compareTo(BigDecimal.valueOf(saldo)));
     }
 
     @Então("o saldo do insumo {string} continua {int}")
     public void saldoContinua(String nome, int saldo) {
-        assertEquals(saldo, mundo.estoque.insumo(nome).saldo());
+        assertEquals(0, mundo.estoque.insumo(nome).saldo().compareTo(BigDecimal.valueOf(saldo)));
     }
 }

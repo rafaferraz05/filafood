@@ -1,5 +1,7 @@
 package br.edu.cesar.filafood.dominio.estoque.devolucao;
 
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.EstoqueDaUnidade;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
@@ -27,8 +29,8 @@ public class DevolucaoDoPreparo {
             throw new RegraDeNegocioException("a devolução só é aceita para pedido em preparo");
         }
         for (Insumo insumo : estoque.insumos()) {
-            double consumido = insumo.consumidoPeloPedido(pedido);
-            if (consumido > 0) {
+            BigDecimal consumido = insumo.consumidoPeloPedido(pedido);
+            if (consumido.signum() > 0) {
                 insumo.devolver(consumido, pedido);
             }
         }

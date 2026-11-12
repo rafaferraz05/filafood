@@ -1,6 +1,8 @@
 package br.edu.cesar.filafood.dominio.estoque.ficha;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -46,14 +48,14 @@ public class FichaSteps {
             int segundaQuantidade, String segundoInsumo) {
         mundo.tentar(() -> {
             FichaTecnica ficha = mundo.fichas.definir(produto);
-            ficha.definirItem(mundo.insumoAtivo(primeiroInsumo), primeiraQuantidade);
-            ficha.definirItem(mundo.insumoAtivo(segundoInsumo), segundaQuantidade);
+            ficha.definirItem(mundo.insumoAtivo(primeiroInsumo), BigDecimal.valueOf(primeiraQuantidade));
+            ficha.definirItem(mundo.insumoAtivo(segundoInsumo), BigDecimal.valueOf(segundaQuantidade));
         });
     }
 
     @Quando("o gestor da unidade define a ficha técnica do produto {string} com {int} {string}")
     public void definirComUmItem(String produto, int quantidade, String insumo) {
-        mundo.tentar(() -> mundo.fichas.definir(produto).definirItem(mundo.insumoAtivo(insumo), quantidade));
+        mundo.tentar(() -> mundo.fichas.definir(produto).definirItem(mundo.insumoAtivo(insumo), BigDecimal.valueOf(quantidade)));
     }
 
     @Então("a ficha técnica do produto {string} na unidade fica com {int} itens")

@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.insumo.MovimentacaoEstoque;
 import br.edu.cesar.filafood.dominio.estoque.suporte.MundoDoEstoque;
@@ -68,15 +70,15 @@ public class DevolucaoSteps {
         boolean encontrada = mundo.estoque.insumo(insumo).movimentacoes().stream()
                 .anyMatch(m -> m.tipo() == MovimentacaoEstoque.Tipo.ENTRADA
                         && m.motivo() == MovimentacaoEstoque.Motivo.DEVOLUCAO
-                        && m.quantidade() == quantidade);
+                        && m.quantidade().compareTo(BigDecimal.valueOf(quantidade)) == 0);
         assertTrue(encontrada, "esperava uma devolução de " + quantidade + " de " + insumo);
     }
 
     @Então("o saldo do insumo {string} volta ao valor anterior à baixa")
     public void saldoVolta(String insumo) {
         mundo.semRecusa();
-        assertEquals(mundo.saldoAntesDaBaixa.get(insumo),
-                mundo.estoque.insumo(insumo).saldo(), 0.001);
+        assertEquals(0, mundo.saldoAntesDaBaixa.get(insumo).compareTo(
+                mundo.estoque.insumo(insumo).saldo()));
     }
 
     @Então("nenhuma movimentação de devolução é registrada")
@@ -91,7 +93,7 @@ public class DevolucaoSteps {
     private void lancarBaixa(String insumo, int quantidade) {
         mundo.garantirSaldo(insumo, 10);
         mundo.saldoAntesDaBaixa.put(insumo, mundo.estoque.insumo(insumo).saldo());
-        mundo.estoque.insumo(insumo).consumir(quantidade, PEDIDO);
+        mundo.estoque.insumo(insumo).consumir(BigDecimal.valueOf(quantidade), PEDIDO);
     }
 
     /**
@@ -101,7 +103,7 @@ public class DevolucaoSteps {
     private void pedidoJaBaixado(EstadoDoPedido estado) {
         mundo.pedido = new PedidoEmTeste(PEDIDO);
         mundo.garantirSaldo("Pão", 10);
-        mundo.estoque.insumo("Pão").consumir(3, PEDIDO);
+        mundo.estoque.insumo("Pão").consumir(BigDecimal.valueOf(3), PEDIDO);
         switch (estado) {
             case CONCLUIDO -> mundo.pedido.concluir();
             case RECUSADO -> mundo.pedido.recusar("recusado pelo teste");

@@ -10,6 +10,7 @@ import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaId;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
@@ -33,11 +34,11 @@ public class AdicionarItemNaFicha {
 
     @Transactional
     public void executar(String unidadeId, String produtoId, String insumoId, BigDecimal quantidade) {
-        FichaTecnica ficha = fichas.porProduto(unidadeId, produtoId)
-                .orElseGet(() -> new FichaTecnica(FichaTecnicaId.novo(), unidadeId, produtoId));
+        FichaTecnica ficha = fichas.porProduto(unidadeId, ProdutoId.de(produtoId))
+                .orElseGet(() -> new FichaTecnica(FichaTecnicaId.novo(), unidadeId, ProdutoId.de(produtoId)));
         Insumo insumo = insumos.porId(new InsumoId(UUID.fromString(insumoId)))
                 .orElseThrow(() -> new RegraDeNegocioException("insumo não encontrado"));
-        ficha.definirItem(insumo, quantidade.doubleValue());
+        ficha.definirItem(insumo, quantidade);
         fichas.salvar(ficha);
     }
 }

@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.estoque;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ public class EstoqueDaUnidade {
         this.unidadeId = unidadeId;
     }
 
-    public Insumo cadastrarInsumo(String nome, String unidadeDeMedida, double estoqueMinimo, int prazoDeEntregaEmDias) {
+    public Insumo cadastrarInsumo(String nome, String unidadeDeMedida, BigDecimal estoqueMinimo, int prazoDeEntregaEmDias) {
         Insumo insumo = new Insumo(InsumoId.novo(), unidadeId, nome, unidadeDeMedida, estoqueMinimo,
                 prazoDeEntregaEmDias);
         insumos.put(nome, insumo);

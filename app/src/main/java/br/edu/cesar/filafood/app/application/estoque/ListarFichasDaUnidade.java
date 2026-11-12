@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.app.application.estoque;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ public class ListarFichasDaUnidade {
         List<ProdutoResumo> produtos = catalogo.daUnidade(unidadeId);
         Map<String, FichaTecnica> porProduto = new LinkedHashMap<>();
         for (FichaTecnica ficha : fichas.daUnidade(unidadeId)) {
-            porProduto.put(ficha.produto(), ficha);
+            porProduto.put(ficha.produto().toString(), ficha);
         }
 
         List<ProdutoComFicha> linhas = produtos.stream()
@@ -93,7 +94,7 @@ public class ListarFichasDaUnidade {
         return minimo == Integer.MAX_VALUE ? 0 : minimo;
     }
 
-    private static int porcoes(double saldo, double porcao) {
-        return porcao <= 0 ? 0 : (int) Math.floor(saldo / porcao);
+    private static int porcoes(BigDecimal saldo, BigDecimal porcao) {
+        return porcao.signum() <= 0 ? 0 : saldo.divide(porcao, 0, java.math.RoundingMode.FLOOR).intValue();
     }
 }

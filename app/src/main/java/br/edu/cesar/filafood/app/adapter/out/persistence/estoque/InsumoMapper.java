@@ -28,7 +28,7 @@ class InsumoMapper {
                 UUID.fromString(insumo.unidadeId()),
                 insumo.nome(),
                 insumo.unidadeDeMedida(),
-                BigDecimal.valueOf(insumo.estoqueMinimo()),
+                insumo.estoqueMinimo(),
                 insumo.prazoDeEntregaEmDias(),
                 estado(insumo));
     }
@@ -55,7 +55,7 @@ class InsumoMapper {
                 entidade.unidadeId().toString(),
                 entidade.nome(),
                 entidade.unidadeDeMedida(),
-                entidade.estoqueMinimo().doubleValue(),
+                entidade.estoqueMinimo(),
                 entidade.prazoDeEntregaEmDias(),
                 "ATIVO".equals(entidade.estado()),
                 movimentacoes);
@@ -66,7 +66,7 @@ class InsumoMapper {
                 new MovimentacaoId(movimentacao.id()),
                 MovimentacaoEstoque.Tipo.valueOf(movimentacao.tipo()),
                 MovimentacaoEstoque.Motivo.valueOf(movimentacao.motivo()),
-                movimentacao.quantidade().doubleValue(),
+                movimentacao.quantidade(),
                 movimentacao.custoUnitario(),
                 movimentacao.origem(),
                 LocalDateTime.ofInstant(movimentacao.dataHora(), ZoneId.systemDefault()));
@@ -78,7 +78,7 @@ class InsumoMapper {
                 insumo,
                 movimentacao.tipo().name(),
                 movimentacao.motivo().name(),
-                BigDecimal.valueOf(movimentacao.quantidade()),
+                movimentacao.quantidade(),
                 movimentacao.custoUnitario(),
                 movimentacao.origem(),
                 movimentacao.dataHora().atZone(ZoneId.systemDefault()).toInstant());

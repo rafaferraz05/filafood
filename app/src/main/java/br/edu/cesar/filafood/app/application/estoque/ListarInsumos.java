@@ -37,7 +37,7 @@ public class ListarInsumos {
                 .toList();
     }
 
-    static BigDecimal quantidade(double valor) {
-        return BigDecimal.valueOf(valor).setScale(3, RoundingMode.HALF_UP);
+    static BigDecimal quantidade(BigDecimal valor) {
+        return valor.setScale(3, RoundingMode.HALF_UP);
     }
 }

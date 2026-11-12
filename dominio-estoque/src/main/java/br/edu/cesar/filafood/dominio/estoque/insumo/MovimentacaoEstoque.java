@@ -8,13 +8,14 @@ import java.time.LocalDateTime;
  * ser alterada nem excluída.
  *
  * O campo {@code origem} guarda o pedido que causou a movimentação, o que permite devolver
- * exatamente o que foi consumido. O custo unitário é dinheiro, em {@link BigDecimal}.
+ * exatamente o que foi consumido. Quantidade e custo unitário usam {@link BigDecimal}: quantidade
+ * com escala 3 e dinheiro com escala 2, como no schema (G-09).
  */
 public record MovimentacaoEstoque(
         MovimentacaoId id,
         Tipo tipo,
         Motivo motivo,
-        double quantidade,
+        BigDecimal quantidade,
         BigDecimal custoUnitario,
         String origem,
         LocalDateTime dataHora) {
@@ -30,17 +31,17 @@ public record MovimentacaoEstoque(
         CONSUMO
     }
 
-    public static MovimentacaoEstoque compra(double quantidade, BigDecimal custoUnitario) {
+    public static MovimentacaoEstoque compra(BigDecimal quantidade, BigDecimal custoUnitario) {
         return new MovimentacaoEstoque(MovimentacaoId.novo(), Tipo.ENTRADA, Motivo.COMPRA, quantidade, custoUnitario,
                 "", LocalDateTime.now());
     }
 
-    public static MovimentacaoEstoque devolucao(double quantidade, String pedido) {
+    public static MovimentacaoEstoque devolucao(BigDecimal quantidade, String pedido) {
         return new MovimentacaoEstoque(MovimentacaoId.novo(), Tipo.ENTRADA, Motivo.DEVOLUCAO, quantidade,
                 BigDecimal.ZERO.setScale(2), pedido, LocalDateTime.now());
     }
 
-    public static MovimentacaoEstoque consumo(double quantidade, String pedido) {
+    public static MovimentacaoEstoque consumo(BigDecimal quantidade, String pedido) {
         return new MovimentacaoEstoque(MovimentacaoId.novo(), Tipo.SAIDA, Motivo.CONSUMO, quantidade,
                 BigDecimal.ZERO.setScale(2), pedido, LocalDateTime.now());
     }

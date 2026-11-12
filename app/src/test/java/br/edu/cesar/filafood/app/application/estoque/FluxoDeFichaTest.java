@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
@@ -42,9 +43,9 @@ class FluxoDeFichaTest {
 
         adicionar.executar(UNIDADE, produto, pao.id().toString(), new BigDecimal("2"));
 
-        FichaTecnica ficha = fichas.porProduto(UNIDADE, produto).orElseThrow();
+        FichaTecnica ficha = fichas.porProduto(UNIDADE, ProdutoId.de(produto)).orElseThrow();
         assertEquals(1, ficha.quantidadeDeItens());
-        assertEquals(2.0, ficha.itens().get(0).quantidade());
+        assertEquals(0, new BigDecimal("2").compareTo(ficha.itens().get(0).quantidade()));
     }
 
     @Test
@@ -117,7 +118,7 @@ class FluxoDeFichaTest {
 
         remover.executar(UNIDADE, produto, pao.id().toString());
 
-        assertTrue(fichas.porProduto(UNIDADE, produto).isEmpty());
+        assertTrue(fichas.porProduto(UNIDADE, ProdutoId.de(produto)).isEmpty());
     }
 
     private static final class FichasEmMemoria implements FichasTecnicas {
@@ -125,7 +126,7 @@ class FluxoDeFichaTest {
         private final Map<String, FichaTecnica> porChave = new LinkedHashMap<>();
 
         @Override
-        public Optional<FichaTecnica> porProduto(String unidadeId, String produto) {
+        public Optional<FichaTecnica> porProduto(String unidadeId, ProdutoId produto) {
             return Optional.ofNullable(porChave.get(unidadeId + "|" + produto));
         }
 
@@ -153,9 +154,9 @@ class FluxoDeFichaTest {
         private final Map<String, Insumo> cadastrados = new LinkedHashMap<>();
 
         Insumo criar(String nome, String unidadeDeMedida, double saldo) {
-            Insumo insumo = new Insumo(InsumoId.novo(), UNIDADE, nome, unidadeDeMedida, 1.0, 2);
+            Insumo insumo = new Insumo(InsumoId.novo(), UNIDADE, nome, unidadeDeMedida, BigDecimal.ONE, 2);
             if (saldo > 0) {
-                insumo.receber(saldo, BigDecimal.ONE);
+                insumo.receber(BigDecimal.valueOf(saldo), BigDecimal.ONE);
             }
             cadastrados.put(insumo.id().toString(), insumo);
             return insumo;

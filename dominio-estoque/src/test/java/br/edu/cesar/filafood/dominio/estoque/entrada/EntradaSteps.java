@@ -30,13 +30,13 @@ public class EntradaSteps {
 
     @Quando("o gestor da unidade registra uma entrada de {int} {string} do insumo {string} com custo unitário {double}")
     public void registrarEntrada(int quantidade, String unidadeDeMedida, String nome, double custoUnitario) {
-        mundo.tentar(() -> mundo.estoque.insumo(nome).receber(quantidade, BigDecimal.valueOf(custoUnitario)));
+        mundo.tentar(() -> mundo.estoque.insumo(nome).receber(BigDecimal.valueOf(quantidade), BigDecimal.valueOf(custoUnitario)));
     }
 
     @Então("o saldo do insumo {string} fica {int} {string}")
     public void saldoFica(String nome, int saldo, String unidadeDeMedida) {
         mundo.semRecusa();
-        assertEquals(saldo, mundo.estoque.insumo(nome).saldo());
+        assertEquals(0, mundo.estoque.insumo(nome).saldo().compareTo(BigDecimal.valueOf(saldo)));
     }
 
     @Então("fica registrada uma movimentação de entrada de {int} {string} com custo unitário {double}")
@@ -46,7 +46,7 @@ public class EntradaSteps {
                 .flatMap(insumo -> insumo.movimentacoes().stream())
                 .anyMatch(m -> m.tipo() == MovimentacaoEstoque.Tipo.ENTRADA
                         && m.motivo() == MovimentacaoEstoque.Motivo.COMPRA
-                        && m.quantidade() == quantidade
+                        && m.quantidade().compareTo(BigDecimal.valueOf(quantidade)) == 0
                         && m.custoUnitario().compareTo(BigDecimal.valueOf(custoUnitario)) == 0);
         assertTrue(encontrada, "esperava uma movimentação de entrada de " + quantidade + " com custo " + custoUnitario);
     }
@@ -60,13 +60,13 @@ public class EntradaSteps {
     @Dado("uma entrada de {int} {string} registrada para o insumo {string}")
     public void entradaRegistrada(int quantidade, String unidadeDeMedida, String nome) {
         insumoDaEntrada = nome;
-        mundo.insumoAtivo(nome).receber(quantidade, BigDecimal.valueOf(2.00));
+        mundo.insumoAtivo(nome).receber(BigDecimal.valueOf(quantidade), BigDecimal.valueOf(2.00));
     }
 
     @Quando("o gestor da unidade tenta alterar a quantidade da entrada para {int} {string}")
     public void alterarQuantidadeDaEntrada(int quantidade, String unidadeDeMedida) {
         Insumo insumo = mundo.estoque.insumo(insumoDaEntrada);
-        mundo.tentar(() -> insumo.alterarQuantidadeDaMovimentacao(quantidade));
+        mundo.tentar(() -> insumo.alterarQuantidadeDaMovimentacao(BigDecimal.valueOf(quantidade)));
     }
 
     @Então("a alteração é recusada com a mensagem {string}")

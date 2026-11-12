@@ -9,7 +9,7 @@ import java.util.Optional;
  */
 public interface FichasTecnicas {
 
-    Optional<FichaTecnica> porProduto(String unidadeId, String produto);
+    Optional<FichaTecnica> porProduto(String unidadeId, ProdutoId produto);
 
     List<FichaTecnica> daUnidade(String unidadeId);
 

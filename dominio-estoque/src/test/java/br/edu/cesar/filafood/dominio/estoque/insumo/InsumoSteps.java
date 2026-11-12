@@ -23,17 +23,17 @@ public class InsumoSteps {
 
     @Quando("o gestor da unidade cadastra o insumo {string} com unidade de medida {string}, estoque mínimo {int} e prazo de entrega de {int} dias")
     public void cadastrarInsumo(String nome, String unidadeDeMedida, int estoqueMinimo, int prazoDeEntrega) {
-        mundo.tentar(() -> mundo.estoque.cadastrarInsumo(nome, unidadeDeMedida, estoqueMinimo, prazoDeEntrega));
+        mundo.tentar(() -> mundo.estoque.cadastrarInsumo(nome, unidadeDeMedida, BigDecimal.valueOf(estoqueMinimo), prazoDeEntrega));
     }
 
     @Quando("o gestor da unidade cadastra um insumo com nome vazio, unidade de medida {string}, estoque mínimo {int} e prazo de entrega de {int} dias")
     public void cadastrarInsumoSemNome(String unidadeDeMedida, int estoqueMinimo, int prazoDeEntrega) {
-        mundo.tentar(() -> mundo.estoque.cadastrarInsumo("", unidadeDeMedida, estoqueMinimo, prazoDeEntrega));
+        mundo.tentar(() -> mundo.estoque.cadastrarInsumo("", unidadeDeMedida, BigDecimal.valueOf(estoqueMinimo), prazoDeEntrega));
     }
 
     @Dado("o insumo {string} cadastrado e com movimentações de estoque registradas")
     public void insumoComMovimentacoes(String nome) {
-        mundo.estoque.cadastrarInsumo(nome, "kg", 5, 3).receber(10, BigDecimal.valueOf(4.00));
+        mundo.estoque.cadastrarInsumo(nome, "kg", BigDecimal.valueOf(5), 3).receber(BigDecimal.valueOf(10), BigDecimal.valueOf(4.00));
     }
 
     @Dado("o insumo {string} ativo")
@@ -71,7 +71,7 @@ public class InsumoSteps {
     @Então("o saldo do insumo {string} fica zero")
     public void saldoFicaZero(String nome) {
         mundo.semRecusa();
-        assertEquals(0, mundo.estoque.insumo(nome).saldo(), "esperava saldo zero");
+        assertEquals(0, mundo.estoque.insumo(nome).saldo().signum(), "esperava saldo zero");
     }
 
     @Então("o histórico de movimentações do insumo {string} continua consultável")

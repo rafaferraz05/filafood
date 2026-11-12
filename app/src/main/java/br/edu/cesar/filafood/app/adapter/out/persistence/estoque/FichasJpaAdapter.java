@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 
 /** Adaptador JPA da porta {@link FichasTecnicas} (docs/padroes-do-projeto.md, seção 8). */
 @Component
@@ -28,8 +29,8 @@ class FichasJpaAdapter implements FichasTecnicas {
     }
 
     @Override
-    public Optional<FichaTecnica> porProduto(String unidadeId, String produto) {
-        return fichas.findByUnidadeIdAndProduto_Id(UUID.fromString(unidadeId), UUID.fromString(produto))
+    public Optional<FichaTecnica> porProduto(String unidadeId, ProdutoId produto) {
+        return fichas.findByUnidadeIdAndProduto_Id(UUID.fromString(unidadeId), produto.valor())
                 .map(mapper::paraDominio);
     }
 
@@ -43,7 +44,7 @@ class FichasJpaAdapter implements FichasTecnicas {
     @Override
     public void salvar(FichaTecnica ficha) {
         UUID unidade = UUID.fromString(ficha.unidadeId());
-        UUID produtoId = UUID.fromString(ficha.produto());
+        UUID produtoId = ficha.produto().valor();
         FichaTecnicaJpa entidade = fichas.findByUnidadeIdAndProduto_Id(unidade, produtoId)
                 .orElseGet(() -> mapper.novaEntidade(ficha, produto(produtoId)));
         mapper.atualizar(entidade, ficha, insumo -> insumos.findById(insumo)

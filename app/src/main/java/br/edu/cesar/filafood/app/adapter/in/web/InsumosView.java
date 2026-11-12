@@ -217,11 +217,11 @@ public class InsumosView extends Div {
         return valor.stripTrailingZeros().toPlainString();
     }
 
-    private static double numero(String valor) {
+    private static java.math.BigDecimal numero(String valor) {
         if (valor == null || valor.isBlank()) {
             throw new NumberFormatException("informe um número");
         }
-        return Double.parseDouble(valor.replace(',', '.').strip());
+        return new java.math.BigDecimal(valor.replace(',', '.').strip());
     }
 
     private static int inteiro(String valor) {

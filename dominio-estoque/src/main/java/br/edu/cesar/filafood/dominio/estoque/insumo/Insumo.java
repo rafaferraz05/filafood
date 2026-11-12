@@ -1,6 +1,7 @@
 package br.edu.cesar.filafood.dominio.estoque.insumo;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,31 +11,38 @@ import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 
 
 // Insumo mantido por uma unidade, com unidade de medida, estoque mínimo e prazo de entrega.
+//
+// Quantidades são BigDecimal com escala 3 (a mesma do schema, G-09); dinheiro continua BigDecimal
+// com escala 2. A média de consumo usa escala 6 para não perder precisão antes de virar ponto de
+// pedido.
 
 public class Insumo {
+
+    private static final int ESCALA_DA_QUANTIDADE = 3;
+    private static final int ESCALA_DO_CONSUMO = 6;
 
     private final InsumoId id;
     private final String unidadeId;
     private final String nome;
     private final String unidadeDeMedida;
-    private final double estoqueMinimo;
+    private final BigDecimal estoqueMinimo;
     private final int prazoDeEntregaEmDias;
     private final List<MovimentacaoEstoque> movimentacoes = new ArrayList<>();
     private boolean ativo = true;
 
-    public Insumo(InsumoId id, String unidadeId, String nome, String unidadeDeMedida, double estoqueMinimo,
+    public Insumo(InsumoId id, String unidadeId, String nome, String unidadeDeMedida, BigDecimal estoqueMinimo,
             int prazoDeEntregaEmDias) {
         if (nome == null || nome.isBlank()) {
             throw new RegraDeNegocioException("informe o nome do insumo");
         }
-        if (estoqueMinimo <= 0) {
+        if (estoqueMinimo == null || estoqueMinimo.signum() <= 0) {
             throw new RegraDeNegocioException("o estoque mínimo deve ser maior que zero");
         }
         this.id = id;
         this.unidadeId = unidadeId;
         this.nome = nome;
         this.unidadeDeMedida = unidadeDeMedida;
-        this.estoqueMinimo = estoqueMinimo;
+        this.estoqueMinimo = quantidade(estoqueMinimo);
         this.prazoDeEntregaEmDias = prazoDeEntregaEmDias;
     }
 
@@ -43,17 +51,22 @@ public class Insumo {
      * já foram validados quando entraram.
      */
     public static Insumo reconstituir(InsumoId id, String unidadeId, String nome, String unidadeDeMedida,
-            double estoqueMinimo, int prazoDeEntregaEmDias, boolean ativo, List<MovimentacaoEstoque> movimentacoes) {
+            BigDecimal estoqueMinimo, int prazoDeEntregaEmDias, boolean ativo,
+            List<MovimentacaoEstoque> movimentacoes) {
         Insumo insumo = new Insumo(id, unidadeId, nome, unidadeDeMedida, estoqueMinimo, prazoDeEntregaEmDias);
         insumo.ativo = ativo;
         insumo.movimentacoes.addAll(movimentacoes);
         return insumo;
     }
 
-    public double saldo() {
-        return movimentacoes.stream()
-                .mapToDouble(m -> m.somaAoSaldo() ? m.quantidade() : -m.quantidade())
-                .sum();
+    public BigDecimal saldo() {
+        BigDecimal saldo = BigDecimal.ZERO;
+        for (MovimentacaoEstoque movimentacao : movimentacoes) {
+            saldo = movimentacao.somaAoSaldo()
+                    ? saldo.add(movimentacao.quantidade())
+                    : saldo.subtract(movimentacao.quantidade());
+        }
+        return saldo;
     }
 
     public void desativar() {
@@ -65,15 +78,13 @@ public class Insumo {
     }
 
     /** Entrada por compra. Exige insumo ativo, quantidade e custo unitário maiores que zero. */
-    public void receber(double quantidade, BigDecimal custoUnitario) {
+    public void receber(BigDecimal quantidade, BigDecimal custoUnitario) {
         exigirAtivo();
-        if (quantidade <= 0) {
-            throw new RegraDeNegocioException("a quantidade deve ser maior que zero");
-        }
-        if (custoUnitario.signum() <= 0) {
+        exigirQuantidadePositiva(quantidade);
+        if (custoUnitario == null || custoUnitario.signum() <= 0) {
             throw new RegraDeNegocioException("o custo unitário deve ser maior que zero");
         }
-        movimentacoes.add(MovimentacaoEstoque.compra(quantidade, custoUnitario));
+        movimentacoes.add(MovimentacaoEstoque.compra(quantidade(quantidade), custoUnitario));
     }
 
     private void exigirAtivo() {
@@ -88,29 +99,28 @@ public class Insumo {
      * Não verifica o saldo: quem decide se a necessidade cabe no estoque é a explosão da ficha
      * técnica, que precisa verificar todos os insumos antes de gravar qualquer movimentação.
      */
-    public void consumir(double quantidade, String pedido) {
+    public void consumir(BigDecimal quantidade, String pedido) {
         exigirAtivo();
-        if (quantidade <= 0) {
-            throw new RegraDeNegocioException("a quantidade deve ser maior que zero");
-        }
-        movimentacoes.add(MovimentacaoEstoque.consumo(quantidade, pedido));
+        exigirQuantidadePositiva(quantidade);
+        movimentacoes.add(MovimentacaoEstoque.consumo(quantidade(quantidade), pedido));
     }
 
     /** Entrada por devolução, que recompõe o saldo quando um preparo é cancelado. */
-    public void devolver(double quantidade, String pedido) {
+    public void devolver(BigDecimal quantidade, String pedido) {
         exigirAtivo();
-        if (quantidade <= 0) {
-            throw new RegraDeNegocioException("a quantidade deve ser maior que zero");
-        }
-        movimentacoes.add(MovimentacaoEstoque.devolucao(quantidade, pedido));
+        exigirQuantidadePositiva(quantidade);
+        movimentacoes.add(MovimentacaoEstoque.devolucao(quantidade(quantidade), pedido));
     }
 
     /** Quanto deste insumo foi consumido pelo pedido informado. */
-    public double consumidoPeloPedido(String pedido) {
-        return movimentacoes.stream()
-                .filter(m -> m.tipo() == MovimentacaoEstoque.Tipo.SAIDA && m.ehDoPedido(pedido))
-                .mapToDouble(MovimentacaoEstoque::quantidade)
-                .sum();
+    public BigDecimal consumidoPeloPedido(String pedido) {
+        BigDecimal consumido = BigDecimal.ZERO;
+        for (MovimentacaoEstoque movimentacao : movimentacoes) {
+            if (movimentacao.tipo() == MovimentacaoEstoque.Tipo.SAIDA && movimentacao.ehDoPedido(pedido)) {
+                consumido = consumido.add(movimentacao.quantidade());
+            }
+        }
+        return consumido;
     }
 
     /**
@@ -119,18 +129,23 @@ public class Insumo {
      * A divisão é sempre por 30, mesmo com dias sem movimento, para que um insumo parado não
      * tenha a média inflada.
      */
-    public double consumoMedioDiario(LocalDate referencia) {
+    public BigDecimal consumoMedioDiario(LocalDate referencia) {
         LocalDateTime inicio = referencia.minusDays(30).atStartOfDay();
-        double saidas = movimentacoes.stream()
-                .filter(m -> m.tipo() == MovimentacaoEstoque.Tipo.SAIDA && m.dataHora().isAfter(inicio))
-                .mapToDouble(MovimentacaoEstoque::quantidade)
-                .sum();
-        return saidas / 30.0;
+        BigDecimal saidas = BigDecimal.ZERO;
+        for (MovimentacaoEstoque movimentacao : movimentacoes) {
+            if (movimentacao.tipo() == MovimentacaoEstoque.Tipo.SAIDA && movimentacao.dataHora().isAfter(inicio)) {
+                saidas = saidas.add(movimentacao.quantidade());
+            }
+        }
+        return saidas.divide(BigDecimal.valueOf(30), ESCALA_DO_CONSUMO, RoundingMode.HALF_UP);
     }
 
     /** Consumo médio diário vezes o prazo de entrega, mais o estoque mínimo. */
-    public double pontoDePedido(LocalDate referencia) {
-        return consumoMedioDiario(referencia) * prazoDeEntregaEmDias + estoqueMinimo;
+    public BigDecimal pontoDePedido(LocalDate referencia) {
+        return consumoMedioDiario(referencia)
+                .multiply(BigDecimal.valueOf(prazoDeEntregaEmDias))
+                .add(estoqueMinimo)
+                .setScale(ESCALA_DA_QUANTIDADE, RoundingMode.HALF_UP);
     }
 
     /**
@@ -140,12 +155,22 @@ public class Insumo {
      * então não há consumo a repor.
      */
     public boolean estaARepor(LocalDate referencia) {
-        return ativo && saldo() <= pontoDePedido(referencia);
+        return ativo && saldo().compareTo(pontoDePedido(referencia)) <= 0;
     }
 
     /** Recusa por definição: a movimentação é imutável, então uma entrada não pode ser alterada. */
-    public void alterarQuantidadeDaMovimentacao(double quantidade) {
+    public void alterarQuantidadeDaMovimentacao(BigDecimal quantidade) {
         throw new RegraDeNegocioException("a movimentação de estoque não pode ser alterada");
+    }
+
+    private static void exigirQuantidadePositiva(BigDecimal quantidade) {
+        if (quantidade == null || quantidade.signum() <= 0) {
+            throw new RegraDeNegocioException("a quantidade deve ser maior que zero");
+        }
+    }
+
+    private static BigDecimal quantidade(BigDecimal valor) {
+        return valor.setScale(ESCALA_DA_QUANTIDADE, RoundingMode.HALF_UP);
     }
 
     public InsumoId id() {
@@ -164,7 +189,7 @@ public class Insumo {
         return unidadeDeMedida;
     }
 
-    public double estoqueMinimo() {
+    public BigDecimal estoqueMinimo() {
         return estoqueMinimo;
     }
 

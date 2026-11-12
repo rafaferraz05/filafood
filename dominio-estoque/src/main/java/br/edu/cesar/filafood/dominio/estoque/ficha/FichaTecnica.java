@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.estoque.ficha;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,21 +18,21 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
  * É {@link Iterable} de propósito: a explosão do pedido e a tela de ficha técnica percorrem os itens
  * pelo iterador, sem receber a coleção interna (ADR 0010).
  *
- * O produto é uma referência opaca: o dublê de teste usa o nome e a aplicação usa o id, e quem
- * resolve o nome para a tela é o adaptador de leitura.
+ * O produto é referenciado por {@link ProdutoId}: o cardápio é do contexto de F6, e a ficha guarda
+ * identidade, não uma cópia do nome.
  */
 public class FichaTecnica implements Iterable<ItemDaFicha> {
 
     private final FichaTecnicaId id;
     private final String unidadeId;
-    private final String produto;
+    private final ProdutoId produto;
     private final Map<String, ItemDaFicha> itensPorInsumo = new LinkedHashMap<>();
 
-    public FichaTecnica(FichaTecnicaId id, String unidadeId, String produto) {
+    public FichaTecnica(FichaTecnicaId id, String unidadeId, ProdutoId produto) {
         if (id == null) {
             throw new IllegalArgumentException("o id da ficha técnica é obrigatório");
         }
-        if (produto == null || produto.isBlank()) {
+        if (produto == null) {
             throw new RegraDeNegocioException("informe o produto da ficha técnica");
         }
         this.id = id;
@@ -43,18 +44,18 @@ public class FichaTecnica implements Iterable<ItemDaFicha> {
      * Reconstitui a ficha a partir da persistência, sem repetir as validações de edição: os itens já
      * foram validados quando entraram.
      */
-    public static FichaTecnica reconstituir(FichaTecnicaId id, String unidadeId, String produto,
+    public static FichaTecnica reconstituir(FichaTecnicaId id, String unidadeId, ProdutoId produto,
             List<ItemDaFicha> itens) {
         FichaTecnica ficha = new FichaTecnica(id, unidadeId, produto);
         itens.forEach(item -> ficha.itensPorInsumo.put(item.insumo().nome(), item));
         return ficha;
     }
 
-    public void definirItem(Insumo insumo, double quantidade) {
+    public void definirItem(Insumo insumo, BigDecimal quantidade) {
         if (!insumo.isAtivo()) {
             throw new RegraDeNegocioException("o insumo está inativo");
         }
-        if (quantidade <= 0) {
+        if (quantidade == null || quantidade.signum() <= 0) {
             throw new RegraDeNegocioException("a quantidade deve ser maior que zero");
         }
         if (itensPorInsumo.containsKey(insumo.nome())) {
@@ -86,7 +87,7 @@ public class FichaTecnica implements Iterable<ItemDaFicha> {
         return unidadeId;
     }
 
-    public String produto() {
+    public ProdutoId produto() {
         return produto;
     }
 

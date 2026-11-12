@@ -18,8 +18,8 @@ class InsumoMapperTest {
 
     @Test
     void idaEVoltaPreservaOsDadosDoInsumo() {
-        Insumo insumo = new Insumo(InsumoId.novo(), UNIDADE, "Farinha", "kg", 5, 3);
-        insumo.receber(10, BigDecimal.valueOf(4.00));
+        Insumo insumo = new Insumo(InsumoId.novo(), UNIDADE, "Farinha", "kg", BigDecimal.valueOf(5), 3);
+        insumo.receber(BigDecimal.valueOf(10), BigDecimal.valueOf(4.00));
 
         InsumoJpa entidade = mapper.novaEntidade(insumo);
         mapper.atualizar(entidade, insumo);
@@ -28,15 +28,15 @@ class InsumoMapperTest {
         assertEquals(insumo.id(), voltou.id());
         assertEquals(UNIDADE, voltou.unidadeId());
         assertEquals("Farinha", voltou.nome());
-        assertEquals(5.0, voltou.estoqueMinimo(), 0.001);
-        assertEquals(10.0, voltou.saldo(), 0.001);
+        assertEquals(0, BigDecimal.valueOf(5).compareTo(voltou.estoqueMinimo()));
+        assertEquals(0, BigDecimal.valueOf(10).compareTo(voltou.saldo()));
         assertEquals(BigDecimal.valueOf(4.00), voltou.movimentacoes().get(0).custoUnitario());
     }
 
     @Test
     void salvarDeNovoNaoDuplicaMovimentacao() {
-        Insumo insumo = new Insumo(InsumoId.novo(), UNIDADE, "Pão", "kg", 5, 3);
-        insumo.receber(2, BigDecimal.valueOf(1.00));
+        Insumo insumo = new Insumo(InsumoId.novo(), UNIDADE, "Pão", "kg", BigDecimal.valueOf(5), 3);
+        insumo.receber(BigDecimal.valueOf(2), BigDecimal.valueOf(1.00));
 
         InsumoJpa entidade = mapper.novaEntidade(insumo);
         mapper.atualizar(entidade, insumo);

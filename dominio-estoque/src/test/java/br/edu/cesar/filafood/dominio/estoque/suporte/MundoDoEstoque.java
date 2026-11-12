@@ -24,7 +24,7 @@ public class MundoDoEstoque {
     public final FichasTecnicasDaUnidade fichas = new FichasTecnicasDaUnidade();
     public final PreparoDoPedido preparo = new PreparoDoPedido(estoque, fichas);
     public final DevolucaoDoPreparo devolucao = new DevolucaoDoPreparo(estoque);
-    public final Map<String, Double> saldoAntesDaBaixa = new LinkedHashMap<>();
+    public final Map<String, BigDecimal> saldoAntesDaBaixa = new LinkedHashMap<>();
 
     public PedidoEmTeste pedido;
     public RegraDeNegocioException recusa;
@@ -52,7 +52,7 @@ public class MundoDoEstoque {
     /** Cadastra o insumo com o estoque mínimo e o prazo de entrega informados, se ainda não existir. */
     public Insumo insumoCom(String nome, double estoqueMinimo, int prazoDeEntregaEmDias) {
         if (!estoque.temInsumo(nome)) {
-            estoque.cadastrarInsumo(nome, "kg", estoqueMinimo, prazoDeEntregaEmDias);
+            estoque.cadastrarInsumo(nome, "kg", BigDecimal.valueOf(estoqueMinimo), prazoDeEntregaEmDias);
         }
         return estoque.insumo(nome);
     }
@@ -60,8 +60,8 @@ public class MundoDoEstoque {
     /** Garante o saldo informado, lançando a entrada que faltar. */
     public void garantirSaldo(String nome, double saldoDesejado) {
         Insumo insumo = insumoAtivo(nome);
-        double diferenca = saldoDesejado - insumo.saldo();
-        if (diferenca > 0) {
+        BigDecimal diferenca = BigDecimal.valueOf(saldoDesejado).subtract(insumo.saldo());
+        if (diferenca.signum() > 0) {
             insumo.receber(diferenca, BigDecimal.valueOf(1.00));
         }
     }

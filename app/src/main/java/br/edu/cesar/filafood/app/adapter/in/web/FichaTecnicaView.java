@@ -222,7 +222,7 @@ public class FichaTecnicaView extends Div {
                 throw new RegraDeNegocioException("selecione o insumo");
             }
             adicionar.executar(UnidadeDeDemonstracao.ID, produtoId, insumoId,
-                    BigDecimal.valueOf(numero(quantidade.getValue())).setScale(3, RoundingMode.HALF_UP));
+                    numero(quantidade.getValue()).setScale(3, RoundingMode.HALF_UP));
             montar();
             aviso("Item adicionado à ficha.", true);
         } catch (RegraDeNegocioException | NumberFormatException excecao) {
@@ -273,10 +273,10 @@ public class FichaTecnicaView extends Div {
         return valor.stripTrailingZeros().toPlainString();
     }
 
-    private static double numero(String valor) {
+    private static BigDecimal numero(String valor) {
         if (valor == null || valor.isBlank()) {
             throw new NumberFormatException("informe um número");
         }
-        return Double.parseDouble(valor.replace(',', '.').strip());
+        return new BigDecimal(valor.replace(',', '.').strip());
     }
 }

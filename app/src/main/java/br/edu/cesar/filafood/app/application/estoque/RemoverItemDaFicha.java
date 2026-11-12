@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
@@ -26,7 +27,7 @@ public class RemoverItemDaFicha {
 
     @Transactional
     public void executar(String unidadeId, String produtoId, String insumoId) {
-        FichaTecnica ficha = fichas.porProduto(unidadeId, produtoId)
+        FichaTecnica ficha = fichas.porProduto(unidadeId, ProdutoId.de(produtoId))
                 .orElseThrow(() -> new RegraDeNegocioException("produto sem ficha técnica na unidade"));
         Insumo insumo = insumos.porId(new InsumoId(UUID.fromString(insumoId)))
                 .orElseThrow(() -> new RegraDeNegocioException("insumo não encontrado"));

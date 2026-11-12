@@ -31,8 +31,8 @@ class FluxoDeInsumoTest {
 
     @Test
     void cadastraDaEntradaEDevolveSaldo() {
-        InsumoId id = cadastrar.executar(new NovoInsumo(unidade, "Farinha", "kg", 5, 3));
-        entrada.executar(new EntradaDeInsumo(id.toString(), 10, new BigDecimal("4.00")));
+        InsumoId id = cadastrar.executar(new NovoInsumo(unidade, "Farinha", "kg", BigDecimal.valueOf(5), 3));
+        entrada.executar(new EntradaDeInsumo(id.toString(), BigDecimal.valueOf(10), new BigDecimal("4.00")));
 
         InsumoResumo resumo = listar.executar(unidade).get(0);
         assertEquals(0, new BigDecimal("10.000").compareTo(resumo.saldo()));
@@ -42,15 +42,15 @@ class FluxoDeInsumoTest {
 
     @Test
     void insumoAbaixoDoPontoDePedidoFicaARepor() {
-        InsumoId id = cadastrar.executar(new NovoInsumo(unidade, "Carne", "kg", 5, 3));
-        entrada.executar(new EntradaDeInsumo(id.toString(), 1, new BigDecimal("20.00")));
+        InsumoId id = cadastrar.executar(new NovoInsumo(unidade, "Carne", "kg", BigDecimal.valueOf(5), 3));
+        entrada.executar(new EntradaDeInsumo(id.toString(), BigDecimal.ONE, new BigDecimal("20.00")));
 
         assertTrue(listar.executar(unidade).get(0).aRepor());
     }
 
     @Test
     void desativarPreservaAEntradaENaoMonitoraReposicao() {
-        InsumoId id = cadastrar.executar(new NovoInsumo(unidade, "Pão", "kg", 5, 3));
+        InsumoId id = cadastrar.executar(new NovoInsumo(unidade, "Pão", "kg", BigDecimal.valueOf(5), 3));
         estado.desativar(id.toString());
 
         InsumoResumo resumo = listar.executar(unidade).get(0);
@@ -61,7 +61,7 @@ class FluxoDeInsumoTest {
     @Test
     void entradaEmInsumoInexistenteEhRecusada() {
         RegraDeNegocioException excecao = assertThrows(RegraDeNegocioException.class,
-                () -> entrada.executar(new EntradaDeInsumo(UUID.randomUUID().toString(), 1, BigDecimal.ONE)));
+                () -> entrada.executar(new EntradaDeInsumo(UUID.randomUUID().toString(), BigDecimal.ONE, BigDecimal.ONE)));
         assertEquals("insumo não encontrado", excecao.getMessage());
     }
 

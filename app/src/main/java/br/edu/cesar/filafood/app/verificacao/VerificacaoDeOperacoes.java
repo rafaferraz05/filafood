@@ -74,8 +74,8 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
                 "histórico do Pão deveria ter entrada e saída, veio " + detalhe.movimentacoes().size());
 
         String nome = "Insumo de verificação " + UUID.randomUUID().toString().substring(0, 8);
-        InsumoId novo = cadastrar.executar(new NovoInsumo(unidade, nome, "kg", 5, 2));
-        registrarEntrada.executar(new EntradaDeInsumo(novo.toString(), 3, new BigDecimal("7.00")));
+        InsumoId novo = cadastrar.executar(new NovoInsumo(unidade, nome, "kg", new BigDecimal("5"), 2));
+        registrarEntrada.executar(new EntradaDeInsumo(novo.toString(), new BigDecimal("3"), new BigDecimal("7.00")));
 
         InsumoResumo criado = buscar(listar.executar(unidade), nome);
         exigir(comparar(criado.saldo(), "3.000"), "saldo do insumo novo deveria ser 3, veio " + criado.saldo());

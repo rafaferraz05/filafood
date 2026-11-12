@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.estoque.consumo;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +35,10 @@ public class PreparoDoPedido {
      *         ou se faltar saldo de qualquer insumo. Nesse caso nada é gravado.
      */
     public void darBaixa(String pedido, List<ItemDoPedido> itens) {
-        Map<String, Double> necessidade = necessidade(itens);
+        Map<String, BigDecimal> necessidade = necessidade(itens);
 
-        for (Map.Entry<String, Double> linha : necessidade.entrySet()) {
-            if (estoque.insumo(linha.getKey()).saldo() < linha.getValue()) {
+        for (Map.Entry<String, BigDecimal> linha : necessidade.entrySet()) {
+            if (estoque.insumo(linha.getKey()).saldo().compareTo(linha.getValue()) < 0) {
                 throw new RegraDeNegocioException("falta de saldo do insumo " + linha.getKey());
             }
         }
@@ -50,12 +51,13 @@ public class PreparoDoPedido {
      * quantidade do insumo na ficha técnica do produto e acumula por insumo, somando as contribuições
      * dos produtos diferentes que usam o mesmo insumo.
      */
-    public Map<String, Double> necessidade(List<ItemDoPedido> itens) {
-        Map<String, Double> necessidade = new LinkedHashMap<>();
+    public Map<String, BigDecimal> necessidade(List<ItemDoPedido> itens) {
+        Map<String, BigDecimal> necessidade = new LinkedHashMap<>();
         for (ItemDoPedido item : itens) {
             FichaTecnica ficha = fichas.exigirFichaDe(item.produto());
-            for (ItemDaFicha daFicha : ficha.itens()) {
-                necessidade.merge(daFicha.insumo().nome(), daFicha.quantidade() * item.quantidade(), Double::sum);
+            for (ItemDaFicha daFicha : ficha) {
+                necessidade.merge(daFicha.insumo().nome(),
+                        daFicha.quantidade().multiply(BigDecimal.valueOf(item.quantidade())), BigDecimal::add);
             }
         }
         return necessidade;

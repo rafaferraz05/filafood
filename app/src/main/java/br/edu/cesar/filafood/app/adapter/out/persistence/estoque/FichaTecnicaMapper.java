@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaId;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ItemDaFicha;
+import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 
 /**
- * Converte entre a ficha técnica do domínio e as entidades JPA. O produto é referência: o domínio
- * guarda o id e quem resolve o nome para a tela é o adaptador de leitura.
+ * Converte entre a ficha técnica do domínio e as entidades JPA. O produto é identidade: quem resolve
+ * o nome para a tela é o adaptador de leitura do cardápio.
  */
 @Component
 class FichaTecnicaMapper {
@@ -34,18 +35,18 @@ class FichaTecnicaMapper {
         for (ItemDaFicha item : ficha) {
             InsumoJpa insumo = insumoPorId.apply(item.insumo().id().valor());
             entidade.adicionarItem(new ItemFichaTecnicaJpa(UUID.randomUUID(), entidade, insumo,
-                    BigDecimal.valueOf(item.quantidade())));
+                    item.quantidade()));
         }
     }
 
     FichaTecnica paraDominio(FichaTecnicaJpa entidade) {
         List<ItemDaFicha> itens = entidade.itens().stream()
-                .map(item -> new ItemDaFicha(insumos.paraDominio(item.insumo()), item.quantidade().doubleValue()))
+                .map(item -> new ItemDaFicha(insumos.paraDominio(item.insumo()), item.quantidade()))
                 .toList();
         return FichaTecnica.reconstituir(
                 new FichaTecnicaId(entidade.id()),
                 entidade.unidadeId().toString(),
-                entidade.produto().id().toString(),
+                new ProdutoId(entidade.produto().id()),
                 itens);
     }
 }

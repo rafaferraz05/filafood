@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
@@ -25,7 +27,7 @@ public class ReposicaoSteps {
 
     @Dado("o insumo {string} com {int} {string} de saídas nos últimos 30 dias")
     public void saidasNosUltimos30Dias(String insumo, int quantidade, String unidadeDeMedida) {
-        mundo.insumoAtivo(insumo).consumir(quantidade, CONSUMO_DE_TESTE);
+        mundo.insumoAtivo(insumo).consumir(BigDecimal.valueOf(quantidade), CONSUMO_DE_TESTE);
     }
 
     /**
@@ -34,22 +36,23 @@ public class ReposicaoSteps {
      */
     @Dado("o insumo {string} com {int} {string} de saídas em {int} dias dos últimos 30 dias")
     public void saidasEmAlgunsDias(String insumo, int quantidade, String unidadeDeMedida, int dias) {
-        mundo.insumoAtivo(insumo).consumir(quantidade, CONSUMO_DE_TESTE);
+        mundo.insumoAtivo(insumo).consumir(BigDecimal.valueOf(quantidade), CONSUMO_DE_TESTE);
     }
 
     @Dado("o insumo {string} com consumo médio diário {double}, prazo de entrega de {int} dias e estoque mínimo {int}")
     public void comConsumoMedio(String insumo, double consumoMedioDiario, int prazoDeEntrega, int estoqueMinimo) {
         Insumo cadastrado = mundo.insumoCom(insumo, estoqueMinimo, prazoDeEntrega);
-        cadastrado.consumir(consumoMedioDiario * 30, CONSUMO_DE_TESTE);
+        cadastrado.consumir(BigDecimal.valueOf(consumoMedioDiario).multiply(BigDecimal.valueOf(30)), CONSUMO_DE_TESTE);
     }
 
     @Dado("o insumo {string} com ponto de pedido {int} e saldo {int}")
     public void comPontoDePedidoESaldo(String insumo, int pontoDePedido, int saldo) {
         Insumo cadastrado = mundo.insumoAtivo(insumo);
         // consumo médio = (ponto de pedido - estoque mínimo) / prazo de entrega
-        double consumoMedioDiario =
-                (pontoDePedido - cadastrado.estoqueMinimo()) / cadastrado.prazoDeEntregaEmDias();
-        cadastrado.consumir(consumoMedioDiario * 30, CONSUMO_DE_TESTE);
+        BigDecimal consumoMedioDiario = BigDecimal.valueOf(pontoDePedido)
+                .subtract(cadastrado.estoqueMinimo())
+                .divide(BigDecimal.valueOf(cadastrado.prazoDeEntregaEmDias()), 6, RoundingMode.HALF_UP);
+        cadastrado.consumir(consumoMedioDiario.multiply(BigDecimal.valueOf(30)), CONSUMO_DE_TESTE);
         mundo.garantirSaldo(insumo, saldo);
     }
 
@@ -65,12 +68,14 @@ public class ReposicaoSteps {
 
     @Então("o consumo médio diário do insumo {string} é {double} {string}")
     public void consumoMedioDiarioEh(String insumo, double esperado, String unidadeDeMedida) {
-        assertEquals(esperado, mundo.estoque.insumo(insumo).consumoMedioDiario(LocalDate.now()), 0.001);
+        assertEquals(0, mundo.estoque.insumo(insumo).consumoMedioDiario(LocalDate.now())
+                .compareTo(BigDecimal.valueOf(esperado)), "consumo médio divergente");
     }
 
     @Então("o ponto de pedido do insumo {string} é {double}")
     public void pontoDePedidoEh(String insumo, double esperado) {
-        assertEquals(esperado, mundo.estoque.insumo(insumo).pontoDePedido(LocalDate.now()), 0.001);
+        assertEquals(0, mundo.estoque.insumo(insumo).pontoDePedido(LocalDate.now())
+                .compareTo(BigDecimal.valueOf(esperado)), "ponto de pedido divergente");
     }
 
     @Então("o insumo {string} fica a repor")

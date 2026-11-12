@@ -130,8 +130,7 @@ public class DetalheInsumoView extends Div implements BeforeEnterObserver {
 
         Runnable calcular = () -> {
             try {
-                BigDecimal valor = BigDecimal.valueOf(numero(quantidade.getValue()))
-                        .multiply(BigDecimal.valueOf(numero(custo.getValue())));
+                BigDecimal valor = numero(quantidade.getValue()).multiply(numero(custo.getValue()));
                 total.setValue(moeda(valor));
             } catch (NumberFormatException excecao) {
                 total.setValue("");
@@ -168,7 +167,7 @@ public class DetalheInsumoView extends Div implements BeforeEnterObserver {
     private void registrar(InsumoDetalhe detalhe, Input quantidade, Input custo) {
         try {
             registrarEntrada.executar(new EntradaDeInsumo(detalhe.id().toString(),
-                    numero(quantidade.getValue()), BigDecimal.valueOf(numero(custo.getValue()))));
+                    numero(quantidade.getValue()), numero(custo.getValue())));
             montar();
             aviso("Entrada registrada.", true);
         } catch (RegraDeNegocioException | NumberFormatException excecao) {
@@ -229,10 +228,10 @@ public class DetalheInsumoView extends Div implements BeforeEnterObserver {
         return "R$ " + String.format(PT_BR, "%.2f", valor);
     }
 
-    private static double numero(String valor) {
+    private static BigDecimal numero(String valor) {
         if (valor == null || valor.isBlank()) {
             throw new NumberFormatException("informe um número");
         }
-        return Double.parseDouble(valor.replace(',', '.').strip());
+        return new BigDecimal(valor.replace(',', '.').strip());
     }
 }
