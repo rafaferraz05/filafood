@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import br.edu.cesar.filafood.app.application.estoque.AdicionarItemNaFicha;
 import br.edu.cesar.filafood.app.application.estoque.AlterarEstadoDoInsumo;
+import br.edu.cesar.filafood.app.application.estoque.BaixaDePreparo;
+import br.edu.cesar.filafood.app.application.estoque.BaixaDoPreparo;
 import br.edu.cesar.filafood.app.application.estoque.CadastrarInsumo;
 import br.edu.cesar.filafood.app.application.estoque.DetalharInsumo;
 import br.edu.cesar.filafood.app.application.estoque.EntradaDeInsumo;
@@ -20,10 +22,13 @@ import br.edu.cesar.filafood.app.application.estoque.InsumoResumo;
 import br.edu.cesar.filafood.app.application.estoque.ListarFichasDaUnidade;
 import br.edu.cesar.filafood.app.application.estoque.ListarInsumos;
 import br.edu.cesar.filafood.app.application.estoque.NovoInsumo;
+import br.edu.cesar.filafood.app.application.estoque.PedidoDoPreparo;
+import br.edu.cesar.filafood.app.application.estoque.PedidoParaPreparo;
 import br.edu.cesar.filafood.app.application.estoque.ProdutoComFicha;
 import br.edu.cesar.filafood.app.application.estoque.RegistrarEntradaDeInsumo;
 import br.edu.cesar.filafood.app.application.estoque.RemoverItemDaFicha;
 import br.edu.cesar.filafood.app.config.UnidadeDeDemonstracao;
+import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 
@@ -44,11 +49,13 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
     private final ListarFichasDaUnidade listarFichas;
     private final AdicionarItemNaFicha adicionarItem;
     private final RemoverItemDaFicha removerItem;
+    private final PedidoDoPreparo pedidos;
+    private final BaixaDoPreparo baixa;
 
     public VerificacaoDeOperacoes(ListarInsumos listar, DetalharInsumo detalhar,
             RegistrarEntradaDeInsumo registrarEntrada, AlterarEstadoDoInsumo alterarEstado,
             CadastrarInsumo cadastrar, ListarFichasDaUnidade listarFichas,
-            AdicionarItemNaFicha adicionarItem, RemoverItemDaFicha removerItem) {
+            AdicionarItemNaFicha adicionarItem, RemoverItemDaFicha removerItem, PedidoDoPreparo pedidos, BaixaDoPreparo baixa) {
         this.listar = listar;
         this.detalhar = detalhar;
         this.registrarEntrada = registrarEntrada;
@@ -57,6 +64,8 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         this.listarFichas = listarFichas;
         this.adicionarItem = adicionarItem;
         this.removerItem = removerItem;
+        this.pedidos = pedidos;
+        this.baixa = baixa;
     }
 
     @Override
@@ -89,6 +98,7 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         System.out.println("VERIFICACAO OK: " + insumos.size()
                 + " insumos no seed; cadastro, entrada, saldo, a-repor, desativar e reativar conferidos.");
         verificarFichas(unidade, pao);
+        verificarPreparo(unidade);
     }
 
     /** Ficha técnica do seed: produtos, itens, porções cobertas e as recusas da RN 2. */
@@ -100,8 +110,11 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         FichaDetalhe fichaDoClassico = listarFichas.executar(unidade, classico.id()).ficha().orElseThrow();
         exigir(fichaDoClassico.temFicha() && fichaDoClassico.itens().size() == 4,
                 "ficha do Clássico deveria ter 4 itens, veio " + fichaDoClassico.itens().size());
-        exigir(fichaDoClassico.porcoesCobertas() == 42,
-                "Clássico deveria cobrir 42 porções, veio " + fichaDoClassico.porcoesCobertas());
+        int menorSaldo = fichaDoClassico.itens().stream()
+                .mapToInt(br.edu.cesar.filafood.app.application.estoque.ItemDaFichaResumo::porcoesCobertas)
+                .min().orElse(0);
+        exigir(fichaDoClassico.porcoesCobertas() == menorSaldo,
+                "Clássico deveria cobrir " + menorSaldo + " porções, veio " + fichaDoClassico.porcoesCobertas());
 
         ProdutoComFicha batata = produto(fichas, "Batata Rústica");
         exigir(!batata.temFicha(), "Batata Rústica deveria estar sem ficha");
@@ -127,6 +140,45 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
                 + "Batata sem ficha; adicionar, recusar repetido e remover conferidos.");
     }
 
+    /** Baixa do pedido do seed (RN 4): o saldo cai pela necessidade e o pedido entra em preparo. */
+    private void verificarPreparo(String unidade) {
+        String pedidoId = "00000000-0000-0000-0000-000000000501";
+        PedidoParaPreparo pedido = pedidos.porId(pedidoId);
+        exigir(pedido.itens().size() == 2, "pedido do seed deveria ter 2 itens, veio " + pedido.itens().size());
+
+        if (pedido.estado() != EstadoDoPedido.ENVIADO) {
+            System.out.println("VERIFICACAO OK: pedido #1337 já está em " + pedido.estado()
+                    + "; a baixa não é repetida.");
+            return;
+        }
+
+        List<InsumoResumo> antes = listar.executar(unidade);
+        baixa.executar(new BaixaDePreparo(pedidoId));
+        List<InsumoResumo> depois = listar.executar(unidade);
+
+        exigir(baixou(antes, depois, "Pão", "3"), "a baixa do Pão deveria ser 3");
+        exigir(baixou(antes, depois, "Carne", "0.6"), "a baixa da Carne deveria ser 0,6");
+        exigir(baixou(antes, depois, "Queijo", "0.12"), "a baixa do Queijo deveria ser 0,12");
+        exigir(baixou(antes, depois, "Tomate", "0.08"), "a baixa do Tomate deveria ser 0,08");
+        exigir(pedidos.porId(pedidoId).estado() == EstadoDoPedido.EM_PREPARO,
+                "o pedido deveria ter entrado em preparo");
+
+        System.out.println("VERIFICACAO OK: preparo do pedido #1337 baixou Pão 3, Carne 0,6, Queijo 0,12 e "
+                + "Tomate 0,08, e o pedido ficou em preparo.");
+    }
+
+    private static boolean baixou(List<InsumoResumo> antes, List<InsumoResumo> depois, String nome, String quantidade) {
+        BigDecimal diferenca = saldoDe(antes, nome).subtract(saldoDe(depois, nome));
+        return diferenca.compareTo(new BigDecimal(quantidade)) == 0;
+    }
+
+    private static BigDecimal saldoDe(List<InsumoResumo> insumos, String nome) {
+        return insumos.stream()
+                .filter(insumo -> insumo.nome().equals(nome))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("insumo não encontrado: " + nome))
+                .saldo();
+    }
     private static ProdutoComFicha produto(FichasDaUnidade fichas, String nome) {
         return fichas.produtos().stream()
                 .filter(produto -> produto.nome().equals(nome))

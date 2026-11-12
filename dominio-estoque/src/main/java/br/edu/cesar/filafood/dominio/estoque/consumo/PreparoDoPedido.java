@@ -7,9 +7,7 @@ import java.util.Map;
 
 import br.edu.cesar.filafood.dominio.estoque.EstoqueDaUnidade;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicasDaUnidade;
-import br.edu.cesar.filafood.dominio.estoque.ficha.ItemDaFicha;
 
 /**
  * Baixa automática por explosão da ficha técnica.
@@ -35,31 +33,30 @@ public class PreparoDoPedido {
      *         ou se faltar saldo de qualquer insumo. Nesse caso nada é gravado.
      */
     public void darBaixa(String pedido, List<ItemDoPedido> itens) {
-        Map<String, BigDecimal> necessidade = necessidade(itens);
+        List<NecessidadeDoPedido.Linha> linhas = necessidade(itens).linhas();
 
-        for (Map.Entry<String, BigDecimal> linha : necessidade.entrySet()) {
-            if (estoque.insumo(linha.getKey()).saldo().compareTo(linha.getValue()) < 0) {
-                throw new RegraDeNegocioException("falta de saldo do insumo " + linha.getKey());
+        for (NecessidadeDoPedido.Linha linha : linhas) {
+            if (linha.insumo().saldo().compareTo(linha.quantidade()) < 0) {
+                throw new RegraDeNegocioException("falta de saldo do insumo " + linha.insumo().nome());
             }
         }
 
-        necessidade.forEach((insumo, quantidade) -> estoque.insumo(insumo).consumir(quantidade, pedido));
+        linhas.forEach(linha -> linha.insumo().consumir(linha.quantidade(), pedido));
     }
 
     /**
-     * Necessidade de cada insumo para o pedido: para cada item, multiplica a quantidade pedida pela
-     * quantidade do insumo na ficha técnica do produto e acumula por insumo, somando as contribuições
-     * dos produtos diferentes que usam o mesmo insumo.
+     * Necessidade de cada insumo para o pedido, por nome, como o dublê de teste consulta.
      */
-    public Map<String, BigDecimal> necessidade(List<ItemDoPedido> itens) {
-        Map<String, BigDecimal> necessidade = new LinkedHashMap<>();
-        for (ItemDoPedido item : itens) {
-            FichaTecnica ficha = fichas.exigirFichaDe(item.produto());
-            for (ItemDaFicha daFicha : ficha) {
-                necessidade.merge(daFicha.insumo().nome(),
-                        daFicha.quantidade().multiply(BigDecimal.valueOf(item.quantidade())), BigDecimal::add);
-            }
+    public Map<String, BigDecimal> necessidadePorNome(List<ItemDoPedido> itens) {
+        Map<String, BigDecimal> porNome = new LinkedHashMap<>();
+        for (NecessidadeDoPedido.Linha linha : necessidade(itens).linhas()) {
+            porNome.put(linha.insumo().nome(), linha.quantidade());
         }
-        return necessidade;
+        return porNome;
+    }
+
+    /** Explosão da ficha para o pedido, compartilhada com a aplicação. */
+    public NecessidadeDoPedido necessidade(List<ItemDoPedido> itens) {
+        return new NecessidadeDoPedido(itens, fichas::exigirFichaDe);
     }
 }
