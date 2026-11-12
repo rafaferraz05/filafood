@@ -23,8 +23,7 @@ class PedidoJpaAdapter implements PedidoDoPreparo {
 
     @Override
     public PedidoParaPreparo porId(String pedidoId) {
-        PedidoJpa pedido = pedidos.findById(UUID.fromString(pedidoId))
-                .orElseThrow(() -> new RegraDeNegocioException("pedido não encontrado"));
+        PedidoJpa pedido = pedido(pedidoId);
         List<ItemDoPedido> itens = pedido.itens().stream()
                 .map(item -> new ItemDoPedido(item.produto().id().toString(), item.quantidade()))
                 .toList();
@@ -34,9 +33,27 @@ class PedidoJpaAdapter implements PedidoDoPreparo {
 
     @Override
     public void marcarEmPreparo(String pedidoId) {
-        PedidoJpa pedido = pedidos.findById(UUID.fromString(pedidoId))
-                .orElseThrow(() -> new RegraDeNegocioException("pedido não encontrado"));
-        pedido.mudarEstado(EstadoDoPedido.EM_PREPARO.name());
+        mudarEstado(pedidoId, EstadoDoPedido.EM_PREPARO);
+    }
+
+    @Override
+    public void marcarConcluido(String pedidoId) {
+        mudarEstado(pedidoId, EstadoDoPedido.CONCLUIDO);
+    }
+
+    @Override
+    public void marcarCancelado(String pedidoId) {
+        mudarEstado(pedidoId, EstadoDoPedido.CANCELADO);
+    }
+
+    private void mudarEstado(String pedidoId, EstadoDoPedido estado) {
+        PedidoJpa pedido = pedido(pedidoId);
+        pedido.mudarEstado(estado.name());
         pedidos.save(pedido);
+    }
+
+    private PedidoJpa pedido(String pedidoId) {
+        return pedidos.findById(UUID.fromString(pedidoId))
+                .orElseThrow(() -> new RegraDeNegocioException("pedido não encontrado"));
     }
 }

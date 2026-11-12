@@ -20,6 +20,11 @@ public final class Acao {
         return botao(texto, "link-acao", acao);
     }
 
+    /** Ação destrutiva do protótipo (`.btn-perigo`): cancelar o preparo, por exemplo. */
+    public static NativeButton perigo(String texto, Runnable acao) {
+        return botao(texto, "btn btn-perigo", acao);
+    }
+
     public static NativeButton apagada(String texto, Runnable acao) {
         return botao(texto, "link-acao apagada", acao);
     }

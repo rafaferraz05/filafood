@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Component;
 import br.edu.cesar.filafood.app.adapter.in.web.FichaTecnicaView;
 import br.edu.cesar.filafood.app.adapter.in.web.InicioView;
 import br.edu.cesar.filafood.app.adapter.in.web.InsumosView;
+import br.edu.cesar.filafood.app.adapter.in.web.PreparoView;
 
 /**
  * Telas que aparecem na navegação da topbar, na ordem em que são exibidas.
@@ -17,7 +18,8 @@ public enum TelaDoMenu {
 
     INICIO("Início", "", InicioView.class),
     INSUMOS("Insumos", "insumos", InsumosView.class),
-    FICHA_TECNICA("Ficha técnica", "ficha-tecnica", FichaTecnicaView.class);
+    FICHA_TECNICA("Ficha técnica", "ficha-tecnica", FichaTecnicaView.class),
+    PREPARO("Preparo do pedido", "preparo", PreparoView.class);
 
     private final String titulo;
     private final String rota;

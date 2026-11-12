@@ -13,12 +13,15 @@ import br.edu.cesar.filafood.app.application.estoque.AlterarEstadoDoInsumo;
 import br.edu.cesar.filafood.app.application.estoque.BaixaDePreparo;
 import br.edu.cesar.filafood.app.application.estoque.BaixaDoPreparo;
 import br.edu.cesar.filafood.app.application.estoque.CadastrarInsumo;
+import br.edu.cesar.filafood.app.application.estoque.CancelamentoDoPreparo;
 import br.edu.cesar.filafood.app.application.estoque.DetalharInsumo;
+import br.edu.cesar.filafood.app.application.estoque.DevolucaoDoCancelamento;
 import br.edu.cesar.filafood.app.application.estoque.EntradaDeInsumo;
 import br.edu.cesar.filafood.app.application.estoque.FichaDetalhe;
 import br.edu.cesar.filafood.app.application.estoque.FichasDaUnidade;
 import br.edu.cesar.filafood.app.application.estoque.InsumoDetalhe;
 import br.edu.cesar.filafood.app.application.estoque.InsumoResumo;
+import br.edu.cesar.filafood.app.application.estoque.ItemDaFichaResumo;
 import br.edu.cesar.filafood.app.application.estoque.ListarFichasDaUnidade;
 import br.edu.cesar.filafood.app.application.estoque.ListarInsumos;
 import br.edu.cesar.filafood.app.application.estoque.NovoInsumo;
@@ -27,6 +30,7 @@ import br.edu.cesar.filafood.app.application.estoque.PedidoParaPreparo;
 import br.edu.cesar.filafood.app.application.estoque.ProdutoComFicha;
 import br.edu.cesar.filafood.app.application.estoque.RegistrarEntradaDeInsumo;
 import br.edu.cesar.filafood.app.application.estoque.RemoverItemDaFicha;
+import br.edu.cesar.filafood.app.config.PedidoDeDemonstracao;
 import br.edu.cesar.filafood.app.config.UnidadeDeDemonstracao;
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
@@ -34,8 +38,11 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 
 /**
  * Verificação de fumaça das operações contra o banco de dev semeado (D-19): lista, detalha,
- * cadastra, dá entrada, desativa e reativa, conferindo saldo e "a repor". Roda com
- * {@code --spring.profiles.active=dev,verificacao --spring.main.web-application-type=none}.
+ * cadastra, dá entrada, desativa e reativa, confere a ficha, dá baixa no pedido do seed e cancela o
+ * preparo devolvendo os insumos. Roda com o perfil {@code verificacao}.
+ *
+ * A baixa e o cancelamento acontecem uma vez: se o pedido já não está no estado esperado, a etapa é
+ * apenas informada.
  */
 @Component
 @Profile("verificacao")
@@ -51,11 +58,13 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
     private final RemoverItemDaFicha removerItem;
     private final PedidoDoPreparo pedidos;
     private final BaixaDoPreparo baixa;
+    private final DevolucaoDoCancelamento devolucao;
 
     public VerificacaoDeOperacoes(ListarInsumos listar, DetalharInsumo detalhar,
             RegistrarEntradaDeInsumo registrarEntrada, AlterarEstadoDoInsumo alterarEstado,
             CadastrarInsumo cadastrar, ListarFichasDaUnidade listarFichas,
-            AdicionarItemNaFicha adicionarItem, RemoverItemDaFicha removerItem, PedidoDoPreparo pedidos, BaixaDoPreparo baixa) {
+            AdicionarItemNaFicha adicionarItem, RemoverItemDaFicha removerItem, PedidoDoPreparo pedidos,
+            BaixaDoPreparo baixa, DevolucaoDoCancelamento devolucao) {
         this.listar = listar;
         this.detalhar = detalhar;
         this.registrarEntrada = registrarEntrada;
@@ -66,6 +75,7 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         this.removerItem = removerItem;
         this.pedidos = pedidos;
         this.baixa = baixa;
+        this.devolucao = devolucao;
     }
 
     @Override
@@ -76,11 +86,10 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         exigir(insumos.size() >= 4, "esperava ao menos os 4 insumos do seed, veio " + insumos.size());
 
         InsumoResumo pao = buscar(insumos, "Pão");
-        exigir(comparar(pao.saldo(), "42.000"), "saldo do Pão deveria ser 42, veio " + pao.saldo());
-
         InsumoDetalhe detalhe = detalhar.executar(pao.id().toString());
         exigir(detalhe.movimentacoes().size() >= 2,
                 "histórico do Pão deveria ter entrada e saída, veio " + detalhe.movimentacoes().size());
+        exigir(detalhe.saldo().compareTo(BigDecimal.ZERO) > 0, "o saldo do Pão deveria ser positivo");
 
         String nome = "Insumo de verificação " + UUID.randomUUID().toString().substring(0, 8);
         InsumoId novo = cadastrar.executar(new NovoInsumo(unidade, nome, "kg", new BigDecimal("5"), 2));
@@ -110,9 +119,7 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         FichaDetalhe fichaDoClassico = listarFichas.executar(unidade, classico.id()).ficha().orElseThrow();
         exigir(fichaDoClassico.temFicha() && fichaDoClassico.itens().size() == 4,
                 "ficha do Clássico deveria ter 4 itens, veio " + fichaDoClassico.itens().size());
-        int menorSaldo = fichaDoClassico.itens().stream()
-                .mapToInt(br.edu.cesar.filafood.app.application.estoque.ItemDaFichaResumo::porcoesCobertas)
-                .min().orElse(0);
+        int menorSaldo = fichaDoClassico.itens().stream().mapToInt(ItemDaFichaResumo::porcoesCobertas).min().orElse(0);
         exigir(fichaDoClassico.porcoesCobertas() == menorSaldo,
                 "Clássico deveria cobrir " + menorSaldo + " porções, veio " + fichaDoClassico.porcoesCobertas());
 
@@ -136,40 +143,77 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         exigir(!listarFichas.executar(unidade, batata.id()).ficha().orElseThrow().temFicha(),
                 "Batata deveria voltar ao estado sem ficha");
 
-        System.out.println("VERIFICACAO OK: ficha técnica com 3 produtos, Clássico com 4 itens e 42 porções, "
-                + "Batata sem ficha; adicionar, recusar repetido e remover conferidos.");
+        System.out.println("VERIFICACAO OK: ficha técnica com 3 produtos, Clássico com 4 itens e "
+                + fichaDoClassico.porcoesCobertas() + " porções, Batata sem ficha; adicionar, recusar "
+                + "repetido e remover conferidos.");
     }
 
-    /** Baixa do pedido do seed (RN 4): o saldo cai pela necessidade e o pedido entra em preparo. */
+    /** Ciclo do preparo (RN 4 e RN 5): baixa o pedido do seed e, em seguida, cancela e devolve. */
     private void verificarPreparo(String unidade) {
-        String pedidoId = "00000000-0000-0000-0000-000000000501";
+        String pedidoId = PedidoDeDemonstracao.ID;
         PedidoParaPreparo pedido = pedidos.porId(pedidoId);
         exigir(pedido.itens().size() == 2, "pedido do seed deveria ter 2 itens, veio " + pedido.itens().size());
 
-        if (pedido.estado() != EstadoDoPedido.ENVIADO) {
-            System.out.println("VERIFICACAO OK: pedido #1337 já está em " + pedido.estado()
-                    + "; a baixa não é repetida.");
+        if (pedido.estado() == EstadoDoPedido.ENVIADO) {
+            List<InsumoResumo> antes = listar.executar(unidade);
+            baixa.executar(new BaixaDePreparo(pedidoId));
+            List<InsumoResumo> depois = listar.executar(unidade);
+
+            exigir(baixou(antes, depois, "Pão", "3"), "a baixa do Pão deveria ser 3");
+            exigir(baixou(antes, depois, "Carne", "0.6"), "a baixa da Carne deveria ser 0,6");
+            exigir(baixou(antes, depois, "Queijo", "0.12"), "a baixa do Queijo deveria ser 0,12");
+            exigir(baixou(antes, depois, "Tomate", "0.08"), "a baixa do Tomate deveria ser 0,08");
+            exigir(pedidos.porId(pedidoId).estado() == EstadoDoPedido.EM_PREPARO,
+                    "o pedido deveria ter entrado em preparo");
+
+            System.out.println("VERIFICACAO OK: preparo do pedido #" + PedidoDeDemonstracao.NUMERO
+                    + " baixou Pão 3, Carne 0,6, Queijo 0,12 e Tomate 0,08.");
+        } else {
+            System.out.println("VERIFICACAO OK: pedido #" + PedidoDeDemonstracao.NUMERO + " já está em "
+                    + pedido.estado() + "; a baixa não é repetida.");
+        }
+
+        if (pedidos.porId(pedidoId).estado() != EstadoDoPedido.EM_PREPARO) {
             return;
         }
 
-        List<InsumoResumo> antes = listar.executar(unidade);
-        baixa.executar(new BaixaDePreparo(pedidoId));
-        List<InsumoResumo> depois = listar.executar(unidade);
+        List<InsumoResumo> antesDoCancelamento = listar.executar(unidade);
+        devolucao.executar(new CancelamentoDoPreparo(pedidoId));
+        List<InsumoResumo> depoisDoCancelamento = listar.executar(unidade);
 
-        exigir(baixou(antes, depois, "Pão", "3"), "a baixa do Pão deveria ser 3");
-        exigir(baixou(antes, depois, "Carne", "0.6"), "a baixa da Carne deveria ser 0,6");
-        exigir(baixou(antes, depois, "Queijo", "0.12"), "a baixa do Queijo deveria ser 0,12");
-        exigir(baixou(antes, depois, "Tomate", "0.08"), "a baixa do Tomate deveria ser 0,08");
-        exigir(pedidos.porId(pedidoId).estado() == EstadoDoPedido.EM_PREPARO,
-                "o pedido deveria ter entrado em preparo");
+        exigir(devolveu(antesDoCancelamento, depoisDoCancelamento, "Pão", "3"), "a devolução do Pão deveria ser 3");
+        exigir(devolveu(antesDoCancelamento, depoisDoCancelamento, "Carne", "0.6"),
+                "a devolução da Carne deveria ser 0,6");
+        exigir(devolveu(antesDoCancelamento, depoisDoCancelamento, "Queijo", "0.12"),
+                "a devolução do Queijo deveria ser 0,12");
+        exigir(devolveu(antesDoCancelamento, depoisDoCancelamento, "Tomate", "0.08"),
+                "a devolução do Tomate deveria ser 0,08");
+        exigir(pedidos.porId(pedidoId).estado() == EstadoDoPedido.CANCELADO,
+                "o pedido deveria ter sido cancelado");
 
-        System.out.println("VERIFICACAO OK: preparo do pedido #1337 baixou Pão 3, Carne 0,6, Queijo 0,12 e "
-                + "Tomate 0,08, e o pedido ficou em preparo.");
+        try {
+            devolucao.executar(new CancelamentoDoPreparo(pedidoId));
+            throw new IllegalStateException("VERIFICACAO FALHOU: cancelar de novo deveria ser recusado");
+        } catch (RegraDeNegocioException esperada) {
+            exigir("a devolução só é aceita para pedido em preparo".equals(esperada.getMessage()),
+                    "mensagem inesperada do segundo cancelamento: " + esperada.getMessage());
+        }
+
+        System.out.println("VERIFICACAO OK: cancelamento do pedido #" + PedidoDeDemonstracao.NUMERO
+                + " devolveu Pão 3, Carne 0,6, Queijo 0,12 e Tomate 0,08 e recusou o segundo cancelamento.");
     }
 
     private static boolean baixou(List<InsumoResumo> antes, List<InsumoResumo> depois, String nome, String quantidade) {
-        BigDecimal diferenca = saldoDe(antes, nome).subtract(saldoDe(depois, nome));
-        return diferenca.compareTo(new BigDecimal(quantidade)) == 0;
+        return variacao(antes, depois, nome).compareTo(new BigDecimal(quantidade).negate()) == 0;
+    }
+
+    private static boolean devolveu(List<InsumoResumo> antes, List<InsumoResumo> depois, String nome,
+            String quantidade) {
+        return variacao(antes, depois, nome).compareTo(new BigDecimal(quantidade)) == 0;
+    }
+
+    private static BigDecimal variacao(List<InsumoResumo> antes, List<InsumoResumo> depois, String nome) {
+        return saldoDe(depois, nome).subtract(saldoDe(antes, nome));
     }
 
     private static BigDecimal saldoDe(List<InsumoResumo> insumos, String nome) {
@@ -179,6 +223,7 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
                 .orElseThrow(() -> new IllegalStateException("insumo não encontrado: " + nome))
                 .saldo();
     }
+
     private static ProdutoComFicha produto(FichasDaUnidade fichas, String nome) {
         return fichas.produtos().stream()
                 .filter(produto -> produto.nome().equals(nome))

@@ -11,4 +11,8 @@ public interface PedidoDoPreparo {
     PedidoParaPreparo porId(String pedidoId);
 
     void marcarEmPreparo(String pedidoId);
+
+    void marcarConcluido(String pedidoId);
+
+    void marcarCancelado(String pedidoId);
 }

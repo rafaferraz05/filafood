@@ -35,6 +35,8 @@ class FluxoDePreparoTest {
     private final FichasEmMemoria fichas = new FichasEmMemoria();
     private final PedidosEmMemoria pedidos = new PedidosEmMemoria();
     private final BaixaDoPreparo baixa = new BaixaDoPreparo(insumos, pedidos, fichas);
+    private final DevolucaoDoCancelamento devolucao = new DevolucaoDoCancelamento(insumos, pedidos);
+    private final ConcluirPreparo concluir = new ConcluirPreparo(pedidos);
 
     @Test
     void explodeAFichaEDaBaixaEmTodosOsInsumos() {
@@ -83,6 +85,62 @@ class FluxoDePreparoTest {
         assertFalse(insumos.temSaidaDoPedido(pao, PEDIDO));
     }
 
+    @Test
+    void cancelaEDevolveExatamenteOQueFoiConsumido() {
+        Insumo pao = insumos.criar("Pão", "un", "10");
+        Insumo carne = insumos.criar("Carne", "kg", "3");
+        String produto = fichas.produtoCom(pao, "1", carne, "0.150");
+        pedidos.pedido(PEDIDO, new ItemDoPedido(produto, 2));
+        baixa.executar(new BaixaDePreparo(PEDIDO));
+
+        devolucao.executar(new CancelamentoDoPreparo(PEDIDO));
+
+        assertEquals(0, new BigDecimal("10").compareTo(insumos.saldo(pao)));
+        assertEquals(0, new BigDecimal("3").compareTo(insumos.saldo(carne)));
+        assertEquals(EstadoDoPedido.CANCELADO, pedidos.estado(PEDIDO));
+        assertEquals(1, insumos.devolucoes(pao));
+        assertEquals(1, insumos.devolucoes(carne));
+    }
+
+    @Test
+    void naoDevolveDuasVezes() {
+        Insumo pao = insumos.criar("Pão", "un", "10");
+        Insumo carne = insumos.criar("Carne", "kg", "1");
+        String produto = fichas.produtoCom(pao, "1", carne, "0.100");
+        pedidos.pedido(PEDIDO, new ItemDoPedido(produto, 1));
+        baixa.executar(new BaixaDePreparo(PEDIDO));
+        devolucao.executar(new CancelamentoDoPreparo(PEDIDO));
+
+        RegraDeNegocioException erro = assertThrows(RegraDeNegocioException.class,
+                () -> devolucao.executar(new CancelamentoDoPreparo(PEDIDO)));
+
+        assertEquals("a devolução só é aceita para pedido em preparo", erro.getMessage());
+        assertEquals(1, insumos.devolucoes(pao), "não podia haver uma segunda devolução");
+        assertEquals(0, new BigDecimal("10").compareTo(insumos.saldo(pao)));
+    }
+
+    @Test
+    void concluiOPreparo() {
+        Insumo pao = insumos.criar("Pão", "un", "10");
+        Insumo carne = insumos.criar("Carne", "kg", "1");
+        String produto = fichas.produtoCom(pao, "1", carne, "0.100");
+        pedidos.pedido(PEDIDO, new ItemDoPedido(produto, 1));
+        baixa.executar(new BaixaDePreparo(PEDIDO));
+
+        concluir.executar(PEDIDO);
+
+        assertEquals(EstadoDoPedido.CONCLUIDO, pedidos.estado(PEDIDO));
+    }
+
+    @Test
+    void naoConcluiPedidoQueNaoEstaEmPreparo() {
+        pedidos.pedido(PEDIDO);
+
+        RegraDeNegocioException erro = assertThrows(RegraDeNegocioException.class,
+                () -> concluir.executar(PEDIDO));
+
+        assertEquals("o preparo só pode ser concluído com o pedido em preparo", erro.getMessage());
+    }
     private static final class InsumosEmMemoria implements Insumos {
 
         private final Map<InsumoId, Insumo> dados = new LinkedHashMap<>();
@@ -97,6 +155,12 @@ class FluxoDePreparoTest {
 
         BigDecimal saldo(Insumo insumo) {
             return dados.get(insumo.id()).saldo();
+        }
+
+        long devolucoes(Insumo insumo) {
+            return dados.get(insumo.id()).movimentacoes().stream()
+                    .filter(m -> m.motivo() == br.edu.cesar.filafood.dominio.estoque.insumo.MovimentacaoEstoque.Motivo.DEVOLUCAO)
+                    .count();
         }
 
         boolean temSaidaDoPedido(Insumo insumo, String pedido) {
@@ -178,10 +242,23 @@ class FluxoDePreparoTest {
         }
 
         @Override
+        public void marcarConcluido(String pedidoId) {
+            mudar(pedidoId, EstadoDoPedido.CONCLUIDO);
+        }
+
+        @Override
+        public void marcarCancelado(String pedidoId) {
+            mudar(pedidoId, EstadoDoPedido.CANCELADO);
+        }
+
+        @Override
         public void marcarEmPreparo(String pedidoId) {
+            mudar(pedidoId, EstadoDoPedido.EM_PREPARO);
+        }
+
+        private void mudar(String pedidoId, EstadoDoPedido estado) {
             PedidoParaPreparo atual = porId(pedidoId);
-            porId.put(pedidoId, new PedidoParaPreparo(atual.id(), atual.unidadeId(), EstadoDoPedido.EM_PREPARO,
-                    atual.itens()));
+            porId.put(pedidoId, new PedidoParaPreparo(atual.id(), atual.unidadeId(), estado, atual.itens()));
         }
     }
 }
