@@ -141,6 +141,10 @@ pedido de referência enquanto a F4 não existe em [`adr/0011-pedido-de-referenc
   estouram `MultipleBagFetchException`.
 - Navegação entre telas (2026-11-08): `TelaDoMenu` enumera as telas com frontend, a `Topbar` monta os
   `RouterLink` e o `MainLayout` destaca a tela atual; `TelasDoMenuTest` guarda rota, menu e casca.
+- G-09 aplicado (2026-11-08): dinheiro e quantidade em `BigDecimal` (escalas 2 e 3; a média de
+  consumo usa escala 6 antes de virar ponto de pedido) e `double` fora do domínio de estoque.
+- Referência entre contextos por identidade (2026-11-08): a `FichaTecnica` guarda `ProdutoId`; o nome
+  do produto existe só na leitura (`ProdutoResumo`), nunca como cópia no agregado.
 
 **Próxima fatia:** P2.3 — Template Method da movimentação, baixa por explosão em transação única e
 teste de atomicidade.

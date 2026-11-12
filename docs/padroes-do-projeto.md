@@ -124,9 +124,11 @@ do domínio (`dominio-estoque` não importa Spring, JPA nem Vaadin). Faltam a 5�
 - **Vocabulário:** nomes de classe, campo, tela, cenário e mensagem saem de `docs/dominio.md`.
   A coluna "não usar" é proibição para conceitos **novos**.
 - **Prosa e mensagens:** português. Classes e métodos em português também, como já está no código.
-- **Tipos:** `BigDecimal` para dinheiro (escala 2) — aplicado em F1/F2; quantidade hoje é `double`
-  no código e ganha escala definida no G-09 (`BigDecimal`, `numeric(12,3)`); `LocalDate`/`Instant`
-  para tempo; `UUID` para identidade (a introduzir no G-08).
+- **Tipos:** `BigDecimal` para dinheiro (escala 2) e para quantidade (escala 3, `numeric(12,3)`, G-09
+  aplicado); a média de consumo usa escala 6 para não perder precisão antes de virar ponto de pedido;
+  `LocalDate`/`Instant` para tempo; `UUID` para identidade (aplicado no G-08).
+- **Referência entre contextos é identidade, não cópia:** a ficha técnica guarda `ProdutoId`, não o
+  nome do produto; quem resolve nome para a tela é o adaptador de leitura do cardápio.
 - **Sem chave natural:** nome não é id. O id é substituto e imutável.
 - **Estados:** enum com nome do domínio (`RASCUNHO`, `ENVIADO`, `EM_PREPARO`…). Transição inválida é
   `RegraDeNegocioException` com a mensagem exata da regra.
@@ -310,7 +312,7 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 
 - Anotar o domínio com `@Entity`, `@Service` ou `@Component`.
 - Importar um `dominio-*` dentro de outro `dominio-*`.
-- Usar `double`/`float` para dinheiro; para quantidade, só até o G-09 definir a escala.
+- Usar `double`/`float` para dinheiro ou quantidade: os dois são `BigDecimal` (escala 2 e 3).
 - Colocar `if` de regra na view ou no controller.
 - Editar migração já aplicada, ou usar `ddl-auto=update`.
 - Fazer `join` entre tabelas de contextos diferentes.
