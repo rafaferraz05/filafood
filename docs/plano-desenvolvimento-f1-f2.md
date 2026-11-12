@@ -145,6 +145,15 @@ pedido de referência enquanto a F4 não existe em [`adr/0011-pedido-de-referenc
   consumo usa escala 6 antes de virar ponto de pedido) e `double` fora do domínio de estoque.
 - Referência entre contextos por identidade (2026-11-08): a `FichaTecnica` guarda `ProdutoId`; o nome
   do produto existe só na leitura (`ProdutoResumo`), nunca como cópia no agregado.
+- P2.3 implementada (2026-11-12): `MovimentacaoNoEstoque` (Template Method) é o fluxo único de
+  entrada e baixa; `NecessidadeDoPedido` no domínio faz a explosão da ficha para a aplicação e para o
+  dublê de teste; `PedidoDoPreparo` tem adaptador de referência com as tabelas `pedido`/`item_pedido`
+  (`V003`) e o seed `V902` traz o pedido #1337 do protótipo. `FluxoDePreparoTest` cobre a baixa, a
+  falta de saldo sem gravar nada e o produto sem ficha.
+- P2.3 validada contra o banco (2026-11-12): Flyway aplicou `V003` e `V902` com o Hibernate em
+  `validate`, e a verificação executou a baixa real do pedido #1337 — Pão 3, Carne 0,6, Queijo 0,12 e
+  Tomate 0,08 — deixando o pedido em preparo. A verificação não repete a baixa: se o pedido já não
+  está `ENVIADO`, ela apenas informa o estado atual.
 
 **Próxima fatia:** P2.3 — Template Method da movimentação, baixa por explosão em transação única e
 teste de atomicidade.
