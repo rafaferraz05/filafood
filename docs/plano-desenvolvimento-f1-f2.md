@@ -162,6 +162,13 @@ pedido de referência enquanto a F4 não existe em [`adr/0011-pedido-de-referenc
   Flyway aplicou as 6 migrações do zero e as quatro telas responderam 200.
   O modo `out-of-order` do dev aparece como aviso mesmo em schema vazio — é esperado, o seed ocupa a
   faixa 900+.
+- P2.5 implementada e validada (2026-11-12): `PoliticaDeReposicao` no domínio, com
+  `ConsumoMedioSobrePrazoEEstoqueMinimo` (padrão da RN 6) e `SemReposicao`; o `Insumo` deixou de
+  calcular ponto de pedido e "a repor" e só informa o consumo médio. `ReposicaoConfig` declara o bean,
+  `ListarInsumos` e `DetalharInsumo` injetam a política e o BDD usa a mesma implementação.
+  `PoliticaDeReposicaoTest` cobre saldo igual ao ponto, saldo acima, insumo inativo, sem saídas em 30
+  dias e a política "sem reposição"; a aplicação subiu com as telas de insumos, ficha e preparo
+  respondendo 200.
 
 **Próxima fatia:** P2.3 — Template Method da movimentação, baixa por explosão em transação única e
 teste de atomicidade.
