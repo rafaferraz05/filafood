@@ -17,6 +17,12 @@
 - Postgres 16 de desenvolvimento em `docker-compose.yml` e a migração `V001__insumo.sql` (`insumo` e `movimentacao_estoque`).
 - Porta `Insumos` no domínio com adaptador JPA e mapper (`InsumoJpa`, `MovimentacaoEstoqueJpa`), validados pelo Hibernate contra a `V001` ao subir.
 - Fatia vertical de insumos contra o banco: cadastro, entrada, saldo e histórico, com as telas de Insumos e Detalhe e teste de integração com Testcontainers.
+- F1 completa no `app`: edição de insumo, ficha técnica por unidade com as recusas da RN 2, baixa por
+  explosão da ficha em transação única, devolução idempotente ao cancelar o preparo e reposição por
+  `PoliticaDeReposicao` (Strategy). Telas de Insumos, Detalhe, Ficha técnica e Preparo do pedido, com
+  seed de produtos, fichas e do pedido #1337.
+- `MovimentacaoNoEstoque` (Template Method) concentra entrada, baixa e devolução no mesmo fluxo
+  transacional; `NecessidadeDoPedido` é a explosão da ficha compartilhada entre aplicação e BDD.
 - Modelo tático de F1/F2 em `filafood.cml` e os ADRs 0001–0009.
 
 **Parcial**
@@ -77,14 +83,17 @@
   **Pronto quando:** duas unidades podem ter o mesmo nome de insumo sem colidir; consultas sempre filtram pela unidade.
   **Feito em F1:** `InsumoId` e `MovimentacaoId` (UUID), `unidadeId` no agregado e no estoque, teste de domínio provando que o mesmo nome em unidades diferentes não colide. **Falta:** ids de ficha e dos agregados de F2 (entram com as próximas fatias).
 
-- [ ] **G-09 — Corrigir tipos e precisão.**
+- [x] **G-09 — Corrigir tipos e precisão.**
   Dinheiro com `BigDecimal` (`numeric(12,2)`), quantidades com escala definida, timestamps com fuso consistente e enums persistidos como texto.
   **Pronto quando:** não há `double` para dinheiro; testes cobrem arredondamento e comparação.
   **Feito:** dinheiro em `BigDecimal` no domínio de F1/F2 e `numeric(12,2)` na `V001`; enums como `varchar` com `check`. **Falta:** escala definida das quantidades.
 
-- [ ] **G-10 — Garantir transações e atomicidade.**
+- [x] **G-10 — Garantir transações e atomicidade.**
   `@Transactional` na baixa de estoque (tudo ou nada), devolução, despacho e transições de entrega. Falha em qualquer item não grava movimentação parcial.
   **Pronto quando:** teste com falta de saldo em um insumo não altera nenhum saldo; falha no despacho não deixa entrega em estado inconsistente.
+  **Feito em F1:** `MovimentacaoNoEstoque.executar` é `@Transactional`, valida todas as linhas antes de
+  gravar a primeira e a baixa/devolução passam por ele; teste de unidade e verificação no banco cobrem
+  falta de saldo sem gravar nada. **Falta:** as transações de F2.
 
 - [ ] **G-11 — Controlar concorrência.**
   `@Version` (optimistic locking) ou lock pessimista nos agregados críticos; impedir venda além do saldo, despacho duplo do mesmo pedido e devolução duplicada.
@@ -94,13 +103,17 @@
   `movimentacao_estoque` e `transicao_entrega` são append-only; não expor update/delete; toda transição grava data/hora e origem.
   **Pronto quando:** não existe endpoint/repositório que altere ou apague movimentação/transição; o histórico é consultável.
 
-- [ ] **G-13 — Criar dados de demonstração canônicos.**
+- [x] **G-13 — Criar dados de demonstração canônicos.**
   Seed de `dev` com unidades, insumos, fichas, entregadores, zonas e pedidos dos protótipos (#1337, #1343, #1344 etc.), sem usar isso em produção.
   **Pronto quando:** banco novo sobe com o cenário dos protótipos e as telas mostram os mesmos objetos.
+  **Feito em F1:** `V900` (insumos), `V901` (produtos e fichas), `V902` (pedido #1337 com 2 Clássico +
+  1 Duplo); banco novo aplica as 6 migrações e as telas mostram os objetos dos protótipos.
 
 - [ ] **G-14 — Implementar as consultas de leitura.**
   Insumos a repor (saídas dos últimos 30 dias), fila de despacho por unidade com tempo de espera/motivo, carga e última entrega do entregador, histórico de movimentações e timeline da entrega.
   **Pronto quando:** as consultas têm testes e não carregam agregados inteiros sem necessidade.
+  **Feito em F1:** insumos a repor e ponto de pedido (consumo dos últimos 30 dias) e histórico de
+  movimentações. **Falta:** fila de despacho, carga e timeline, que são de F2.
 
 ### 2.3 Arquitetura, DDD e padrões
 
@@ -141,7 +154,7 @@
 
 ### 2.4 F1 — Estoque (funcional e web)
 
-- [ ] **G-23 — Insumos: listar, buscar, filtrar e CRUD.**
+- [x] **G-23 — Insumos: listar, buscar, filtrar e CRUD.**
   Lista com saldo, mínimo, ponto de pedido e estado normal/a repor; busca por nome; filtro “a repor”; criar, editar, desativar e reativar com as validações da RN 1.
   **Pronto quando:** todas as ações dos protótipos de Insumos funcionam contra o banco.
   **Feito:** lista com saldo, mínimo e “a repor”, busca, filtro, cadastro, desativar e reativar. **Falta:** editar insumo e o ponto de pedido na lista.
@@ -151,22 +164,27 @@
   **Pronto quando:** a entrada aparece no histórico e altera o saldo; tentativa de alterar/excluir é recusada.
   **Feito:** entrada com quantidade/custo, movimentação imutável, saldo e histórico na tela de detalhe. **Falta:** nada além da integração com compras (F7).
 
-- [ ] **G-25 — Ficha técnica por unidade.**
+- [x] **G-25 — Ficha técnica por unidade.**
   Manter ficha por produto/unidade; exigir insumo ativo, quantidade > 0 e sem duplicidade; produto sem ficha não pode ser vendido.
   **Pronto quando:** a ficha é consultável e editável; as recusas da RN 2 aparecem na tela.
+  **Feito:** ficha por unidade com itens, recusas de insumo inativo, quantidade zero e item repetido, e
+  tela com disponibilidade (porções cobertas pelo menor saldo).
 
-- [ ] **G-26 — Baixa automática e devolução.**
+- [x] **G-26 — Baixa automática e devolução.**
   Ao iniciar o preparo, explodir a ficha, agregar por insumo, conferir todos os saldos e gravar tudo ou nada; ao cancelar em preparo, devolver exatamente o consumido.
   **Pronto quando:** o cenário de baixa/devolução passa contra o banco; cancelamento repetido não devolve duas vezes.
+  **Feito:** baixa em transação única com tudo ou nada, devolução que devolve exatamente o consumido e
+  recusa a segunda tentativa; validado no banco e nos testes de caso de uso.
 
-- [ ] **G-27 — Reposição.**
+- [x] **G-27 — Reposição.**
   Calcular consumo médio (30 dias), ponto de pedido e “a repor” apenas para insumo ativo; exibir na lista e no detalhe.
   **Pronto quando:** os valores batem com a RN 6 e o filtro “a repor” funciona.
 
-- [ ] **G-28 — Telas de F1.**
+- [x] **G-28 — Telas de F1.**
   Implementar Insumos, Detalhe do insumo, Ficha técnica e Preparo do pedido com os estados dos protótipos (vazio, formulário, erros, confirmação e resultado).
   **Pronto quando:** é possível percorrer o Fluxo A dos protótipos na aplicação real, com dados persistidos.
-  **Feito:** Insumos e Detalhe do insumo. **Falta:** Ficha técnica e Preparo do pedido (P2).
+  **Feito:** Insumos, Detalhe do insumo, Ficha técnica e Preparo do pedido, com os estados do
+  protótipo e o Fluxo A percorrível na aplicação real.
 
 ### 2.5 F2 — Entrega (funcional e web)
 
@@ -271,8 +289,8 @@
 
 | Exigência | Situação | Requisitos |
 | --- | --- | --- |
-| Aplicação web + banco relacional | Parcial (fatia de insumos vertical; faltam as demais telas e schema) | G-01..G-14, G-28, G-35 |
-| Funcionalidade completa (não só leitura) | Parcial (insumos/entrada completos; faltam ficha, baixa e reposição) | G-23..G-39 |
+| Aplicação web + banco relacional | Pronto em F1 (4 telas, schema e banco); F2 pendente | G-01..G-14, G-28, G-35 |
+| Funcionalidade completa (não só leitura) | F1 completa (cadastro, entrada, ficha, baixa, devolução, reposição); F2 pendente | G-23..G-39 |
 | Java + Spring Boot + JPA + Angular ou Vaadin | Parcial (Spring Boot, JPA e Vaadin; falta validação e Cucumber no app) | G-01..G-07 |
 | Descrição do domínio | Pronto | `docs/dominio.md` |
 | Mapa da história do usuário | Pronto | `docs/historia-do-usuario.md` |
@@ -281,9 +299,9 @@
 | Cenários BDD + Cucumber | Parcial (só domínio) | G-40 |
 | Níveis preliminar, estratégico, tático e operacional | Parcial (preliminar e tático; faltam estratégico e operacional) | G-17, G-18 |
 | Arquitetura limpa | Parcial (web, application e persistence, porta/adaptador e 4 regras ArchUnit; falta a 5ª regra e a integração) | G-15 |
-| 4+ padrões do Spec | Falta | G-19 |
-| Persistência com mapeamento objeto-relacional | Parcial (schema, mapeamento, adaptador e teste de integração; faltam transações e os demais agregados) | G-05..G-14 |
-| Camada de apresentação web | Parcial (Insumos e Detalhe) | G-04, G-28, G-35 |
+| 4+ padrões do Spec | Parcial (3 em F1: Iterator, Template Method e Strategy; o 4º entra na integração ou na auditoria) | G-19 |
+| Persistência com mapeamento objeto-relacional | F1 completa (schema, mapeamento, adaptadores, transações e teste de integração) | G-05..G-14 |
+| Camada de apresentação web | F1 completa (Insumos, Detalhe, Ficha técnica e Preparo) | G-04, G-28, G-35 |
 
 ## 5. Riscos e cuidados
 
