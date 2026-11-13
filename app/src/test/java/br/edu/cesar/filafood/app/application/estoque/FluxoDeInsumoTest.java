@@ -18,6 +18,7 @@ import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.reposicao.ConsumoMedioSobrePrazoEEstoqueMinimo;
 
 /** Casos de uso de insumo com a porta em memória (padrões §9: fake em vez de mock). */
 class FluxoDeInsumoTest {
@@ -25,7 +26,7 @@ class FluxoDeInsumoTest {
     private final InsumosEmMemoria insumos = new InsumosEmMemoria();
     private final CadastrarInsumo cadastrar = new CadastrarInsumo(insumos);
     private final RegistrarEntradaDeInsumo entrada = new RegistrarEntradaDeInsumo(insumos);
-    private final ListarInsumos listar = new ListarInsumos(insumos);
+    private final ListarInsumos listar = new ListarInsumos(insumos, new ConsumoMedioSobrePrazoEEstoqueMinimo());
     private final AlterarEstadoDoInsumo estado = new AlterarEstadoDoInsumo(insumos);
     private final String unidade = UUID.randomUUID().toString();
 

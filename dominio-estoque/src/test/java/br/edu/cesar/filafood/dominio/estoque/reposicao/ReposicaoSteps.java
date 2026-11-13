@@ -9,6 +9,8 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
+import br.edu.cesar.filafood.dominio.estoque.reposicao.ConsumoMedioSobrePrazoEEstoqueMinimo;
+import br.edu.cesar.filafood.dominio.estoque.reposicao.PoliticaDeReposicao;
 import br.edu.cesar.filafood.dominio.estoque.suporte.MundoDoEstoque;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
@@ -20,6 +22,7 @@ public class ReposicaoSteps {
     private static final String CONSUMO_DE_TESTE = "consumo-de-teste";
 
     private final MundoDoEstoque mundo;
+    private final PoliticaDeReposicao politica = new ConsumoMedioSobrePrazoEEstoqueMinimo();
 
     public ReposicaoSteps(MundoDoEstoque mundo) {
         this.mundo = mundo;
@@ -74,17 +77,17 @@ public class ReposicaoSteps {
 
     @Então("o ponto de pedido do insumo {string} é {double}")
     public void pontoDePedidoEh(String insumo, double esperado) {
-        assertEquals(0, mundo.estoque.insumo(insumo).pontoDePedido(LocalDate.now())
+        assertEquals(0, politica.pontoDePedido(mundo.estoque.insumo(insumo), LocalDate.now())
                 .compareTo(BigDecimal.valueOf(esperado)), "ponto de pedido divergente");
     }
 
     @Então("o insumo {string} fica a repor")
     public void ficaARepor(String insumo) {
-        assertTrue(mundo.estoque.insumo(insumo).estaARepor(LocalDate.now()), "esperava o insumo a repor");
+        assertTrue(politica.estaARepor(mundo.estoque.insumo(insumo), LocalDate.now()), "esperava o insumo a repor");
     }
 
     @Então("o insumo {string} fica normal")
     public void ficaNormal(String insumo) {
-        assertFalse(mundo.estoque.insumo(insumo).estaARepor(LocalDate.now()), "esperava o insumo normal");
+        assertFalse(politica.estaARepor(mundo.estoque.insumo(insumo), LocalDate.now()), "esperava o insumo normal");
     }
 }

@@ -140,23 +140,8 @@ public class Insumo {
         return saidas.divide(BigDecimal.valueOf(30), ESCALA_DO_CONSUMO, RoundingMode.HALF_UP);
     }
 
-    /** Consumo médio diário vezes o prazo de entrega, mais o estoque mínimo. */
-    public BigDecimal pontoDePedido(LocalDate referencia) {
-        return consumoMedioDiario(referencia)
-                .multiply(BigDecimal.valueOf(prazoDeEntregaEmDias))
-                .add(estoqueMinimo)
-                .setScale(ESCALA_DA_QUANTIDADE, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * O insumo está a repor quando o saldo é menor ou igual ao ponto de pedido.
-     *
-     * Insumo inativo não é monitorado: ele não entra em ficha técnica e não aceita movimentação,
-     * então não há consumo a repor.
-     */
-    public boolean estaARepor(LocalDate referencia) {
-        return ativo && saldo().compareTo(pontoDePedido(referencia)) <= 0;
-    }
+    // O ponto de pedido e o sinal de "a repor" são da PoliticaDeReposicao (RN 6, ADR 0010): a
+    // entidade só informa o consumo médio.
 
     /** Recusa por definição: a movimentação é imutável, então uma entrada não pode ser alterada. */
     public void alterarQuantidadeDaMovimentacao(BigDecimal quantidade) {

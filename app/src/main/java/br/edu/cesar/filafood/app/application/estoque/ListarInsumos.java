@@ -10,15 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.reposicao.PoliticaDeReposicao;
 
 /** Lista os insumos da unidade com saldo, ponto de pedido e sinal de reposição (D-11). */
 @Service
 public class ListarInsumos {
 
     private final Insumos insumos;
+    private final PoliticaDeReposicao politica;
 
-    public ListarInsumos(Insumos insumos) {
+    public ListarInsumos(Insumos insumos, PoliticaDeReposicao politica) {
         this.insumos = insumos;
+        this.politica = politica;
     }
 
     @Transactional(readOnly = true)
@@ -31,9 +34,9 @@ public class ListarInsumos {
                         insumo.unidadeDeMedida(),
                         quantidade(insumo.saldo()),
                         quantidade(insumo.estoqueMinimo()),
-                        quantidade(insumo.pontoDePedido(hoje)),
+                        quantidade(politica.pontoDePedido(insumo, hoje)),
                         insumo.isAtivo(),
-                        insumo.estaARepor(hoje)))
+                        politica.estaARepor(insumo, hoje)))
                 .toList();
     }
 

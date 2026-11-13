@@ -12,15 +12,18 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
 import br.edu.cesar.filafood.dominio.estoque.insumo.MovimentacaoEstoque;
+import br.edu.cesar.filafood.dominio.estoque.reposicao.PoliticaDeReposicao;
 
 /** Dados do insumo e do histórico para a tela de detalhe. */
 @Service
 public class DetalharInsumo {
 
     private final Insumos insumos;
+    private final PoliticaDeReposicao politica;
 
-    public DetalharInsumo(Insumos insumos) {
+    public DetalharInsumo(Insumos insumos, PoliticaDeReposicao politica) {
         this.insumos = insumos;
+        this.politica = politica;
     }
 
     @Transactional(readOnly = true)
@@ -42,11 +45,11 @@ public class DetalharInsumo {
                 ListarInsumos.quantidade(insumo.saldo()),
                 ListarInsumos.quantidade(insumo.consumoMedioDiario(hoje)),
                 ListarInsumos.quantidade(insumo.estoqueMinimo()),
-                ListarInsumos.quantidade(insumo.pontoDePedido(hoje)),
+                ListarInsumos.quantidade(politica.pontoDePedido(insumo, hoje)),
                 custoDaUltimaEntrada,
                 insumo.prazoDeEntregaEmDias(),
                 insumo.isAtivo(),
-                insumo.estaARepor(hoje),
+                politica.estaARepor(insumo, hoje),
                 insumo.movimentacoes().stream()
                         .map(movimentacao -> new MovimentacaoResumo(
                                 movimentacao.tipo().name(),
