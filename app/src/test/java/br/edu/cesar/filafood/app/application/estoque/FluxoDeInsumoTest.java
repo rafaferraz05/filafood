@@ -28,6 +28,7 @@ class FluxoDeInsumoTest {
     private final RegistrarEntradaDeInsumo entrada = new RegistrarEntradaDeInsumo(insumos);
     private final ListarInsumos listar = new ListarInsumos(insumos, new ConsumoMedioSobrePrazoEEstoqueMinimo());
     private final AlterarEstadoDoInsumo estado = new AlterarEstadoDoInsumo(insumos);
+    private final EditarInsumo editar = new EditarInsumo(insumos);
     private final String unidade = UUID.randomUUID().toString();
 
     @Test
@@ -66,6 +67,40 @@ class FluxoDeInsumoTest {
         assertEquals("insumo não encontrado", excecao.getMessage());
     }
 
+    @Test
+    void editaOsDadosDoInsumo() {
+        InsumoId id = cadastrar.executar(new NovoInsumo(unidade, "Farinha", "kg", BigDecimal.valueOf(5), 3));
+
+        editar.executar(new AlteracaoDeInsumo(id.toString(), "Farinha de trigo", "sc", BigDecimal.valueOf(8), 5));
+
+        InsumoResumo resumo = listar.executar(unidade).get(0);
+        assertEquals("Farinha de trigo", resumo.nome());
+        assertEquals("sc", resumo.unidadeDeMedida());
+        assertEquals(0, BigDecimal.valueOf(8).compareTo(resumo.estoqueMinimo()));
+        assertEquals(5, resumo.prazoDeEntregaEmDias());
+    }
+
+    @Test
+    void recusaEdicaoComNomeDeOutroInsumo() {
+        cadastrar.executar(new NovoInsumo(unidade, "Farinha", "kg", BigDecimal.valueOf(5), 3));
+        InsumoId acucar = cadastrar.executar(new NovoInsumo(unidade, "Açúcar", "kg", BigDecimal.valueOf(5), 3));
+
+        RegraDeNegocioException erro = assertThrows(RegraDeNegocioException.class,
+                () -> editar.executar(new AlteracaoDeInsumo(acucar.toString(), "Farinha", "kg",
+                        BigDecimal.valueOf(5), 3)));
+
+        assertEquals("já existe um insumo com esse nome na unidade", erro.getMessage());
+    }
+
+    @Test
+    void recusaEdicaoComEstoqueMinimoInvalido() {
+        InsumoId id = cadastrar.executar(new NovoInsumo(unidade, "Farinha", "kg", BigDecimal.valueOf(5), 3));
+
+        RegraDeNegocioException erro = assertThrows(RegraDeNegocioException.class,
+                () -> editar.executar(new AlteracaoDeInsumo(id.toString(), "Farinha", "kg", BigDecimal.ZERO, 3)));
+
+        assertEquals("o estoque mínimo deve ser maior que zero", erro.getMessage());
+    }
     /** Fake da porta: guarda os agregados por id, como o adaptador faria no banco. */
     private static final class InsumosEmMemoria implements Insumos {
 
@@ -74,6 +109,13 @@ class FluxoDeInsumoTest {
         @Override
         public Optional<Insumo> porId(InsumoId id) {
             return Optional.ofNullable(dados.get(id));
+        }
+
+        @Override
+        public Optional<Insumo> porNome(String unidadeId, String nome) {
+            return dados.values().stream()
+                    .filter(insumo -> insumo.unidadeId().equals(unidadeId) && insumo.nome().equals(nome))
+                    .findFirst();
         }
 
         @Override

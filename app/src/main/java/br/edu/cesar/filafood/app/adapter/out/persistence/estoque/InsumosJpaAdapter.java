@@ -28,6 +28,11 @@ class InsumosJpaAdapter implements Insumos {
     }
 
     @Override
+    public Optional<Insumo> porNome(String unidadeId, String nome) {
+        return repositorio.findByUnidadeIdAndNome(UUID.fromString(unidadeId), nome).map(mapper::paraDominio);
+    }
+
+    @Override
     public List<Insumo> doEstoqueDaUnidade(String unidadeId) {
         return repositorio.findByUnidadeId(UUID.fromString(unidadeId)).stream()
                 .map(mapper::paraDominio)

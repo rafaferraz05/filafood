@@ -67,6 +67,14 @@ public class InsumoJpa {
         this.estado = estado;
     }
 
+    void atualizarDados(String nome, String unidadeDeMedida, BigDecimal estoqueMinimo,
+            int prazoDeEntregaEmDias) {
+        this.nome = nome;
+        this.unidadeDeMedida = unidadeDeMedida;
+        this.estoqueMinimo = estoqueMinimo;
+        this.prazoDeEntregaEmDias = prazoDeEntregaEmDias;
+    }
+
     void atualizarEstado(String estado) {
         this.estado = estado;
     }

@@ -23,10 +23,10 @@ public class Insumo {
 
     private final InsumoId id;
     private final String unidadeId;
-    private final String nome;
-    private final String unidadeDeMedida;
-    private final BigDecimal estoqueMinimo;
-    private final int prazoDeEntregaEmDias;
+    private String nome;
+    private String unidadeDeMedida;
+    private BigDecimal estoqueMinimo;
+    private int prazoDeEntregaEmDias;
     private final List<MovimentacaoEstoque> movimentacoes = new ArrayList<>();
     private boolean ativo = true;
 
@@ -67,6 +67,24 @@ public class Insumo {
                     : saldo.subtract(movimentacao.quantidade());
         }
         return saldo;
+    }
+
+    /**
+     * Edita os dados do cadastro (RN 1) sem tocar na identidade nem no histórico. A colisão de nome
+     * na unidade é conferida pelo caso de uso, que conhece a porta.
+     */
+    public void alterarDados(String nome, String unidadeDeMedida, BigDecimal estoqueMinimo,
+            int prazoDeEntregaEmDias) {
+        if (nome == null || nome.isBlank()) {
+            throw new RegraDeNegocioException("informe o nome do insumo");
+        }
+        if (estoqueMinimo == null || estoqueMinimo.signum() <= 0) {
+            throw new RegraDeNegocioException("o estoque mínimo deve ser maior que zero");
+        }
+        this.nome = nome;
+        this.unidadeDeMedida = unidadeDeMedida;
+        this.estoqueMinimo = quantidade(estoqueMinimo);
+        this.prazoDeEntregaEmDias = prazoDeEntregaEmDias;
     }
 
     public void desativar() {

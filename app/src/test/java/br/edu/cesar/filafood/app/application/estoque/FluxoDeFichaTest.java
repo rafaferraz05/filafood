@@ -168,6 +168,13 @@ class FluxoDeFichaTest {
         }
 
         @Override
+        public Optional<Insumo> porNome(String unidadeId, String nome) {
+            return cadastrados.values().stream()
+                    .filter(insumo -> insumo.unidadeId().equals(unidadeId) && insumo.nome().equals(nome))
+                    .findFirst();
+        }
+
+        @Override
         public List<Insumo> doEstoqueDaUnidade(String unidadeId) {
             return List.copyOf(cadastrados.values());
         }

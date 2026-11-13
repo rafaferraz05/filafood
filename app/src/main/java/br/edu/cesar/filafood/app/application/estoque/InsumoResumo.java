@@ -12,6 +12,7 @@ public record InsumoResumo(
         BigDecimal saldo,
         BigDecimal estoqueMinimo,
         BigDecimal pontoDePedido,
+        int prazoDeEntregaEmDias,
         boolean ativo,
         boolean aRepor) {
 }

@@ -35,6 +35,7 @@ public class ListarInsumos {
                         quantidade(insumo.saldo()),
                         quantidade(insumo.estoqueMinimo()),
                         quantidade(politica.pontoDePedido(insumo, hoje)),
+                        insumo.prazoDeEntregaEmDias(),
                         insumo.isAtivo(),
                         politica.estaARepor(insumo, hoje)))
                 .toList();

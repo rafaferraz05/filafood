@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import br.edu.cesar.filafood.app.application.estoque.AdicionarItemNaFicha;
+import br.edu.cesar.filafood.app.application.estoque.AlteracaoDeInsumo;
 import br.edu.cesar.filafood.app.application.estoque.AlterarEstadoDoInsumo;
 import br.edu.cesar.filafood.app.application.estoque.BaixaDePreparo;
 import br.edu.cesar.filafood.app.application.estoque.BaixaDoPreparo;
@@ -16,6 +17,7 @@ import br.edu.cesar.filafood.app.application.estoque.CadastrarInsumo;
 import br.edu.cesar.filafood.app.application.estoque.CancelamentoDoPreparo;
 import br.edu.cesar.filafood.app.application.estoque.DetalharInsumo;
 import br.edu.cesar.filafood.app.application.estoque.DevolucaoDoCancelamento;
+import br.edu.cesar.filafood.app.application.estoque.EditarInsumo;
 import br.edu.cesar.filafood.app.application.estoque.EntradaDeInsumo;
 import br.edu.cesar.filafood.app.application.estoque.FichaDetalhe;
 import br.edu.cesar.filafood.app.application.estoque.FichasDaUnidade;
@@ -59,12 +61,13 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
     private final PedidoDoPreparo pedidos;
     private final BaixaDoPreparo baixa;
     private final DevolucaoDoCancelamento devolucao;
+    private final EditarInsumo editar;
 
     public VerificacaoDeOperacoes(ListarInsumos listar, DetalharInsumo detalhar,
             RegistrarEntradaDeInsumo registrarEntrada, AlterarEstadoDoInsumo alterarEstado,
             CadastrarInsumo cadastrar, ListarFichasDaUnidade listarFichas,
             AdicionarItemNaFicha adicionarItem, RemoverItemDaFicha removerItem, PedidoDoPreparo pedidos,
-            BaixaDoPreparo baixa, DevolucaoDoCancelamento devolucao) {
+            BaixaDoPreparo baixa, DevolucaoDoCancelamento devolucao, EditarInsumo editar) {
         this.listar = listar;
         this.detalhar = detalhar;
         this.registrarEntrada = registrarEntrada;
@@ -76,6 +79,7 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         this.pedidos = pedidos;
         this.baixa = baixa;
         this.devolucao = devolucao;
+        this.editar = editar;
     }
 
     @Override
@@ -104,8 +108,21 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
         alterarEstado.reativar(novo.toString());
         exigir(buscar(listar.executar(unidade), nome).ativo(), "insumo deveria estar ativo");
 
+        editar.executar(new AlteracaoDeInsumo(novo.toString(), nome + " editado", "sc", new BigDecimal("9"), 7));
+        InsumoResumo editado = buscar(listar.executar(unidade), nome + " editado");
+        exigir(comparar(editado.estoqueMinimo(), "9.000"),
+                "estoque mínimo do insumo editado deveria ser 9, veio " + editado.estoqueMinimo());
+        exigir(editado.prazoDeEntregaEmDias() == 7, "prazo do insumo editado deveria ser 7");
+        try {
+            editar.executar(new AlteracaoDeInsumo(novo.toString(), "Pão", "kg", new BigDecimal("9"), 7));
+            throw new IllegalStateException("VERIFICACAO FALHOU: nome repetido na edição deveria ser recusado");
+        } catch (RegraDeNegocioException esperada) {
+            exigir("já existe um insumo com esse nome na unidade".equals(esperada.getMessage()),
+                    "mensagem inesperada da edição repetida: " + esperada.getMessage());
+        }
+
         System.out.println("VERIFICACAO OK: " + insumos.size()
-                + " insumos no seed; cadastro, entrada, saldo, a-repor, desativar e reativar conferidos.");
+                + " insumos no seed; cadastro, entrada, saldo, a-repor, desativar, reativar e editar conferidos.");
         verificarFichas(unidade, pao);
         verificarPreparo(unidade);
     }

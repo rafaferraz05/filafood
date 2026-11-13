@@ -11,6 +11,9 @@ public interface Insumos {
 
     Optional<Insumo> porId(InsumoId id);
 
+    /** Usado na edição: o nome é único por unidade (RN 1). */
+    Optional<Insumo> porNome(String unidadeId, String nome);
+
     List<Insumo> doEstoqueDaUnidade(String unidadeId);
 
     void salvar(Insumo insumo);

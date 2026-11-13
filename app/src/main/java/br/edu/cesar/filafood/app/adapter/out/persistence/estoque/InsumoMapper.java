@@ -34,6 +34,8 @@ class InsumoMapper {
     }
 
     void atualizar(InsumoJpa entidade, Insumo insumo) {
+        entidade.atualizarDados(insumo.nome(), insumo.unidadeDeMedida(), insumo.estoqueMinimo(),
+                insumo.prazoDeEntregaEmDias());
         entidade.atualizarEstado(estado(insumo));
         Set<UUID> existentes = new HashSet<>();
         for (MovimentacaoEstoqueJpa movimentacao : entidade.movimentacoes()) {

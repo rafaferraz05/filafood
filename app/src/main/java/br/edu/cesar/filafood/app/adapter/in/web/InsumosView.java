@@ -21,8 +21,10 @@ import br.edu.cesar.filafood.app.adapter.in.web.layout.Campo;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Entradas;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.MainLayout;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Tabela;
+import br.edu.cesar.filafood.app.application.estoque.AlteracaoDeInsumo;
 import br.edu.cesar.filafood.app.application.estoque.AlterarEstadoDoInsumo;
 import br.edu.cesar.filafood.app.application.estoque.CadastrarInsumo;
+import br.edu.cesar.filafood.app.application.estoque.EditarInsumo;
 import br.edu.cesar.filafood.app.application.estoque.InsumoResumo;
 import br.edu.cesar.filafood.app.application.estoque.ListarInsumos;
 import br.edu.cesar.filafood.app.application.estoque.NovoInsumo;
@@ -41,6 +43,7 @@ public class InsumosView extends Div {
     private final ListarInsumos listar;
     private final CadastrarInsumo cadastrar;
     private final AlterarEstadoDoInsumo alterarEstado;
+    private final EditarInsumo editar;
 
     private final Cabecalho cabecalho = new Cabecalho("Insumos",
             "Estoque da unidade, com saldo, estoque mínimo e ponto de pedido.");
@@ -50,10 +53,12 @@ public class InsumosView extends Div {
     private final Paragraph aviso = new Paragraph();
     private List<InsumoResumo> insumos = List.of();
 
-    public InsumosView(ListarInsumos listar, CadastrarInsumo cadastrar, AlterarEstadoDoInsumo alterarEstado) {
+    public InsumosView(ListarInsumos listar, CadastrarInsumo cadastrar, AlterarEstadoDoInsumo alterarEstado,
+            EditarInsumo editar) {
         this.listar = listar;
         this.cadastrar = cadastrar;
         this.alterarEstado = alterarEstado;
+        this.editar = editar;
 
         busca.campo().addValueChangeListener(evento -> render());
         filtro.setItems("Estado: todos", "Estado: normal", "Estado: a repor", "Estado: inativo");
@@ -139,6 +144,7 @@ public class InsumosView extends Div {
     private Component acoes(InsumoResumo insumo) {
         Div acoes = new Div();
         acoes.addClassName("acoes");
+        acoes.add(Acao.link("Editar", () -> abrirEdicao(insumo)));
         acoes.add(Acao.link("Entrada",
                 () -> getUI().ifPresent(ui -> ui.navigate("insumos/" + insumo.id()))));
         acoes.add(insumo.ativo()
@@ -166,7 +172,25 @@ public class InsumosView extends Div {
         Input unidade = Entradas.texto();
         Input minimo = Entradas.texto();
         Input prazo = Entradas.texto();
+        abrirFormulario("Novo insumo", nome, unidade, minimo, prazo,
+                dialogo -> salvarCadastro(dialogo, nome, unidade, minimo, prazo));
+    }
 
+    private void abrirEdicao(InsumoResumo insumo) {
+        Input nome = Entradas.texto();
+        nome.setValue(insumo.nome());
+        Input unidade = Entradas.texto();
+        unidade.setValue(insumo.unidadeDeMedida());
+        Input minimo = Entradas.texto();
+        minimo.setValue(texto(insumo.estoqueMinimo()));
+        Input prazo = Entradas.texto();
+        prazo.setValue(String.valueOf(insumo.prazoDeEntregaEmDias()));
+        abrirFormulario("Editar insumo", nome, unidade, minimo, prazo,
+                dialogo -> salvarEdicao(dialogo, insumo, nome, unidade, minimo, prazo));
+    }
+
+    private void abrirFormulario(String tituloTexto, Input nome, Input unidade, Input minimo, Input prazo,
+            java.util.function.Consumer<Dialog> salvar) {
         Dialog dialogo = new Dialog();
         dialogo.setWidth("420px");
         dialogo.getElement().getStyle().set("padding", "0");
@@ -176,7 +200,7 @@ public class InsumosView extends Div {
 
         Div titulo = new Div();
         titulo.addClassName("confirmacao-titulo");
-        titulo.setText("Novo insumo");
+        titulo.setText(tituloTexto);
 
         Div corpo = new Div();
         corpo.addClassName("card-corpo");
@@ -186,7 +210,7 @@ public class InsumosView extends Div {
         Div acoesForm = new Div();
         acoesForm.addClassName("acoes-form");
         acoesForm.add(
-                Acao.primario("Salvar", () -> salvar(dialogo, nome, unidade, minimo, prazo)),
+                Acao.primario("Salvar", () -> salvar.accept(dialogo)),
                 Acao.claro("Cancelar", dialogo::close));
 
         caixa.add(titulo, corpo, acoesForm);
@@ -194,12 +218,25 @@ public class InsumosView extends Div {
         dialogo.open();
     }
 
-    private void salvar(Dialog dialogo, Input nome, Input unidade, Input minimo, Input prazo) {
+    private void salvarCadastro(Dialog dialogo, Input nome, Input unidade, Input minimo, Input prazo) {
         try {
             cadastrar.executar(new NovoInsumo(UnidadeDeDemonstracao.ID, nome.getValue(), unidade.getValue(),
                     numero(minimo.getValue()), inteiro(prazo.getValue())));
             dialogo.close();
             aviso("Insumo cadastrado.", true);
+            recarregar();
+        } catch (RegraDeNegocioException | NumberFormatException excecao) {
+            aviso(excecao.getMessage(), false);
+        }
+    }
+
+    private void salvarEdicao(Dialog dialogo, InsumoResumo insumo, Input nome, Input unidade, Input minimo,
+            Input prazo) {
+        try {
+            editar.executar(new AlteracaoDeInsumo(insumo.id().toString(), nome.getValue(), unidade.getValue(),
+                    numero(minimo.getValue()), inteiro(prazo.getValue())));
+            dialogo.close();
+            aviso("Insumo atualizado.", true);
             recarregar();
         } catch (RegraDeNegocioException | NumberFormatException excecao) {
             aviso(excecao.getMessage(), false);

@@ -19,4 +19,6 @@ interface InsumoJpaRepository extends JpaRepository<InsumoJpa, UUID> {
 
     @EntityGraph(attributePaths = "movimentacoes")
     List<InsumoJpa> findByUnidadeId(UUID unidadeId);
+
+    Optional<InsumoJpa> findByUnidadeIdAndNome(UUID unidadeId, String nome);
 }
