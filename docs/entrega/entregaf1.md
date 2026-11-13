@@ -57,6 +57,11 @@ instale Java, Maven ou Docker. Os relatórios Cucumber ficam como artefato do pr
 
 4. A porta 8090 é encaminhada e aberta no navegador automaticamente. Navegue pelo menu da topbar.
 
+Se o Codespaces cair num "recovery container" (Alpine, sem Java) com erro `JAVA_HOME`, o container não
+foi construído: veja o log de build. A causa conhecida é a feature `docker-in-docker` em imagens
+Debian trixie, resolvida com `"moby": false` nas opções da feature. Depois da correção é preciso
+**apagar o codespace** e criar outro — o container de recuperação não é reaproveitado.
+
 ### Nível 4 — rodar na própria máquina (opcional)
 
 ```powershell
