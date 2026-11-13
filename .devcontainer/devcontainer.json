@@ -13,7 +13,10 @@
     }
   },
   "postCreateCommand": "chmod +x mvnw",
-  "postStartCommand": "printf 'DB_PASSWORD=filafood\\n' > .env && docker compose up -d --wait db",
+  "postStartCommand": "printf 'DB_PASSWORD=filafood\n' > .env && docker compose up -d --wait db",
+  "remoteEnv": {
+    "DB_PASSWORD": "filafood"
+  },
   "customizations": {
     "vscode": {
       "extensions": ["vscjava.vscode-java-pack"],
