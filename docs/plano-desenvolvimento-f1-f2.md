@@ -238,6 +238,18 @@ divergência do código.
 
 **Pronto quando:** o checklist da seção 4 do documento de requisitos está todo marcado.
 
+**Status (2026-11-12): P7 parcialmente entregue.**
+- **CI:** `.github/workflows/ci.yml` com dois jobs — suíte da raiz sem Docker e persistência com
+  Testcontainers — e os relatórios Cucumber como artefato. Escrito e ainda sem primeira execução.
+- **Codespaces:** `.devcontainer/devcontainer.json` (Java 21, Docker-in-Docker, Node, Postgres do
+  compose, porta 8090 encaminhada e `DB_PASSWORD` no ambiente remoto) e tasks em `.vscode/tasks.json`.
+- **D-43:** [`docs/entrega/entregaf1.md`](entrega/entregaf1.md) com os quatro níveis de validação, o roteiro
+  de demonstração de 5 minutos e as evidências do runner; README da raiz aponta para ele.
+- **D-44 parcial:** `docs/arquitetura.md` (camadas, DDD, padrões, modelo de dados e índice de ADRs) e
+  rastreabilidade atualizada em `docs/requisitos-pendentes-f1-f2.md`.
+- **Pendente:** a primeira execução do CI (que depende do push), o teste de interface (ADR 0007),
+  a suíte de concorrência (D-42) e o restante de F2.
+
 ## 4. Fatias demonstráveis (o que mostrar ao fim de cada fase)
 
 | Fim de | Demonstração | Comando |

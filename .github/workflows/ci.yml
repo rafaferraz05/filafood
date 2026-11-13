@@ -3,7 +3,7 @@ name: verificação
 # Prova automatizada da entrega: todo push em `main` roda aqui o mesmo build que
 # roda na máquina do autor. É a forma de o professor conferir que a suíte passa
 # sem instalar Java, Maven ou Docker — basta abrir a aba "Actions".
-# Roteiro de validação: docs/entrega/README.md.
+# Roteiro de validação: docs/entrega/entregaf1.md.
 
 on:
   push:

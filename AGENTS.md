@@ -29,7 +29,7 @@ node scripts/verificar-prototipos.mjs         # prototype guard
 - `CenarioDeCarga` is the Part 1 regression check (not JUnit): it must end with `TODOS OS CENARIOS PASSARAM.`; it throws on invariant failure.
 - Run one scenario/tag: `.\mvnw.cmd -f dominio-estoque/pom.xml test "-Dcucumber.filter.tags=@f1-rn4"` (quote the argument in PowerShell). Tags such as `@f1-rn4`, `@f4-rn6`, `@f7-rn3` are declared in the `.feature` files.
 - `scripts/verificar-prototipos.mjs` needs Node 20.11+ (uses `import.meta.dirname`); there is no `package.json`, so run it directly with `node`, no install step.
-- No CI, linter, formatter, typecheck, or codegen exists; don't invent commands. The Maven wrapper is the reliable build entrypoint.
+- CI exists (`.github/workflows/ci.yml`): the default suite without Docker plus the Testcontainers job. No linter, formatter, typecheck or codegen; don't invent commands. The Maven wrapper is the reliable build entrypoint, and `mvnw` is executable in git for the Linux runners.
 - Cucumber reports: `<module>/target/cucumber-report.html`.
 
 ## BDD and domain code
@@ -56,5 +56,5 @@ node scripts/verificar-prototipos.mjs         # prototype guard
 - Migrations live in `app/src/main/resources/db/migration` (`V<nnn>__<descricao>.sql`); `ddl-auto=validate`, so the schema comes only from Flyway. The dev seed occupies versions 900+ (`db/seed`), so a dev database already at 901 needs `spring.flyway.out-of-order=true` (set in `application-dev.yml`) to accept a newer schema migration such as `V002`.
 - Vaadin dev mode requires `com.vaadin:vaadin-dev` (already in `app/pom.xml`); `app/src/main/frontend/generated/` and `node_modules/` are generated and gitignored. The production frontend build (`vaadin-maven-plugin`) is not configured yet.
 - The app's CSS is the prototype stylesheet: `docs/prototipos/estilo.css` is copied into `META-INF/resources` at build time and loaded by `AppShell` as `/estilo.css`; `app.css` is only the Vaadin delta. Screens use `MainLayout` + the helpers in `app/adapter/in/web/layout`, never their own layout/CSS. A screen only appears in the topbar navigation when it is added to `layout/TelaDoMenu` (title + route + view class).
-- The root `README.md` documents Part 1; build and module commands are here and in `docs/prototipos/ATENDIMENTO.md`.
+- The root `README.md` documents Part 1 and the F1 application; architecture is in `docs/arquitetura.md` and the validation/demo guide (GitHub, Actions, Codespaces, local) in `docs/entrega/entregaf1.md`. Build and module commands are here and in `docs/prototipos/ATENDIMENTO.md`.
 - Windows console can show mojibake for pt-BR accents; source files are UTF-8. Don't re-encode files to fix the console.

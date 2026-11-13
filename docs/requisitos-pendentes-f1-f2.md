@@ -261,18 +261,26 @@
 - [ ] **G-45 — README de execução.**
   Como subir banco, rodar migrações, iniciar a aplicação, rodar testes, acessar a web e carregar os dados de demonstração.
   **Pronto quando:** uma pessoa clona o repositório e executa o passo a passo sem ajuda.
+  **Feito em F1:** README da raiz com o passo a passo do app e `docs/entrega/entregaf1.md` com os níveis de
+  validação (GitHub, Actions, Codespaces e local). **Falta:** o passo a passo de F2.
 
 - [ ] **G-46 — Documentação de arquitetura.**
   Diagrama de camadas, mapa de contextos (CML), ER, decisões (ADR), padrões adotados e contrato da API (se REST).
   **Pronto quando:** os documentos explicam o código real e estão linkados no README.
+  **Feito em F1:** `docs/arquitetura.md` com camadas, DDD, padrões, tabelas e índice de ADRs; diagrama de
+  camadas em texto. **Falta:** o ContextMap (ADR 0008) e o diagrama ER formal.
 
 - [ ] **G-47 — Atualizar a rastreabilidade.**
   Ligar ES-01..ES-07 e EN-01..EN-09 a casos de uso, telas/endpoints e testes; atualizar `docs/funcionalidades.md` e `docs/historia-do-usuario.md` com o que virou aplicação.
   **Pronto quando:** cada história tem implementação e prova localizáveis.
+  **Feito em F1:** G-09, G-10, G-13, G-23, G-25..G-28 marcados com o que foi entregue. **Falta:** as
+  histórias de F2.
 
 - [ ] **G-48 — Fechar a entrega do Spec.**
   Repositório público ou acessível ao `@profsauloaraujo`, evidências de execução, roteiro de demonstração e confirmação de que as funcionalidades não são só leitura.
   **Pronto quando:** o checklist da seção 4 está todo marcado.
+  **Feito em F1:** repositório público, CI e Codespaces prontos, roteiro e evidências em
+  `docs/entrega/entregaf1.md`. **Falta:** o checklist fechar com F2.
 
 ## 3. Ordem sugerida
 

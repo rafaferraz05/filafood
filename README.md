@@ -35,6 +35,26 @@ Banco do dev: copie `.env.example` para `.env` (não versionado), rode `docker c
 exporte a mesma senha para o app (`$env:DB_PASSWORD = "..."`). O perfil `dev` é o padrão, e o schema é
 aplicado pelo Flyway a partir de `app/src/main/resources/db/migration`.
 
+
+## Aplicação (F1 — estoque)
+
+A F1 está completa: insumos (cadastro, edição, entrada, desativar/reativar), ficha técnica por
+unidade, baixa por explosão da ficha ao iniciar o preparo, devolução ao cancelar e reposição. O seed
+de dev traz os insumos, as fichas e o pedido #1337 dos protótipos.
+
+| Tela | Rota |
+| --- | --- |
+| Início | `/` |
+| Insumos | `/insumos` |
+| Detalhe do insumo | `/insumos/{id}` |
+| Ficha técnica | `/ficha-tecnica` |
+| Preparo do pedido | `/preparo` |
+
+- Arquitetura e camadas: [`docs/arquitetura.md`](docs/arquitetura.md).
+- Como avaliar sem montar ambiente (GitHub, CI e Codespaces) e roteiro de demonstração:
+  [`docs/entrega/entregaf1.md`](docs/entrega/entregaf1.md).
+- O que a F1 entrega e o que falta: [`docs/requisitos-pendentes-f1-f2.md`](docs/requisitos-pendentes-f1-f2.md).
+
 As seções abaixo descrevem a Parte 1 do trabalho — o protótipo local de concorrência em Java puro.
 
 ## Objetivo da Parte 1
