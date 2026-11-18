@@ -11,7 +11,7 @@ import br.edu.cesar.filafood.app.adapter.in.web.layout.Badge;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Cabecalho;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.MainLayout;
 
-/** Início no layout e no CSS do protótipo: três perfis, com a entrada de F1 liberada. */
+/** Início no layout e no CSS do protótipo: três perfis, com a entrada de F1 e F6 liberada. */
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("FilaFood")
 public class InicioView extends Div {
@@ -23,10 +23,10 @@ public class InicioView extends Div {
 
         Div grid = new Div();
         grid.addClassName("grid-2");
-        grid.add(card("Gestor da unidade", "Insumos, ficha técnica, entregadores e despacho.",
+        grid.add(card("Gestor da unidade", "Insumos, ficha técnica, cardápio, entregadores e despacho.",
                 Acao.primario("Abrir insumos", () -> getUI().ifPresent(ui -> ui.navigate("insumos"))),
-                Acao.claro("Abrir ficha técnica",
-                        () -> getUI().ifPresent(ui -> ui.navigate("ficha-tecnica")))));
+                Acao.claro("Abrir ficha técnica", () -> getUI().ifPresent(ui -> ui.navigate("ficha-tecnica"))),
+                Acao.claro("Abrir cardápio", () -> getUI().ifPresent(ui -> ui.navigate("cardapio")))));
         grid.add(card("Atendente ou cozinheiro", "Fila de preparo, itens prontos e conclusão do pedido."));
         grid.add(card("Entregador", "Retirada, entrega e falha das entregas atribuídas."));
 

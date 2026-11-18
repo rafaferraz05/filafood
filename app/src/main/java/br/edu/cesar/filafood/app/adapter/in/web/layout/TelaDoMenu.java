@@ -2,6 +2,7 @@ package br.edu.cesar.filafood.app.adapter.in.web.layout;
 
 import com.vaadin.flow.component.Component;
 
+import br.edu.cesar.filafood.app.adapter.in.web.CardapioView;
 import br.edu.cesar.filafood.app.adapter.in.web.FichaTecnicaView;
 import br.edu.cesar.filafood.app.adapter.in.web.InicioView;
 import br.edu.cesar.filafood.app.adapter.in.web.InsumosView;
@@ -19,6 +20,7 @@ public enum TelaDoMenu {
     INICIO("Início", "", InicioView.class),
     INSUMOS("Insumos", "insumos", InsumosView.class),
     FICHA_TECNICA("Ficha técnica", "ficha-tecnica", FichaTecnicaView.class),
+    CARDAPIO("Cardápio", "cardapio", CardapioView.class),
     PREPARO("Preparo do pedido", "preparo", PreparoView.class);
 
     private final String titulo;

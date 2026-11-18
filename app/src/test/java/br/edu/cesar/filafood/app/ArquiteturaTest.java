@@ -43,9 +43,11 @@ class ArquiteturaTest {
                 .check(classes);
     }
 
-    @Test
+   @Test
     void dominioNaoConheceFramework() {
-        JavaClasses dominio = new ClassFileImporter().importPackages("br.edu.cesar.filafood.dominio.estoque");
+        JavaClasses dominio = new ClassFileImporter().importPackages(
+                "br.edu.cesar.filafood.dominio.estoque",
+                "br.edu.cesar.filafood.dominio.cardapio");
         noClasses()
                 .should().dependOnClassesThat()
                 .resideInAnyPackage("org.springframework..", "jakarta.persistence..", "com.vaadin..")

@@ -54,7 +54,10 @@
       <groupId>br.edu.cesar.filafood</groupId>
       <artifactId>dominio-estoque</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>br.edu.cesar.filafood</groupId>
+      <artifactId>dominio-cardapio</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit</artifactId>
