@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.aplicacao.estoque.Quantidade;
@@ -24,7 +23,6 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoServico;
 
 /** Serviço de aplicação da ficha técnica: leitura da tela e edição coordenada (RN 2). */
-@Service
 public class FichaServicoAplicacao {
 
     private final ProdutoRepositorioAplicacao catalogo;

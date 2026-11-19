@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.aplicacao.estoque.Quantidade;
@@ -23,7 +22,6 @@ import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 
 /** Serviço de aplicação do preparo: tela, baixa, devolução e conclusão (RN 4 e RN 5). */
-@Service
 public class PreparoServicoAplicacao {
 
     private final PedidoRepositorioAplicacao pedidos;

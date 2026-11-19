@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.aplicacao.estoque.Quantidade;
@@ -22,7 +21,6 @@ import br.edu.cesar.filafood.dominio.estoque.reposicao.PoliticaDeReposicao;
  * O limite transacional é daqui; a regra (validações da RN 1) fica no agregado e no
  * {@link InsumoServico}.
  */
-@Service
 public class InsumoServicoAplicacao {
 
     private final InsumoServico insumos;

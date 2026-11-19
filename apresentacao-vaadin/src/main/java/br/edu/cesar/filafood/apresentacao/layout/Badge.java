@@ -1,0 +1,39 @@
+package br.edu.cesar.filafood.apresentacao.layout;
+
+import com.vaadin.flow.component.html.Span;
+
+/** Badges do protótipo (`.badge`, `.badge-ok`, `.badge-repor`, `.badge-neutro`). */
+public final class Badge {
+
+    private Badge() {
+    }
+
+    public static Span neutro(String texto) {
+        return criar("badge-neutro", texto, false);
+    }
+
+    public static Span ok(String texto) {
+        return criar("badge-ok", texto, true);
+    }
+
+    public static Span repor(String texto) {
+        return criar("badge-repor", texto, true);
+    }
+
+    /** Variante de alerta do protótipo, usada quando falta cadastro (produto sem ficha). */
+    public static Span alerta(String texto) {
+        return criar("badge-alerta", texto, true);
+    }
+
+    private static Span criar(String variante, String texto, boolean comBolinha) {
+        Span badge = new Span();
+        badge.addClassNames("badge", variante);
+        if (comBolinha) {
+            Span bolinha = new Span();
+            bolinha.addClassName("bolinha");
+            badge.add(bolinha);
+        }
+        badge.add(new Span(texto));
+        return badge;
+    }
+}

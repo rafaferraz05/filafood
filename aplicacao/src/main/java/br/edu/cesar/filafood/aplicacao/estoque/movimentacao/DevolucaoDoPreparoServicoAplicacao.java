@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
 
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
@@ -22,7 +21,6 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
  * em preparo: concluído, recusado ou já cancelado não devolve nada — e como a segunda tentativa
  * encontra o pedido cancelado, o cancelamento não devolve duas vezes.
  */
-@Service
 public class DevolucaoDoPreparoServicoAplicacao extends MovimentacaoServicoAplicacao<CancelamentoDoPreparo> {
 
     private final PedidoRepositorioAplicacao pedidos;

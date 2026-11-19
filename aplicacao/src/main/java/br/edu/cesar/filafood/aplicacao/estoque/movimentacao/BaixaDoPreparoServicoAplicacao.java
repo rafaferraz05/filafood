@@ -6,7 +6,6 @@ import br.edu.cesar.filafood.aplicacao.estoque.preparo.BaixaDePreparo;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
 
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.consumo.NecessidadeDoPedido;
@@ -20,7 +19,6 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
  * Explode a ficha técnica dos produtos do pedido, confere o saldo de todos os insumos antes de
  * gravar e só então lança as saídas, tudo na mesma transação do {@link MovimentacaoServicoAplicacao}.
  */
-@Service
 public class BaixaDoPreparoServicoAplicacao extends MovimentacaoServicoAplicacao<BaixaDePreparo> {
 
     private final PedidoRepositorioAplicacao pedidos;
