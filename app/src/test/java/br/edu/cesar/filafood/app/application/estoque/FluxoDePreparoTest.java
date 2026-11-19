@@ -1,5 +1,8 @@
 package br.edu.cesar.filafood.app.application.estoque;
 
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoParaPreparo;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -227,7 +230,7 @@ class FluxoDePreparoTest {
         }
     }
 
-    private static final class PedidosEmMemoria implements PedidoDoPreparo {
+    private static final class PedidosEmMemoria implements PedidoRepositorioAplicacao {
 
         private final Map<String, PedidoParaPreparo> porId = new LinkedHashMap<>();
 

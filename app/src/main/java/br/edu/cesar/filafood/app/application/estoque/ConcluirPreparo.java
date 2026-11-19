@@ -1,5 +1,8 @@
 package br.edu.cesar.filafood.app.application.estoque;
 
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoParaPreparo;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +13,9 @@ import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 @Service
 public class ConcluirPreparo {
 
-    private final PedidoDoPreparo pedidos;
+    private final PedidoRepositorioAplicacao pedidos;
 
-    public ConcluirPreparo(PedidoDoPreparo pedidos) {
+    public ConcluirPreparo(PedidoRepositorioAplicacao pedidos) {
         this.pedidos = pedidos;
     }
 

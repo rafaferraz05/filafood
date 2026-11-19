@@ -1,0 +1,59 @@
+package br.edu.cesar.filafood.infraestrutura.persistencia.jpa;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoParaPreparo;
+import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
+import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
+import br.edu.cesar.filafood.dominio.estoque.consumo.ItemDoPedido;
+
+/** Adaptador de referência da porta {@link PedidoRepositorioAplicacao} (ADR 0011). */
+@Component
+class PedidoJpaAdapter implements PedidoRepositorioAplicacao {
+
+    private final PedidoJpaRepository pedidos;
+
+    PedidoJpaAdapter(PedidoJpaRepository pedidos) {
+        this.pedidos = pedidos;
+    }
+
+    @Override
+    public PedidoParaPreparo porId(String pedidoId) {
+        PedidoJpa pedido = pedido(pedidoId);
+        List<ItemDoPedido> itens = pedido.itens().stream()
+                .map(item -> new ItemDoPedido(item.produto().id().toString(), item.quantidade()))
+                .toList();
+        return new PedidoParaPreparo(pedido.id().toString(), pedido.unidadeId().toString(),
+                EstadoDoPedido.valueOf(pedido.estado()), itens);
+    }
+
+    @Override
+    public void marcarEmPreparo(String pedidoId) {
+        mudarEstado(pedidoId, EstadoDoPedido.EM_PREPARO);
+    }
+
+    @Override
+    public void marcarConcluido(String pedidoId) {
+        mudarEstado(pedidoId, EstadoDoPedido.CONCLUIDO);
+    }
+
+    @Override
+    public void marcarCancelado(String pedidoId) {
+        mudarEstado(pedidoId, EstadoDoPedido.CANCELADO);
+    }
+
+    private void mudarEstado(String pedidoId, EstadoDoPedido estado) {
+        PedidoJpa pedido = pedido(pedidoId);
+        pedido.mudarEstado(estado.name());
+        pedidos.save(pedido);
+    }
+
+    private PedidoJpa pedido(String pedidoId) {
+        return pedidos.findById(UUID.fromString(pedidoId))
+                .orElseThrow(() -> new RegraDeNegocioException("pedido não encontrado"));
+    }
+}

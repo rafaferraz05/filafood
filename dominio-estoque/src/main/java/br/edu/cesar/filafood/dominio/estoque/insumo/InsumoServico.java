@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.dominio.estoque.insumo;
 
+import java.util.List;
 import java.util.Optional;
 
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
@@ -35,5 +36,9 @@ public class InsumoServico {
 
     public Optional<Insumo> porNome(String unidadeId, String nome) {
         return repositorio.porNome(unidadeId, nome);
+    }
+
+    public List<Insumo> doEstoqueDaUnidade(String unidadeId) {
+        return repositorio.doEstoqueDaUnidade(unidadeId);
     }
 }

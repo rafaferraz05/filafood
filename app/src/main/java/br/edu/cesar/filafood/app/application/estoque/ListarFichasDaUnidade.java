@@ -1,5 +1,8 @@
 package br.edu.cesar.filafood.app.application.estoque;
 
+import br.edu.cesar.filafood.aplicacao.estoque.produto.ProdutoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.produto.ProdutoResumo;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,10 +21,10 @@ import br.edu.cesar.filafood.dominio.estoque.ficha.ItemDaFicha;
 @Service
 public class ListarFichasDaUnidade {
 
-    private final CatalogoDeProdutos catalogo;
+    private final ProdutoRepositorioAplicacao catalogo;
     private final FichaTecnicaRepositorio fichas;
 
-    public ListarFichasDaUnidade(CatalogoDeProdutos catalogo, FichaTecnicaRepositorio fichas) {
+    public ListarFichasDaUnidade(ProdutoRepositorioAplicacao catalogo, FichaTecnicaRepositorio fichas) {
         this.catalogo = catalogo;
         this.fichas = fichas;
     }

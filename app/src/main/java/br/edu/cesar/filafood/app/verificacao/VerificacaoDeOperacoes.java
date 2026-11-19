@@ -27,8 +27,8 @@ import br.edu.cesar.filafood.app.application.estoque.ItemDaFichaResumo;
 import br.edu.cesar.filafood.app.application.estoque.ListarFichasDaUnidade;
 import br.edu.cesar.filafood.app.application.estoque.ListarInsumos;
 import br.edu.cesar.filafood.app.application.estoque.NovoInsumo;
-import br.edu.cesar.filafood.app.application.estoque.PedidoDoPreparo;
-import br.edu.cesar.filafood.app.application.estoque.PedidoParaPreparo;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoParaPreparo;
 import br.edu.cesar.filafood.app.application.estoque.ProdutoComFicha;
 import br.edu.cesar.filafood.app.application.estoque.RegistrarEntradaDeInsumo;
 import br.edu.cesar.filafood.app.application.estoque.RemoverItemDaFicha;
@@ -58,7 +58,7 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
     private final ListarFichasDaUnidade listarFichas;
     private final AdicionarItemNaFicha adicionarItem;
     private final RemoverItemDaFicha removerItem;
-    private final PedidoDoPreparo pedidos;
+    private final PedidoRepositorioAplicacao pedidos;
     private final BaixaDoPreparo baixa;
     private final DevolucaoDoCancelamento devolucao;
     private final EditarInsumo editar;
@@ -66,7 +66,7 @@ public class VerificacaoDeOperacoes implements CommandLineRunner {
     public VerificacaoDeOperacoes(ListarInsumos listar, DetalharInsumo detalhar,
             RegistrarEntradaDeInsumo registrarEntrada, AlterarEstadoDoInsumo alterarEstado,
             CadastrarInsumo cadastrar, ListarFichasDaUnidade listarFichas,
-            AdicionarItemNaFicha adicionarItem, RemoverItemDaFicha removerItem, PedidoDoPreparo pedidos,
+            AdicionarItemNaFicha adicionarItem, RemoverItemDaFicha removerItem, PedidoRepositorioAplicacao pedidos,
             BaixaDoPreparo baixa, DevolucaoDoCancelamento devolucao, EditarInsumo editar) {
         this.listar = listar;
         this.detalhar = detalhar;

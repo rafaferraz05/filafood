@@ -1,5 +1,8 @@
 package br.edu.cesar.filafood.app.application.estoque;
 
+import br.edu.cesar.filafood.aplicacao.estoque.produto.ProdutoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.produto.ProdutoResumo;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -185,7 +188,7 @@ class FluxoDeFichaTest {
         }
     }
 
-    private static final class CatalogoEmMemoria implements CatalogoDeProdutos {
+    private static final class CatalogoEmMemoria implements ProdutoRepositorioAplicacao {
 
         private final List<ProdutoResumo> produtos = new ArrayList<>();
 

@@ -1,5 +1,10 @@
 package br.edu.cesar.filafood.app.application.estoque;
 
+import br.edu.cesar.filafood.aplicacao.estoque.produto.ProdutoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoParaPreparo;
+import br.edu.cesar.filafood.aplicacao.estoque.produto.ProdutoResumo;
+
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,11 +25,11 @@ import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 @Service
 public class DetalharPreparo {
 
-    private final PedidoDoPreparo pedidos;
+    private final PedidoRepositorioAplicacao pedidos;
     private final FichaTecnicaRepositorio fichas;
-    private final CatalogoDeProdutos catalogo;
+    private final ProdutoRepositorioAplicacao catalogo;
 
-    public DetalharPreparo(PedidoDoPreparo pedidos, FichaTecnicaRepositorio fichas, CatalogoDeProdutos catalogo) {
+    public DetalharPreparo(PedidoRepositorioAplicacao pedidos, FichaTecnicaRepositorio fichas, ProdutoRepositorioAplicacao catalogo) {
         this.pedidos = pedidos;
         this.fichas = fichas;
         this.catalogo = catalogo;

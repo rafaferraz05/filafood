@@ -1,5 +1,8 @@
 package br.edu.cesar.filafood.app.application.estoque;
 
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoParaPreparo;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -19,10 +22,10 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 @Service
 public class BaixaDoPreparo extends MovimentacaoNoEstoque<BaixaDePreparo> {
 
-    private final PedidoDoPreparo pedidos;
+    private final PedidoRepositorioAplicacao pedidos;
     private final FichaTecnicaRepositorio fichas;
 
-    public BaixaDoPreparo(InsumoRepositorio insumos, PedidoDoPreparo pedidos, FichaTecnicaRepositorio fichas) {
+    public BaixaDoPreparo(InsumoRepositorio insumos, PedidoRepositorioAplicacao pedidos, FichaTecnicaRepositorio fichas) {
         super(insumos);
         this.pedidos = pedidos;
         this.fichas = fichas;

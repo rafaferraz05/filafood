@@ -1,5 +1,8 @@
 package br.edu.cesar.filafood.app.application.estoque;
 
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoRepositorioAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoParaPreparo;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +24,9 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 @Service
 public class DevolucaoDoCancelamento extends MovimentacaoNoEstoque<CancelamentoDoPreparo> {
 
-    private final PedidoDoPreparo pedidos;
+    private final PedidoRepositorioAplicacao pedidos;
 
-    public DevolucaoDoCancelamento(InsumoRepositorio insumos, PedidoDoPreparo pedidos) {
+    public DevolucaoDoCancelamento(InsumoRepositorio insumos, PedidoRepositorioAplicacao pedidos) {
         super(insumos);
         this.pedidos = pedidos;
     }
