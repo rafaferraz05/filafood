@@ -1,5 +1,8 @@
 # Plano de desenvolvimento — F1 Estoque e F2 Entrega
 
+> **Nota (2026-11-19):** nomes e caminhos citados neste documento refletem a estrutura anterior à refatoração do [ADR 0012](adr/0012-estrutura-e-nomenclatura-do-modelo.md) (por exemplo, pp/ e MovimentacaoNoEstoque). A estrutura atual é dominio-*, plicacao, infraestrutura e presentacao-vaadin; consulte [arquitetura.md](arquitetura.md).
+
+
 > **Base:** `docs/requisitos-pendentes-f1-f2.md` (requisitos **G-01 a G-48**).
 > Aquele documento diz **o que** falta; este diz **em que ordem**, **como provar** e **o que decidir
 > antes de escrever código**. Os identificadores `G-xx` são mantidos para a rastreabilidade; as

@@ -1,5 +1,8 @@
 # Requisitos pendentes — F1 Estoque e F2 Entrega
 
+> **Nota (2026-11-19):** nomes e caminhos citados neste documento refletem a estrutura anterior à refatoração do [ADR 0012](adr/0012-estrutura-e-nomenclatura-do-modelo.md) (por exemplo, pp/ e MovimentacaoNoEstoque). A estrutura atual é dominio-*, plicacao, infraestrutura e presentacao-vaadin; consulte [arquitetura.md](arquitetura.md).
+
+
 **Base:** `docs/Spec.md` (rubrica), `docs/funcionalidades.md` (RNs), `docs/dominio.md` (vocabulário) e `docs/historia-do-usuario.md` (histórias ES/EN).
 
 **Escopo:** F1 (estoque) e F2 (entrega), ambas de complexidade alta e sob responsabilidade de Gabriel Rocha. O alvo do Spec é uma aplicação **web com banco relacional** e funcionalidades **completas** — não basta a lógica de domínio em memória.
