@@ -6,8 +6,9 @@
 
   <parent>
     <groupId>br.edu.cesar.filafood</groupId>
-    <artifactId>filafood</artifactId>
+    <artifactId>filafood-pai</artifactId>
     <version>1.0.0</version>
+    <relativePath>../pai/pom.xml</relativePath>
   </parent>
 
   <artifactId>dominio-cardapio</artifactId>

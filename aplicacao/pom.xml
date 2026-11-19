@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>br.edu.cesar.filafood</groupId>
+    <artifactId>filafood-pai</artifactId>
+    <version>1.0.0</version>
+    <relativePath>../pai/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>aplicacao</artifactId>
+  <packaging>jar</packaging>
+  <name>FilaFood: camada de aplicação</name>
+
+  <!-- Serviços de aplicação, DTOs de leitura e portas de consulta. Sem Spring Web, sem JPA e sem
+       Vaadin: o limite transacional fica aqui, a persistência fica em `infraestrutura`. -->
+  <dependencies>
+    <dependency>
+      <groupId>br.edu.cesar.filafood</groupId>
+      <artifactId>dominio-estoque</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+  </dependencies>
+</project>
