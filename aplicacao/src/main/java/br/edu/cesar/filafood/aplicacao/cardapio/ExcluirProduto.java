@@ -1,4 +1,4 @@
-package br.edu.cesar.filafood.app.application.cardapio;
+package br.edu.cesar.filafood.aplicacao.cardapio;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import br.edu.cesar.filafood.dominio.cardapio.Produto;
 import br.edu.cesar.filafood.dominio.cardapio.ProdutoId;
 import br.edu.cesar.filafood.dominio.cardapio.ProdutosDoCardapio;
 import br.edu.cesar.filafood.dominio.cardapio.RegraDeNegocioException;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 
 /**
  * Exclui um produto que ainda não tenha histórico de pedidos ou ficha técnica vinculada.
@@ -18,9 +18,9 @@ import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
 public class ExcluirProduto {
 
     private final ProdutosDoCardapio produtos;
-    private final FichasTecnicas fichas;
+    private final FichaTecnicaRepositorio fichas;
 
-    public ExcluirProduto(ProdutosDoCardapio produtos, FichasTecnicas fichas) {
+    public ExcluirProduto(ProdutosDoCardapio produtos, FichaTecnicaRepositorio fichas) {
         this.produtos = produtos;
         this.fichas = fichas;
     }

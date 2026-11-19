@@ -1,4 +1,4 @@
-package br.edu.cesar.filafood.app.application.cardapio;
+package br.edu.cesar.filafood.aplicacao.cardapio;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +18,7 @@ import br.edu.cesar.filafood.dominio.cardapio.ProdutosDoCardapio;
 import br.edu.cesar.filafood.dominio.cardapio.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaId;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
 
@@ -129,7 +129,7 @@ class FluxoDeCardapioTest {
         }
     }
 
-    private static final class FichasEmMemoria implements FichasTecnicas {
+    private static final class FichasEmMemoria implements FichaTecnicaRepositorio {
         private final Map<String, FichaTecnica> dados = new LinkedHashMap<>();
 
         @Override

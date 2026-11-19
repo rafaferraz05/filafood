@@ -1,4 +1,4 @@
-package br.edu.cesar.filafood.app.adapter.in.web;
+package br.edu.cesar.filafood.apresentacao.cardapio;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,33 +17,33 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import br.edu.cesar.filafood.app.adapter.in.web.layout.Acao;
-import br.edu.cesar.filafood.app.adapter.in.web.layout.Badge;
-import br.edu.cesar.filafood.app.adapter.in.web.layout.Busca;
-import br.edu.cesar.filafood.app.adapter.in.web.layout.Cabecalho;
-import br.edu.cesar.filafood.app.adapter.in.web.layout.Campo;
-import br.edu.cesar.filafood.app.adapter.in.web.layout.Entradas;
-import br.edu.cesar.filafood.app.adapter.in.web.layout.MainLayout;
-import br.edu.cesar.filafood.app.adapter.in.web.layout.Tabela;
-import br.edu.cesar.filafood.app.application.cardapio.AlteracaoDeProduto;
-import br.edu.cesar.filafood.app.application.cardapio.AlterarEstadoDoProduto;
-import br.edu.cesar.filafood.app.application.cardapio.CadastrarProduto;
-import br.edu.cesar.filafood.app.application.cardapio.DefinirPrecoDoProduto;
-import br.edu.cesar.filafood.app.application.cardapio.EditarProduto;
-import br.edu.cesar.filafood.app.application.cardapio.EncerrarPeriodoDePreco;
-import br.edu.cesar.filafood.app.application.cardapio.ExcluirProduto;
-import br.edu.cesar.filafood.app.application.cardapio.ListarCardapioDaUnidade;
-import br.edu.cesar.filafood.app.application.cardapio.NovoPeriodoDePreco;
-import br.edu.cesar.filafood.app.application.cardapio.NovoProduto;
-import br.edu.cesar.filafood.app.application.cardapio.PeriodoPrecoResumo;
-import br.edu.cesar.filafood.app.application.cardapio.ProdutoCardapioDetalhe;
-import br.edu.cesar.filafood.app.config.UnidadeDeDemonstracao;
+import br.edu.cesar.filafood.apresentacao.layout.Acao;
+import br.edu.cesar.filafood.apresentacao.layout.Badge;
+import br.edu.cesar.filafood.apresentacao.layout.Busca;
+import br.edu.cesar.filafood.apresentacao.layout.Cabecalho;
+import br.edu.cesar.filafood.apresentacao.layout.Campo;
+import br.edu.cesar.filafood.apresentacao.layout.Entradas;
+import br.edu.cesar.filafood.apresentacao.layout.MainLayout;
+import br.edu.cesar.filafood.apresentacao.layout.Tabela;
+import br.edu.cesar.filafood.aplicacao.cardapio.AlteracaoDeProduto;
+import br.edu.cesar.filafood.aplicacao.cardapio.AlterarEstadoDoProduto;
+import br.edu.cesar.filafood.aplicacao.cardapio.CadastrarProduto;
+import br.edu.cesar.filafood.aplicacao.cardapio.DefinirPrecoDoProduto;
+import br.edu.cesar.filafood.aplicacao.cardapio.EditarProduto;
+import br.edu.cesar.filafood.aplicacao.cardapio.EncerrarPeriodoDePreco;
+import br.edu.cesar.filafood.aplicacao.cardapio.ExcluirProduto;
+import br.edu.cesar.filafood.aplicacao.cardapio.ListarCardapioDaUnidade;
+import br.edu.cesar.filafood.aplicacao.cardapio.NovoPeriodoDePreco;
+import br.edu.cesar.filafood.aplicacao.cardapio.NovoProduto;
+import br.edu.cesar.filafood.aplicacao.cardapio.PeriodoPrecoResumo;
+import br.edu.cesar.filafood.aplicacao.cardapio.ProdutoCardapioDetalhe;
+import br.edu.cesar.filafood.apresentacao.config.UnidadeDeDemonstracao;
 import br.edu.cesar.filafood.dominio.cardapio.RegraDeNegocioException;
 
 /** Tela do Cardápio (F6): CRUD de produtos + Preço Vigente (RN 4) + Disponibilidade (RN 5). */
 @Route(value = "cardapio", layout = MainLayout.class)
 @PageTitle("FilaFood · Cardápio")
-public class CardapioView extends Div {
+public class CardapioRota extends Div {
 
     private static final Locale PT_BR = Locale.forLanguageTag("pt-BR");
     private static final DateTimeFormatter DATA_BR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -70,7 +70,7 @@ public class CardapioView extends Div {
     private List<ProdutoCardapioDetalhe> produtos = List.of();
     private String produtoSelecionadoId;
 
-    public CardapioView(ListarCardapioDaUnidade listar, CadastrarProduto cadastrar, EditarProduto editar,
+    public CardapioRota(ListarCardapioDaUnidade listar, CadastrarProduto cadastrar, EditarProduto editar,
             AlterarEstadoDoProduto alterarEstado, ExcluirProduto excluir, DefinirPrecoDoProduto definirPreco,
             EncerrarPeriodoDePreco encerrarPeriodo) {
         this.listar = listar;

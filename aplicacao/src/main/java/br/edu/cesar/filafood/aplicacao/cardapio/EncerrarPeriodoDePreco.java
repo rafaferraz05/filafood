@@ -1,4 +1,4 @@
-package br.edu.cesar.filafood.app.application.cardapio;
+package br.edu.cesar.filafood.aplicacao.cardapio;
 
 import java.time.LocalDate;
 import java.util.UUID;

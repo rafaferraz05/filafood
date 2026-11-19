@@ -1,4 +1,4 @@
-package br.edu.cesar.filafood.app.application.cardapio;
+package br.edu.cesar.filafood.aplicacao.cardapio;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ import br.edu.cesar.filafood.dominio.cardapio.DisponibilidadeDoProduto;
 import br.edu.cesar.filafood.dominio.cardapio.Produto;
 import br.edu.cesar.filafood.dominio.cardapio.ProdutosDoCardapio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 
 /**
  * Orquestra os dados do CRUD do Produto, o Preço Vigente (RN 4) e a Disponibilidade (RN 5)
@@ -23,9 +23,9 @@ import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
 public class ListarCardapioDaUnidade {
 
     private final ProdutosDoCardapio produtos;
-    private final FichasTecnicas fichas;
+    private final FichaTecnicaRepositorio fichas;
 
-    public ListarCardapioDaUnidade(ProdutosDoCardapio produtos, FichasTecnicas fichas) {
+    public ListarCardapioDaUnidade(ProdutosDoCardapio produtos, FichaTecnicaRepositorio fichas) {
         this.produtos = produtos;
         this.fichas = fichas;
     }

@@ -39,7 +39,7 @@ node scripts/verificar-prototipos.mjs         # prototype guard
 - Gherkin is pt-BR (`# language: pt`); steps use `io.cucumber.java.pt.Dado/Quando/Então`.
 - Features live under `<module>/src/test/resources/<package path>/`; glue is set in each `src/test/resources/junit-platform.properties`; `RunCucumberTest` is a JUnit Platform `@Suite` selecting the module package. A new module needs both.
 - Features assert exact Portuguese rejection messages. Change a message in domain code → update all affected features and the prototype state that cites it.
-- `dominio-cardapio` and `dominio-compras` deliberately have **no `src/main`**: their rules live in test-support `MundoDo...` doubles and do not depend on `dominio-estoque`. Don't promote/move them or add cross-module dependencies without a design decision.
+- `dominio-compras` deliberately has **no `src/main`**: its rules live in test-support `MundoDo...` doubles and do not depend on `dominio-estoque`. `dominio-cardapio` ganhou `src/main` na F6 (`Produto`, `PeriodoPreco`, `ProdutosDoCardapio`); a F6 usa `aplicacao/cardapio` e `infraestrutura/.../jpa/cardapio`.
 - `dominio-atendimento` contains the only JUnit test (`CancelamentoConcorrenteTest`), which races cancellation vs. start-of-preparation; keep it passing.
 - Domain objects guard shared state with `synchronized` methods; Part 1 uses `BlockingQueue`/`AtomicInteger` and the invariant `aceitos = concluídos + recusados + cancelados`.
 - `docs/dominio.md` is the vocabulary source of truth (including explicit "não usar" synonyms); `docs/funcionalidades.md` defines rules F1–F7; `docs/historia-do-usuario.md` maps stories. Use those names in code, tests, and UI, and keep new prose in pt-BR.

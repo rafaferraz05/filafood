@@ -18,7 +18,7 @@ filafood (pom agregador: só <modules>)
 ├── dominio-estoque/         F1 — modelo tático, BDD Cucumber, zero framework
 ├── dominio-entrega/         F2
 ├── dominio-atendimento/     F3–F5
-├── dominio-cardapio/        F6 (regras em dublês de teste)
+├── dominio-cardapio/        F6 — cardápio (Produto, PeriodoPreco; main desde a F6)
 ├── dominio-compras/         F7 (regras em dublês de teste)
 ├── aplicacao/               serviços de aplicação, DTOs de leitura e portas de consulta
 ├── infraestrutura/          JPA, mapeadores, adaptadores e Flyway

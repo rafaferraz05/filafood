@@ -1,4 +1,4 @@
-package br.edu.cesar.filafood.app.adapter.out.persistence.cardapio;
+package br.edu.cesar.filafood.infraestrutura.persistencia.jpa.cardapio;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

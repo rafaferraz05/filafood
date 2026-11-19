@@ -1,4 +1,4 @@
-package br.edu.cesar.filafood.app.application.cardapio;
+package br.edu.cesar.filafood.aplicacao.cardapio;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

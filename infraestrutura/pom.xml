@@ -23,6 +23,10 @@
     </dependency>
     <dependency>
       <groupId>br.edu.cesar.filafood</groupId>
+      <artifactId>dominio-cardapio</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>br.edu.cesar.filafood</groupId>
       <artifactId>aplicacao</artifactId>
     </dependency>
 
