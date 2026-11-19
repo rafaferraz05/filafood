@@ -5,15 +5,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /** Caso de uso de cadastro de insumo (F1 RN 1). */
 @Service
 public class CadastrarInsumo {
 
-    private final Insumos insumos;
+    private final InsumoRepositorio insumos;
 
-    public CadastrarInsumo(Insumos insumos) {
+    public CadastrarInsumo(InsumoRepositorio insumos) {
         this.insumos = insumos;
     }
 

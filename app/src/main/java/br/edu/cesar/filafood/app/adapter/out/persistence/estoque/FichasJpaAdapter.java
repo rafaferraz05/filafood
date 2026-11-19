@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 
-/** Adaptador JPA da porta {@link FichasTecnicas} (docs/padroes-do-projeto.md, seção 8). */
+/** Adaptador JPA da porta {@link FichaTecnicaRepositorio} (docs/padroes-do-projeto.md, seção 8). */
 @Component
-class FichasJpaAdapter implements FichasTecnicas {
+class FichasJpaAdapter implements FichaTecnicaRepositorio {
 
     private final FichaTecnicaJpaRepository fichas;
     private final ProdutoJpaRepository produtos;

@@ -1,13 +1,13 @@
-package br.edu.cesar.filafood.dominio.estoque.consumo;
+package br.edu.cesar.filafood.infraestrutura.persistencia.memoria;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.edu.cesar.filafood.dominio.estoque.EstoqueDaUnidade;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicasDaUnidade;
+import br.edu.cesar.filafood.dominio.estoque.consumo.ItemDoPedido;
+import br.edu.cesar.filafood.dominio.estoque.consumo.NecessidadeDoPedido;
 
 /**
  * Baixa automática por explosão da ficha técnica.

@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /** Caso de uso de entrada por compra (F1 RN 3), no fluxo comum das movimentações. */
 @Service
 public class RegistrarEntradaDeInsumo extends MovimentacaoNoEstoque<EntradaDeInsumo> {
 
-    public RegistrarEntradaDeInsumo(Insumos insumos) {
+    public RegistrarEntradaDeInsumo(InsumoRepositorio insumos) {
         super(insumos);
     }
 

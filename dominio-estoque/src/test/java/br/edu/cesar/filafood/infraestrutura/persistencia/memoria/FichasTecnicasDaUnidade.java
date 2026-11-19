@@ -1,10 +1,13 @@
-package br.edu.cesar.filafood.dominio.estoque.ficha;
+package br.edu.cesar.filafood.infraestrutura.persistencia.memoria;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaId;
+import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 
 /**
  * Fichas técnicas mantidas pela unidade, uma por produto.

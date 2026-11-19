@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaId;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /**
  * Adiciona um item à ficha do produto na unidade (F1 RN 2).
@@ -24,10 +24,10 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
 @Service
 public class AdicionarItemNaFicha {
 
-    private final FichasTecnicas fichas;
-    private final Insumos insumos;
+    private final FichaTecnicaRepositorio fichas;
+    private final InsumoRepositorio insumos;
 
-    public AdicionarItemNaFicha(FichasTecnicas fichas, Insumos insumos) {
+    public AdicionarItemNaFicha(FichaTecnicaRepositorio fichas, InsumoRepositorio insumos) {
         this.fichas = fichas;
         this.insumos = insumos;
     }

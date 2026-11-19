@@ -1,9 +1,9 @@
-package br.edu.cesar.filafood.dominio.estoque.devolucao;
+package br.edu.cesar.filafood.infraestrutura.persistencia.memoria;
 
 import java.math.BigDecimal;
 
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
-import br.edu.cesar.filafood.dominio.estoque.EstoqueDaUnidade;
+import br.edu.cesar.filafood.infraestrutura.persistencia.memoria.EstoqueDaUnidade;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 

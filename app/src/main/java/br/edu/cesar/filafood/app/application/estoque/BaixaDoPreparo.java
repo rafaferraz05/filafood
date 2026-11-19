@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.consumo.NecessidadeDoPedido;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /**
  * Baixa automática ao iniciar o preparo (F1 RN 4).
@@ -20,9 +20,9 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
 public class BaixaDoPreparo extends MovimentacaoNoEstoque<BaixaDePreparo> {
 
     private final PedidoDoPreparo pedidos;
-    private final FichasTecnicas fichas;
+    private final FichaTecnicaRepositorio fichas;
 
-    public BaixaDoPreparo(Insumos insumos, PedidoDoPreparo pedidos, FichasTecnicas fichas) {
+    public BaixaDoPreparo(InsumoRepositorio insumos, PedidoDoPreparo pedidos, FichaTecnicaRepositorio fichas) {
         super(insumos);
         this.pedidos = pedidos;
         this.fichas = fichas;

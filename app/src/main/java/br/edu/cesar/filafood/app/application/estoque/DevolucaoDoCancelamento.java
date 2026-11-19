@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /**
  * Devolução ao cancelar o preparo (F1 RN 5).
@@ -23,7 +23,7 @@ public class DevolucaoDoCancelamento extends MovimentacaoNoEstoque<CancelamentoD
 
     private final PedidoDoPreparo pedidos;
 
-    public DevolucaoDoCancelamento(Insumos insumos, PedidoDoPreparo pedidos) {
+    public DevolucaoDoCancelamento(InsumoRepositorio insumos, PedidoDoPreparo pedidos) {
         super(insumos);
         this.pedidos = pedidos;
     }

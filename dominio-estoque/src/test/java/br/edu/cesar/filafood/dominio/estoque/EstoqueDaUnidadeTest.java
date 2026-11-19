@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
+import br.edu.cesar.filafood.infraestrutura.persistencia.memoria.EstoqueDaUnidade;
 
 /** Identidade e escopo por unidade do insumo (G-08). */
 class EstoqueDaUnidadeTest {

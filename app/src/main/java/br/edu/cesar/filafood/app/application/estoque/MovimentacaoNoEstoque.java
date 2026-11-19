@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /**
  * Template Method das movimentações de estoque (ADR 0010).
@@ -19,9 +19,9 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
  */
 public abstract class MovimentacaoNoEstoque<C> {
 
-    protected final Insumos insumos;
+    protected final InsumoRepositorio insumos;
 
-    protected MovimentacaoNoEstoque(Insumos insumos) {
+    protected MovimentacaoNoEstoque(InsumoRepositorio insumos) {
         this.insumos = insumos;
     }
 

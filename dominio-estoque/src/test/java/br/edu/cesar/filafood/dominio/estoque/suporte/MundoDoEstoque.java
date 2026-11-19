@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import br.edu.cesar.filafood.dominio.estoque.EstoqueDaUnidade;
+import br.edu.cesar.filafood.infraestrutura.persistencia.memoria.EstoqueDaUnidade;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
-import br.edu.cesar.filafood.dominio.estoque.consumo.PreparoDoPedido;
-import br.edu.cesar.filafood.dominio.estoque.devolucao.DevolucaoDoPreparo;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicasDaUnidade;
+import br.edu.cesar.filafood.infraestrutura.persistencia.memoria.PreparoDoPedido;
+import br.edu.cesar.filafood.infraestrutura.persistencia.memoria.DevolucaoDoPreparo;
+import br.edu.cesar.filafood.infraestrutura.persistencia.memoria.FichasTecnicasDaUnidade;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 
 /**

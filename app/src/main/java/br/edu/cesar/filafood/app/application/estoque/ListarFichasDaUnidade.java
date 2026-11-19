@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ItemDaFicha;
 
 /** Lista os produtos do cardápio com a disponibilidade e a ficha do produto escolhido (F1 RN 2). */
@@ -19,9 +19,9 @@ import br.edu.cesar.filafood.dominio.estoque.ficha.ItemDaFicha;
 public class ListarFichasDaUnidade {
 
     private final CatalogoDeProdutos catalogo;
-    private final FichasTecnicas fichas;
+    private final FichaTecnicaRepositorio fichas;
 
-    public ListarFichasDaUnidade(CatalogoDeProdutos catalogo, FichasTecnicas fichas) {
+    public ListarFichasDaUnidade(CatalogoDeProdutos catalogo, FichaTecnicaRepositorio fichas) {
         this.catalogo = catalogo;
         this.fichas = fichas;
     }

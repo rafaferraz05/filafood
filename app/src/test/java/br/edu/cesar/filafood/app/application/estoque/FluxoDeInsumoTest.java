@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.reposicao.ConsumoMedioSobrePrazoEEstoqueMinimo;
 
 /** Casos de uso de insumo com a porta em memória (padrões §9: fake em vez de mock). */
@@ -102,7 +102,7 @@ class FluxoDeInsumoTest {
         assertEquals("o estoque mínimo deve ser maior que zero", erro.getMessage());
     }
     /** Fake da porta: guarda os agregados por id, como o adaptador faria no banco. */
-    private static final class InsumosEmMemoria implements Insumos {
+    private static final class InsumosEmMemoria implements InsumoRepositorio {
 
         private final Map<InsumoId, Insumo> dados = new LinkedHashMap<>();
 

@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.reposicao.PoliticaDeReposicao;
 
 /** Lista os insumos da unidade com saldo, ponto de pedido e sinal de reposição (D-11). */
 @Service
 public class ListarInsumos {
 
-    private final Insumos insumos;
+    private final InsumoRepositorio insumos;
     private final PoliticaDeReposicao politica;
 
-    public ListarInsumos(Insumos insumos, PoliticaDeReposicao politica) {
+    public ListarInsumos(InsumoRepositorio insumos, PoliticaDeReposicao politica) {
         this.insumos = insumos;
         this.politica = politica;
     }

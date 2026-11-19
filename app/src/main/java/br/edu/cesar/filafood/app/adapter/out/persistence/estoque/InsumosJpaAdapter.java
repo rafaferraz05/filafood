@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
-/** Adaptador JPA da porta {@link Insumos} (docs/padroes-do-projeto.md, seção 8). */
+/** Adaptador JPA da porta {@link InsumoRepositorio} (docs/padroes-do-projeto.md, seção 8). */
 @Component
-class InsumosJpaAdapter implements Insumos {
+class InsumosJpaAdapter implements InsumoRepositorio {
 
     private final InsumoJpaRepository repositorio;
     private final InsumoMapper mapper;

@@ -13,7 +13,7 @@ import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.consumo.ItemDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.consumo.NecessidadeDoPedido;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 
 /** Monta a tela de Preparo do pedido: itens, necessidade por insumo e o que já foi baixado (RN 4). */
@@ -21,10 +21,10 @@ import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 public class DetalharPreparo {
 
     private final PedidoDoPreparo pedidos;
-    private final FichasTecnicas fichas;
+    private final FichaTecnicaRepositorio fichas;
     private final CatalogoDeProdutos catalogo;
 
-    public DetalharPreparo(PedidoDoPreparo pedidos, FichasTecnicas fichas, CatalogoDeProdutos catalogo) {
+    public DetalharPreparo(PedidoDoPreparo pedidos, FichaTecnicaRepositorio fichas, CatalogoDeProdutos catalogo) {
         this.pedidos = pedidos;
         this.fichas = fichas;
         this.catalogo = catalogo;

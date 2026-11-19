@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.insumo.MovimentacaoEstoque;
 import br.edu.cesar.filafood.dominio.estoque.reposicao.PoliticaDeReposicao;
 
@@ -18,10 +18,10 @@ import br.edu.cesar.filafood.dominio.estoque.reposicao.PoliticaDeReposicao;
 @Service
 public class DetalharInsumo {
 
-    private final Insumos insumos;
+    private final InsumoRepositorio insumos;
     private final PoliticaDeReposicao politica;
 
-    public DetalharInsumo(Insumos insumos, PoliticaDeReposicao politica) {
+    public DetalharInsumo(InsumoRepositorio insumos, PoliticaDeReposicao politica) {
         this.insumos = insumos;
         this.politica = politica;
     }

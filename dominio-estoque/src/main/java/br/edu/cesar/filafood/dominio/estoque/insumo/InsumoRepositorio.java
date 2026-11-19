@@ -7,7 +7,7 @@ import java.util.Optional;
  * Porta de saída do agregado Insumo. O adaptador JPA vive no `app`; o domínio não conhece
  * framework (docs/padroes-do-projeto.md, seção 4).
  */
-public interface Insumos {
+public interface InsumoRepositorio {
 
     Optional<Insumo> porId(InsumoId id);
 

@@ -19,11 +19,11 @@ import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.consumo.ItemDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaId;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /** Baixa por explosão da ficha técnica (F1 RN 4) contra dublês das portas. */
 class FluxoDePreparoTest {
@@ -141,7 +141,7 @@ class FluxoDePreparoTest {
 
         assertEquals("o preparo só pode ser concluído com o pedido em preparo", erro.getMessage());
     }
-    private static final class InsumosEmMemoria implements Insumos {
+    private static final class InsumosEmMemoria implements InsumoRepositorio {
 
         private final Map<InsumoId, Insumo> dados = new LinkedHashMap<>();
         private int salvas;
@@ -193,7 +193,7 @@ class FluxoDePreparoTest {
         }
     }
 
-    private static final class FichasEmMemoria implements FichasTecnicas {
+    private static final class FichasEmMemoria implements FichaTecnicaRepositorio {
 
         private final Map<String, FichaTecnica> porChave = new LinkedHashMap<>();
 

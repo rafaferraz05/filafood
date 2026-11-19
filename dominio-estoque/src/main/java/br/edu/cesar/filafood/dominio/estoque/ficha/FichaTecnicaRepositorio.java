@@ -7,7 +7,7 @@ import java.util.Optional;
  * Porta de saída das fichas técnicas. O adaptador JPA vive no `app`; o domínio não conhece
  * framework (docs/padroes-do-projeto.md, seção 4).
  */
-public interface FichasTecnicas {
+public interface FichaTecnicaRepositorio {
 
     Optional<FichaTecnica> porProduto(String unidadeId, ProdutoId produto);
 

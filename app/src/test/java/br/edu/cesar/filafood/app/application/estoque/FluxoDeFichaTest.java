@@ -17,11 +17,11 @@ import org.junit.jupiter.api.Test;
 
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
-import br.edu.cesar.filafood.dominio.estoque.ficha.FichasTecnicas;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnicaRepositorio;
 import br.edu.cesar.filafood.dominio.estoque.ficha.ProdutoId;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /** Casos de uso da ficha técnica contra dublês das portas (F1 RN 2). */
 class FluxoDeFichaTest {
@@ -121,7 +121,7 @@ class FluxoDeFichaTest {
         assertTrue(fichas.porProduto(UNIDADE, ProdutoId.de(produto)).isEmpty());
     }
 
-    private static final class FichasEmMemoria implements FichasTecnicas {
+    private static final class FichasEmMemoria implements FichaTecnicaRepositorio {
 
         private final Map<String, FichaTecnica> porChave = new LinkedHashMap<>();
 
@@ -149,7 +149,7 @@ class FluxoDeFichaTest {
         }
     }
 
-    private static final class InsumosEmMemoria implements Insumos {
+    private static final class InsumosEmMemoria implements InsumoRepositorio {
 
         private final Map<String, Insumo> cadastrados = new LinkedHashMap<>();
 

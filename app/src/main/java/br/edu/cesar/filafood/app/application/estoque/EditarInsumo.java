@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoId;
-import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
+import br.edu.cesar.filafood.dominio.estoque.insumo.InsumoRepositorio;
 
 /**
  * Edita o cadastro do insumo (RN 1).
@@ -19,9 +19,9 @@ import br.edu.cesar.filafood.dominio.estoque.insumo.Insumos;
 @Service
 public class EditarInsumo {
 
-    private final Insumos insumos;
+    private final InsumoRepositorio insumos;
 
-    public EditarInsumo(Insumos insumos) {
+    public EditarInsumo(InsumoRepositorio insumos) {
         this.insumos = insumos;
     }
 

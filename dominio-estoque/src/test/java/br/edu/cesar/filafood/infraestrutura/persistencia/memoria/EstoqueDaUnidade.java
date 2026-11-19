@@ -1,4 +1,4 @@
-package br.edu.cesar.filafood.dominio.estoque;
+package br.edu.cesar.filafood.infraestrutura.persistencia.memoria;
 
 import java.math.BigDecimal;
 import java.util.Collection;
