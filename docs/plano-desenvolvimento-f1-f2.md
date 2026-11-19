@@ -254,7 +254,7 @@ divergência do código.
 
 | Fim de | Demonstração | Comando |
 | --- | --- | --- |
-| P0 | app sobe com a tela inicial e o banco criado | `docker compose up -d db` + `.\mvnw.cmd -f app/pom.xml spring-boot:run` |
+| P0 | app sobe com a tela inicial e o banco criado | `docker compose up -d db` + `.\mvnw.cmd -pl apresentacao-vaadin -am spring-boot:run` |
 | P1 | cadastrar insumo, dar entrada e ver o saldo | app |
 | P2 | ficha, baixa, devolução e "a repor" | app + BDD F1 |
 | P3 | entregador, zona e taxa calculada | app |

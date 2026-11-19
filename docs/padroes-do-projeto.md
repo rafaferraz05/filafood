@@ -29,12 +29,12 @@
 | --- | --- | --- |
 | Linguagem | **Java 21** | todos os módulos |
 | Build | **Maven via wrapper** (`.\mvnw.cmd`), raiz agregadora (ADR 0001) | raiz |
-| Framework | **Spring Boot 4.1.2** | `app` |
+| Framework | **Spring Boot 4.1.2** | `apresentacao-vaadin` |
 | Persistência | **Spring Data JPA / Hibernate 7** | `app` |
 | Banco | **PostgreSQL 16** | dev (Compose) e produção; `test` com Testcontainers (**pendente**) |
-| Migração | **Flyway 12** (`spring-boot-starter-flyway`) | `app/src/main/resources/db/migration` |
+| Migração | **Flyway 12** (`spring-boot-starter-flyway`) | `infraestrutura/src/main/resources/db/migration` |
 | Validação | **Jakarta Bean Validation** (**pendente**) | `app` |
-| Web | **Vaadin Flow 25.3.4** | `app/adapter/in/web` |
+| Web | **Vaadin Flow 25.3.4** | `apresentacao-vaadin/src/main/java/br/edu/cesar/filafood/apresentacao` |
 | BDD | **Cucumber 7.21.1** + JUnit 5.11.4 | módulos de domínio (no `app`, pendente) |
 | Teste de arquitetura | **ArchUnit 1.5.1** — 4 regras (3 do app + pureza do domínio) | `app` (test) |
 | Teste de banco | **Testcontainers 1.21.4 (PostgreSQL)** — profile `integracao` (ADR 0009) | `app` (test) |
@@ -87,7 +87,7 @@ filafood/
 | `dominio-atendimento` | Rafael | idem |
 | `dominio-cardapio`, `dominio-compras` | Denys | idem |
 | pastas do contexto dentro de `app` (`application`, `persistence`, `web`) | dono do contexto | idem |
-| `app/config`, `app/shared`, POM pai, `docker-compose.yml` | grupo | PR + revisão de outra pessoa |
+| `apresentacao-vaadin` (config), `pai`, `docker-compose.yml` | grupo | PR + revisão de outra pessoa |
 
 ## 4. Camadas, pacotes e dependências
 
@@ -205,8 +205,8 @@ otimista (G-11).
 
 ## 8. Integração entre contextos
 
-- **Porta + adaptador.** Quem precisa declara a interface (`PedidoPronto`, `CatalogoDeProdutos`);
-  quem integra implementa em `app/adapter/out/integracao`.
+- **Porta + adaptador.** Quem precisa declara a interface (`PedidoPronto`, `ProdutoRepositorioAplicacao`);
+  quem integra implementa em `infraestrutura/.../integracao`.
 - **Dados de outro contexto viram DTO local.** Não se passa entidade de domínio de um módulo para
   outro.
 - **Nenhum `join` entre tabelas de contextos diferentes.** Se a tela precisa dos dois, um caso de uso
@@ -236,7 +236,7 @@ identidade + 2 do mapper + 4 de caso de uso + 4 ArchUnit); o profile `integracao
 contra um Postgres real. Playwright e Cucumber rodando no `app` ainda não existem.
 
 **Teste de integração:** o teste de repositório com Testcontainers roda no profile `integracao`
-(`.\mvnw.cmd -pl app -am -Pintegracao test`), não no build padrão — assim `.\mvnw.cmd test` não
+(`.\mvnw.cmd -pl infraestrutura -am -Pintegracao test`), não no build padrão — assim `.\mvnw.cmd test` não
 passa a exigir Docker para todo mundo. O teste usa Flyway + Hibernate direto, sem Spring Test,
 porque o Boot 4 exige JUnit 6 e o reactor fica no JUnit 5 (ADR 0009).
 
@@ -260,7 +260,7 @@ porque o Boot 4 exige JUnit 6 e o reactor fica no JUnit 5 (ADR 0009).
 - **PR pequeno, uma intenção.** Um PR não mistura refatoração com funcionalidade.
 - Antes de abrir: `.\mvnw.cmd test` na raiz e `node scripts/verificar-prototipos.mjs` quando mexer
   em `docs/prototipos`.
-- Revisão de outra pessoa é obrigatória em `app/config`, POMs, migrações e domínio de outro dono.
+- Revisão de outra pessoa é obrigatória em `pai`, `apresentacao-vaadin` (config), migrações e domínio de outro dono.
 - Nunca commitar `target/`, segredo, `.env` ou arquivo temporário.
 
 **Checklist de revisão (5 perguntas)**
@@ -303,8 +303,8 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 4. **BDD:** `.feature` em `dominio-<contexto>/src/test/resources`, tags `@fX-rnY`, mensagens exatas.
 5. **Domínio:** classes em `src/main` do módulo; sem framework.
 6. **Schema:** migração Flyway e entidade JPA no adaptador.
-7. **Casos de uso e portas** em `app/application/<contexto>`.
-8. **Views** em `app/adapter/in/web/<contexto>`, com perfil e estados.
+7. **Serviços de aplicação e portas** em `aplicacao/src/main/java/.../aplicacao/<contexto>`.
+8. **Views** em `apresentacao-vaadin/src/main/java/br/edu/cesar/filafood/apresentacao/<contexto>`, com perfil e estados.
 9. **Testes:** BDD, domínio, persistência, web, concorrência quando houver disputa.
 10. **Rastreabilidade:** história → regra → caso de uso → tela → teste.
 
@@ -357,7 +357,7 @@ rastreabilidade; protótipo correspondente navegável; nenhum estado de erro sem
 .\mvnw.cmd -Pintegracao test                     # teste de repositório (D-13, exige Docker)
 .\mvnw.cmd -f dominio-estoque/pom.xml test       # um módulo
 docker compose up -d --wait db                   # Postgres do dev (precisa de .env)
-.\mvnw.cmd -pl app -am spring-boot:run           # aplicação (DB_PASSWORD no ambiente)
+.\mvnw.cmd -pl apresentacao-vaadin -am spring-boot:run           # aplicação (DB_PASSWORD no ambiente)
 node scripts/verificar-prototipos.mjs            # protótipos
 ```
 

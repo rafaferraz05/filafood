@@ -29,7 +29,7 @@ layout e no CSS dos protótipos de `docs/prototipos/`.
 - [`docs/requisitos-pendentes-f1-f2.md`](../requisitos-pendentes-f1-f2.md): rastreabilidade do que a
   F1 entrega e do que falta.
 - Testes legíveis: `dominio-estoque/src/test/resources/` (Gherkin em pt-BR) e
-  `app/src/test/java/` (casos de uso e arquitetura).
+  `aplicacao/src/test/java/` (serviços) e `apresentacao-vaadin/src/test/java/` (rotas e arquitetura).
 
 ### Nível 2 — a suíte roda no GitHub Actions
 
@@ -37,7 +37,7 @@ Cada push em `main` dispara o workflow **verificação** (`.github/workflows/ci.
 
 1. **Build e BDD (sem Docker)** — `./mvnw -B -ntp test` na raiz: Parte 1, todos os `dominio-*` e o
    `app`. É a mesma suíte que roda na máquina do autor.
-2. **Persistência com Testcontainers** — `./mvnw -pl app -am -Pintegracao test`, que sobe um Postgres
+2. **Persistência com Testcontainers** — `./mvnw -pl infraestrutura -am -Pintegracao test`, que sobe um Postgres
    real no runner e valida migração, mapeamento e constraints.
 
 Abra a aba **Actions**: verde significa que o projeto compila e os cenários passam, sem que o avaliador
@@ -52,7 +52,7 @@ instale Java, Maven ou Docker. Os relatórios Cucumber ficam como artefato do pr
    comando:
 
    ```bash
-   ./mvnw -pl app -am spring-boot:run "-Dspring-boot.run.arguments=--server.port=8090"
+   ./mvnw -pl apresentacao-vaadin -am spring-boot:run "-Dspring-boot.run.arguments=--server.port=8090"
    ```
 
 4. A porta 8090 é encaminhada e aberta no navegador automaticamente. Navegue pelo menu da topbar.
@@ -67,7 +67,7 @@ Debian trixie, resolvida com `"moby": false` nas opções da feature. Depois da 
 ```powershell
 cd C:\Users\pc\FilaFood
 $env:DB_PASSWORD = ((Get-Content .env) | Where-Object { $_ -like 'DB_PASSWORD=*' }) -replace '^DB_PASSWORD=',''
-.\mvnw.cmd -pl app -am spring-boot:run "-Dspring-boot.run.arguments=--server.port=8090"
+.\mvnw.cmd -pl apresentacao-vaadin -am spring-boot:run "-Dspring-boot.run.arguments=--server.port=8090"
 ```
 
 Abre em `http://localhost:8090`. O banco é o Postgres do `docker-compose.yml`; o Flyway aplica as
@@ -121,37 +121,37 @@ a F1 entrega hoje e aponta o arquivo onde ele é atendido — inclusive o que ai
 
 | Requisito | Situação na F1 | Onde está |
 | --- | --- | --- |
-| Funcionalidade **completa**, não só leitura | Atende: a F1 (complexidade alta) tem escrita em todos os caminhos — cadastro, edição, entrada, baixa e devolução —, além das leituras | `app/.../application/estoque/` (casos de uso de escrita) e `adapter/in/web/` (telas) |
+| Funcionalidade **completa**, não só leitura | Atende: a F1 (complexidade alta) tem escrita em todos os caminhos — cadastro, edição, entrada, baixa e devolução —, além das leituras | `aplicacao/.../aplicacao/estoque/` (serviços de escrita) e `apresentacao-vaadin/.../apresentacao/` (rotas) |
 | Repositório público no GitHub | Atende | `https://github.com/rafaferraz05/filafood` |
-| Java + Spring Boot + JPA + Angular ou Vaadin | Atende com Spring Boot 4.1.2, JPA/Hibernate 7 e Vaadin 25 | `pom.xml`, `app/pom.xml` |
+| Java + Spring Boot + JPA + Angular ou Vaadin | Atende com Spring Boot 4.1.2, JPA/Hibernate 7 e Vaadin 25 | `pom.xml`, `apresentacao-vaadin/pom.xml` |
 | Descrição do domínio com linguagem onipresente | Atende: vocabulário, sinônimos proibidos e fluxos; os nomes do documento são os das classes, telas e mensagens | [`docs/dominio.md`](../dominio.md) §3 e §4 |
 | Mapa da história do usuário | Atende | [`docs/historia-do-usuario.md`](../historia-do-usuario.md) |
-| Protótipos de alta fidelidade | Atende: telas de Insumos, Detalhe, Ficha e Preparo em todos os estados; o CSS do protótipo é o CSS da aplicação | [`docs/prototipos/estoque/fluxo-a/`](../prototipos/estoque/fluxo-a/) e `app/src/main/resources/META-INF/resources/filafood-app.css` |
+| Protótipos de alta fidelidade | Atende: telas de Insumos, Detalhe, Ficha e Preparo em todos os estados; o CSS do protótipo é o CSS da aplicação | [`docs/prototipos/estoque/fluxo-a/`](../prototipos/estoque/fluxo-a/) e `apresentacao-vaadin/src/main/resources/META-INF/resources/filafood-app.css` |
 | Modelo CML (Context Mapper) | Atende no **tático** de F1/F2 | [`filafood.cml`](../../filafood.cml); escopo no [ADR 0008](../adr/0008-cml-escopo-tatico-f1-f2.md) |
 | Cenários de teste BDD | Atende: 6 features e 28 cenários de F1 | `dominio-estoque/src/test/resources/br/edu/cesar/filafood/dominio/estoque/{insumo,entrada,ficha,consumo,devolucao,reposicao}/*.feature` |
 | Automação BDD com Cucumber | Atende: suíte JUnit Platform que roda o Cucumber e gera relatório | `dominio-estoque/src/test/java/.../RunCucumberTest.java` e `target/cucumber-report.html` |
 | Níveis preliminar, estratégico, tático e operacional do DDD | **Parcial**: três níveis fechados; o estratégico não tem ContextMap | tabela 5.2 |
-| Arquitetura limpa | Atende: dependências apontam para dentro, cobradas por ArchUnit | `app/src/test/java/.../ArquiteturaTest.java`; tabela 5.4 |
+| Arquitetura limpa | Atende: dependências apontam para dentro, cobradas por ArchUnit | `apresentacao-vaadin/src/test/java/.../ArquiteturaTest.java`; tabela 5.4 |
 | 4 ou mais padrões de projeto | **Parcial**: a F1 entrega 3 (Iterator, Template Method e Strategy); o quarto entra na integração ou na auditoria | tabela 5.3 |
-| Camada de persistência com mapeamento objeto-relacional | Atende: entidades JPA separadas do domínio, mappers, repositórios, Flyway e `ddl-auto: validate` | `app/.../adapter/out/persistence/estoque/`; tabela 5.5 |
-| Camada de apresentação web | Atende: cinco telas navegáveis com o layout do protótipo | `app/.../adapter/in/web/`; tabela 5.6 |
+| Camada de persistência com mapeamento objeto-relacional | Atende: entidades JPA separadas do domínio, mappers, repositórios, Flyway e `ddl-auto: validate` | `infraestrutura/.../persistencia/jpa/`; tabela 5.5 |
+| Camada de apresentação web | Atende: cinco telas navegáveis com o layout do protótipo | `apresentacao-vaadin/.../apresentacao/`; tabela 5.6 |
 
 ### 5.2 Níveis de DDD
 
 | Nível | O que a F1 tem | Onde |
 | --- | --- | --- |
 | **Preliminar** | linguagem onipresente, mapa da história, protótipos de alta fidelidade | [`dominio.md`](../dominio.md), [`historia-do-usuario.md`](../historia-do-usuario.md), [`prototipos/`](../prototipos/) |
-| **Estratégico** | contextos delimitados como módulos; integração por portas (`PedidoDoPreparo`, `CatalogoDeProdutos`) em vez de chamada direta; contexto de estoque isolado | `dominio-*` (nenhum importa outro), `app/application/estoque/`, [ADR 0005](../adr/0005-integracao-entre-contextos.md) e [ADR 0011](../adr/0011-pedido-de-referencia-na-f1.md). **Falta o ContextMap** ([ADR 0008](../adr/0008-cml-escopo-tatico-f1-f2.md)) |
+| **Estratégico** | contextos delimitados como módulos; integração por portas (`PedidoRepositorioAplicacao`, `ProdutoRepositorioAplicacao`) em vez de chamada direta; contexto de estoque isolado | `dominio-*` (nenhum importa outro), `aplicacao/src/main/java/br/edu/cesar/filafood/aplicacao/estoque/`, [ADR 0005](../adr/0005-integracao-entre-contextos.md) e [ADR 0011](../adr/0011-pedido-de-referencia-na-f1.md). **Falta o ContextMap** ([ADR 0008](../adr/0008-cml-escopo-tatico-f1-f2.md)) |
 | **Tático** | agregados (`Insumo` com `MovimentacaoEstoque`; `FichaTecnica` com `ItemDaFicha`), value objects (`InsumoId`, `MovimentacaoId`, `FichaTecnicaId`, `ProdutoId`), serviços (`NecessidadeDoPedido`, `PoliticaDeReposicao`), repositórios como portas | `dominio-estoque/src/main/java/br/edu/cesar/filafood/dominio/estoque/{insumo,ficha,consumo,reposicao}/` e [`filafood.cml`](../../filafood.cml) |
-| **Operacional** | casos de uso com limite transacional, adaptadores de persistência e de web, migrações e dados de demonstração | `app/application/estoque/`, `app/adapter/out/persistence/estoque/`, `app/adapter/in/web/`, `app/src/main/resources/db/{migration,seed}/` |
+| **Operacional** | casos de uso com limite transacional, adaptadores de persistência e de web, migrações e dados de demonstração | `aplicacao/src/main/java/br/edu/cesar/filafood/aplicacao/estoque/`, `infraestrutura/src/main/java/br/edu/cesar/filafood/infraestrutura/persistencia/jpa/`, `apresentacao-vaadin/src/main/java/br/edu/cesar/filafood/apresentacao/`, `infraestrutura/src/main/resources/db/{migration,seed}/` |
 
 ### 5.3 Padrões de projeto
 
 | Padrão | Implementação na F1 | Colaboração real |
 | --- | --- | --- |
 | **Iterator** | `ficha/FichaTecnica.java` implementa `Iterable<ItemDaFicha>`; `consumo/NecessidadeDoPedido.java` percorre pelos iteradores | a explosão da ficha e a tela percorrem os itens sem receber a coleção interna |
-| **Template Method** | `app/application/estoque/MovimentacaoNoEstoque.java`, com `RegistrarEntradaDeInsumo`, `BaixaDoPreparo` e `DevolucaoDoCancelamento` | o fluxo (validar tudo → aplicar → gravar → concluir) é único e transacional; cada subclasse define só o que varia |
-| **Strategy** | `dominio/estoque/reposicao/PoliticaDeReposicao.java`, com `ConsumoMedioSobrePrazoEEstoqueMinimo` e `SemReposicao`; bean em `app/config/ReposicaoConfig.java` | a fórmula do ponto de pedido muda sem tocar em `ListarInsumos`/`DetalharInsumo` |
+| **Template Method** | `aplicacao/.../estoque/movimentacao/MovimentacaoServicoAplicacao.java`, com `EntradaDeInsumoServicoAplicacao`, `BaixaDoPreparoServicoAplicacao` e `DevolucaoDoPreparoServicoAplicacao` | o fluxo (validar tudo → aplicar → gravar → concluir) é único e transacional; cada subclasse define só o que varia |
+| **Strategy** | `dominio/estoque/reposicao/PoliticaDeReposicao.java`, com `ConsumoMedioSobrePrazoEEstoqueMinimo` e `SemReposicao`; bean em `VaadinAplicacao.java` | a fórmula do ponto de pedido muda sem tocar em `InsumoServicoAplicacao` |
 | Quarto padrão | **ainda não** | Observer entra na integração entre contextos (P5) e Decorator na auditoria (P6); Proxy só com ganho medido — decisão no [ADR 0010](../adr/0010-padroes-de-projeto-em-f1.md) |
 
 ### 5.4 Arquitetura limpa
@@ -161,21 +161,23 @@ viola:
 
 | Regra | O que impede |
 | --- | --- |
-| Vaadin só em `adapter.in.web..` | caso de uso ou persistência importando componente de tela |
-| `application` não depende de `adapter` | caso de uso chamando repositório JPA direto |
-| `adapter.in.web` não acessa `adapter.out.persistence` | view consultando banco sem caso de uso |
-| `dominio-estoque` sem Spring/JPA/Vaadin | domínio virando entidade anêmica com anotação |
+| Vaadin só em `apresentacao..` | domínio, aplicação ou infraestrutura importando componente de tela |
+| `aplicacao` não depende de `infraestrutura`/`apresentacao` | serviço de aplicação chamando JPA ou Vaadin direto |
+| `apresentacao` não acessa `infraestrutura` | rota consultando banco sem serviço |
+| `infraestrutura` não depende de `apresentacao` | persistência conhecendo tela |
+| `dominio` sem Spring/JPA/Vaadin e sem as outras camadas | domínio virando entidade anêmica com anotação |
 
-Portas e adaptadores: `Insumos` e `FichasTecnicas` (domínio) e `CatalogoDeProdutos`/`PedidoDoPreparo`
-(aplicação) são interfaces; quem implementa são `InsumosJpaAdapter`, `FichasJpaAdapter`,
-`CatalogoJpaAdapter` e `PedidoJpaAdapter`.
+Portas e adaptadores: `InsumoRepositorio` e `FichaTecnicaRepositorio` (domínio) e
+`ProdutoRepositorioAplicacao`/`PedidoRepositorioAplicacao` (aplicação) são interfaces; quem implementa
+são `InsumoRepositorioJpa`, `FichaTecnicaRepositorioJpa`, `ProdutoRepositorioAplicacaoJpa` e
+`PedidoRepositorioAplicacaoJpa`.
 
 ### 5.5 Persistência objeto-relacional
 
 - **Entidades separadas do domínio:** `InsumoJpa`, `MovimentacaoEstoqueJpa`, `ProdutoJpa`,
   `FichaTecnicaJpa`, `ItemFichaTecnicaJpa`, `PedidoJpa`, `ItemPedidoJpa`, em
-  `app/.../adapter/out/persistence/estoque/`. Nenhuma classe do domínio tem `@Entity`.
-- **Mappers:** `InsumoMapper` e `FichaTecnicaMapper` convertem nos dois sentidos; `ItemPedidoJpa` e
+  `infraestrutura/.../persistencia/jpa/`. Nenhuma classe do domínio tem `@Entity`.
+- **Mappers:** `JpaMapeador` converte os dois sentidos; `ItemPedidoJpa` e
   `PedidoJpa` são lidos pelo `PedidoJpaAdapter`.
 - **Identidade e agregados:** `InsumoId`/`MovimentacaoId`/`FichaTecnicaId`/`ProdutoId` são value
   objects; a movimentação é append-only (o mapper só acrescenta o que ainda não existe).

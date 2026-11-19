@@ -26,6 +26,12 @@ public class FichaTecnicaServico {
         repositorio.salvar(ficha);
     }
 
+    /** Abre a ficha do produto para edição, criando-a se ainda não existir. */
+    public FichaTecnica abrir(String unidadeId, ProdutoId produto) {
+        return repositorio.porProduto(unidadeId, produto)
+                .orElseGet(() -> new FichaTecnica(FichaTecnicaId.novo(), unidadeId, produto));
+    }
+
     public FichaTecnica obter(String unidadeId, ProdutoId produto) {
         return repositorio.porProduto(unidadeId, produto)
                 .orElseThrow(() -> new RegraDeNegocioException("produto sem ficha técnica na unidade"));

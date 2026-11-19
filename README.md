@@ -22,18 +22,18 @@ Convenção: o CML fica na **raiz**, como no exemplo `sgb-2025-01`. A documenta�
 Os arquivos `.feature` do Cucumber ficam dentro do módulo de domínio correspondente, em
 `src/test/resources`, espelhando o pacote do conceito.
 
-Build: o `pom.xml` da raiz agrega o `parte1`, os `dominio-*` e o `app`; `.\mvnw.cmd test` roda tudo.
+Build: o `pom.xml` da raiz agrega `pai`, `parte1`, os `dominio-*` e as camadas `aplicacao`, `infraestrutura` e `apresentacao-vaadin`; `.\mvnw.cmd test` roda tudo.
 Cada módulo continua rodando sozinho com `-f`, e a Parte 1 continua executável por
 `java -cp parte1/target/classes`. O teste de repositório com Testcontainers roda à parte, com
-`.\mvnw.cmd -pl app -am -Pintegracao test` (exige Docker).
+`.\mvnw.cmd -pl infraestrutura -am -Pintegracao test` (exige Docker).
 
-Aplicação: `.\mvnw.cmd -pl app -am spring-boot:run` sobe a tela inicial em `http://localhost:8080`.
+Aplicação: `.\mvnw.cmd -pl apresentacao-vaadin -am spring-boot:run` sobe a tela inicial em `http://localhost:8080`.
 Nesta máquina as portas 8080 e 8081 são do `tailscaled`, então use
 `"-Dspring-boot.run.arguments=--server.port=8090"`.
 
 Banco do dev: copie `.env.example` para `.env` (não versionado), rode `docker compose up -d --wait db` e
 exporte a mesma senha para o app (`$env:DB_PASSWORD = "..."`). O perfil `dev` é o padrão, e o schema é
-aplicado pelo Flyway a partir de `app/src/main/resources/db/migration`.
+aplicado pelo Flyway a partir de `infraestrutura/src/main/resources/db/migration`.
 
 
 ## Aplicação (F1 — estoque)

@@ -9,10 +9,18 @@ target/
 
 # Vaadin: frontend gerado pelo dev server e dependências Node
 node_modules/
-app/src/main/frontend/generated/
+apresentacao-vaadin/src/main/frontend/generated/
 
 # Segredo local do dev (o modelo com as chaves é o .env.example)
 .env
 
 # Bundle de desenvolvimento do Vaadin (gerado no build do frontend)
-app/src/main/bundles/
+apresentacao-vaadin/src/main/bundles/
+
+# Arquivos gerados pelo dev server do Vaadin no modulo de apresentacao
+apresentacao-vaadin/package.json
+apresentacao-vaadin/package-lock.json
+apresentacao-vaadin/vite.config.ts
+apresentacao-vaadin/tsconfig.json
+apresentacao-vaadin/types.d.ts
+apresentacao-vaadin/vite.generated.ts

@@ -64,5 +64,5 @@ jobs:
         run: chmod +x mvnw
 
       # O runner do GitHub já tem Docker, então o Postgres do teste sobe sozinho.
-      - name: "./mvnw.cmd -pl app -am -Pintegracao test"
-        run: ./mvnw -B -ntp -pl app -am -Pintegracao test
+      - name: "./mvnw.cmd -pl infraestrutura -am -Pintegracao test"
+        run: ./mvnw -B -ntp -pl infraestrutura -am -Pintegracao test

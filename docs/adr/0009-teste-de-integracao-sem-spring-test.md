@@ -9,7 +9,7 @@
 
 - **Decisão:** o teste de repositório do D-13 (`EsquemaDoEstoqueIT`) usa **Flyway + Hibernate
   direto**, sem contexto Spring, e **Testcontainers 1.21.4**. Ele roda no profile `integracao`
-  (`.\mvnw.cmd -pl app -am -Pintegracao test`), que inclui `*IT.java` no surefire; o build padrão
+  (`.\mvnw.cmd -pl infraestrutura -am -Pintegracao test`), que inclui `*IT.java` no surefire; o build padrão
   não depende de Docker.
 
 - **Consequências:**

@@ -7,7 +7,7 @@
 
 - **Decisão:** **PostgreSQL 16** em Docker Compose no perfil `dev`, **Testcontainers** com a mesma
   imagem no perfil `test`, e **Flyway** com migrações `V<nnn>__<descricao>.sql` em
-  `app/src/main/resources/db/migration`. `ddl-auto=validate`; schema só por migração.
+  `infraestrutura/src/main/resources/db/migration`. `ddl-auto=validate`; schema só por migração.
 
 - **Consequências:**
   - `numeric(12,2)` para dinheiro e `timestamptz` para data/hora sem surpresa de dialeto.

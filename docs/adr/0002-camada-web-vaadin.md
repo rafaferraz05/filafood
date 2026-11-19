@@ -5,7 +5,7 @@
 - **Contexto:** o Spec aceita Angular ou Vaadin; o grupo precisa de uma camada de apresentação para
   as telas dos protótipos, com validação de formulário e mensagens de erro do domínio (D2).
 
-- **Decisão:** usar **Vaadin Flow 24.x** em `app/adapter/in/web`, com views Java por tela e seleção
+- **Decisão:** usar **Vaadin Flow 24.x** em `apresentacao-vaadin/src/main/java/br/edu/cesar/filafood/apresentacao`, com views Java por tela e seleção
   de perfil na sessão. O tema replica as cores do protótipo; `docs/prototipos/estilo.css` não é
   importado pela aplicação.
 

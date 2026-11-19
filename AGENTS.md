@@ -1,23 +1,26 @@
 # AGENTS.md
 
 ## Repository shape
-The root `pom.xml` is a Maven aggregator (`br.edu.cesar.filafood:filafood`) for `parte1` and the
-`dominio-*` modules; `.\mvnw.cmd test` at the root runs all of them.
+The root `pom.xml` is a Maven aggregator (`br.edu.cesar.filafood:filafood`) for `pai`, `parte1`, the
+`dominio-*` modules and the three layers (`aplicacao`, `infraestrutura`, `apresentacao-vaadin`);
+`.\mvnw.cmd test` at the root runs all of them.
 
 - **`parte1/`**: Part 1 concurrency prototype in plain Java 21 (package `br/edu/cesar/filafood/`). It stays executable with `java -cp parte1/target/classes`.
-- **Domain modules** (`dominio-*/pom.xml`): children of the root POM, each with its own Cucumber/JUnit setup; a single one still runs with `-f`.
+- **Domain modules** (`dominio-*/pom.xml`): children of `pai/pom.xml`, each with its own Cucumber/JUnit setup; a single one still runs with `-f`.
   - `dominio-estoque` = F1 (estoque), `dominio-entrega` = F2 (entrega), `dominio-atendimento` = F3–F5 (unidades, pedidos, funcionários), `dominio-cardapio` = F6, `dominio-compras` = F7.
-- **`app/`**: composition root (Spring Boot 4.1.2, Vaadin 25.3.4, JPA, Flyway, Actuator; ArchUnit at test scope). Run it with `.\mvnw.cmd -pl app -am spring-boot:run`. Profile `dev` is the default and expects the Postgres from `docker-compose.yml`.
+- **`aplicacao/`**: serviços de aplicação (`*ServicoAplicacao`), DTOs de leitura e portas `*RepositorioAplicacao`; Spring tx, sem JPA/Vaadin.
+- **`infraestrutura/`**: entidades `*Jpa`, `JpaMapeador`, implementações `*RepositorioJpa`, Spring Data e as migrações/seed do Flyway.
+- **`apresentacao-vaadin/`**: rotas `*Rota`, layout e o composition root `VaadinAplicacao` (Spring Boot 4.1.2, Vaadin 25.3.4, Actuator; ArchUnit at test scope). Run it with `.\mvnw.cmd -pl apresentacao-vaadin -am spring-boot:run`. Profile `dev` is the default and expects the Postgres from `docker-compose.yml`.
 - `docs/` holds the domain source of truth and static prototypes; `docs/prototipos/` is HTML/CSS only.
 
 ## Commands (Windows PowerShell; use the wrapper)
 ```powershell
 .\mvnw.cmd test                               # raiz: parte1 + todos os módulos
 .\mvnw.cmd -q package                         # empacota tudo
-.\mvnw.cmd -pl app -am -Pintegracao test      # inclui o teste de repositório (Docker)
-.\mvnw.cmd -pl app -am spring-boot:run "-Dspring-boot.run.arguments=--spring.profiles.active=dev,verificacao --server.port=8092"  # smoke test das operações no banco de dev
+.\mvnw.cmd -pl infraestrutura -am -Pintegracao test      # inclui o teste de repositório (Docker)
+.\mvnw.cmd -pl apresentacao-vaadin -am spring-boot:run "-Dspring-boot.run.arguments=--spring.profiles.active=dev,verificacao --server.port=8092"  # smoke test das operações no banco de dev
 docker compose up -d --wait db                # Postgres do dev (precisa de .env)
-.\mvnw.cmd -pl app -am spring-boot:run         # app (8080/8081 são do tailscaled; ver gotchas)
+.\mvnw.cmd -pl apresentacao-vaadin -am spring-boot:run         # app (8080/8081 são do tailscaled; ver gotchas)
 java -cp parte1/target/classes br.edu.cesar.filafood.Main
 java -cp parte1/target/classes br.edu.cesar.filafood.CenarioDeCarga
 
@@ -53,8 +56,8 @@ node scripts/verificar-prototipos.mjs         # prototype guard
 - Ports 8080 and 8081 are taken by `tailscaled` on this machine; run the app with `"-Dspring-boot.run.arguments=--server.port=8090"`.
 - `.env` is not versioned (copy `.env.example`); `docker compose` reads it, but the app needs `DB_PASSWORD` exported in the shell, and the dev profile is the default.
 - `db/seed` (V900) só entra no perfil `dev`: semeia Pão, Carne, Queijo e Tomate. O runner `verificacao` cadastra um insumo novo a cada execução, então o banco de dev acumula esses insumos de teste. Ele também roda o ciclo do preparo uma vez: baixa o pedido #1337 e em seguida cancela e devolve os insumos, deixando o pedido `CANCELADO`; a segunda tentativa de cancelamento é recusada. Para voltar ao estado do protótipo (`ENVIADO`, estoque cheio), recrie o volume com `docker compose down -v` e suba de novo — o Flyway reaplica as 6 migrações.
-- Migrations live in `app/src/main/resources/db/migration` (`V<nnn>__<descricao>.sql`); `ddl-auto=validate`, so the schema comes only from Flyway. The dev seed occupies versions 900+ (`db/seed`), so a dev database already at 901 needs `spring.flyway.out-of-order=true` (set in `application-dev.yml`) to accept a newer schema migration such as `V002`.
-- Vaadin dev mode requires `com.vaadin:vaadin-dev` (already in `app/pom.xml`); `app/src/main/frontend/generated/` and `node_modules/` are generated and gitignored. The production frontend build (`vaadin-maven-plugin`) is not configured yet.
-- The app's CSS is the prototype stylesheet: `docs/prototipos/estilo.css` is copied into `META-INF/resources` at build time and loaded by `AppShell` as `/estilo.css`; `app.css` is only the Vaadin delta. Screens use `MainLayout` + the helpers in `app/adapter/in/web/layout`, never their own layout/CSS. A screen only appears in the topbar navigation when it is added to `layout/TelaDoMenu` (title + route + view class).
+- Migrations live in `infraestrutura/src/main/resources/db/migration` (`V<nnn>__<descricao>.sql`); `ddl-auto=validate`, so the schema comes only from Flyway. The dev seed occupies versions 900+ (`db/seed`), so a dev database already at 901 needs `spring.flyway.out-of-order=true` (set in `application-dev.yml`) to accept a newer schema migration such as `V002`.
+- Vaadin dev mode requires `com.vaadin:vaadin-dev` (already in `apresentacao-vaadin/pom.xml`); `apresentacao-vaadin/src/main/frontend/generated/` and `node_modules/` are generated and gitignored. The production frontend build (`vaadin-maven-plugin`) is not configured yet.
+- The app's CSS is the prototype stylesheet: `docs/prototipos/estilo.css` is copied into `META-INF/resources` at build time and loaded by `AppShell` as `/estilo.css`; `app.css` is only the Vaadin delta. Screens use `MainLayout` + the helpers in `apresentacao-vaadin/src/main/java/br/edu/cesar/filafood/apresentacao/layout`, never their own layout/CSS. A screen only appears in the topbar navigation when it is added to `layout/TelaDoMenu` (title + route + `*Rota` class).
 - The root `README.md` documents Part 1 and the F1 application; architecture is in `docs/arquitetura.md` and the validation/demo guide (GitHub, Actions, Codespaces, local) in `docs/entrega/entregaf1.md`. Build and module commands are here and in `docs/prototipos/ATENDIMENTO.md`.
 - Windows console can show mojibake for pt-BR accents; source files are UTF-8. Don't re-encode files to fix the console.
