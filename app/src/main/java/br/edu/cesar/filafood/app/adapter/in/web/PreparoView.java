@@ -14,15 +14,10 @@ import br.edu.cesar.filafood.app.adapter.in.web.layout.Badge;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Cabecalho;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.MainLayout;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Tabela;
-import br.edu.cesar.filafood.app.application.estoque.BaixaDePreparo;
-import br.edu.cesar.filafood.app.application.estoque.BaixaDoPreparo;
-import br.edu.cesar.filafood.app.application.estoque.CancelamentoDoPreparo;
-import br.edu.cesar.filafood.app.application.estoque.ConcluirPreparo;
-import br.edu.cesar.filafood.app.application.estoque.DetalharPreparo;
-import br.edu.cesar.filafood.app.application.estoque.DevolucaoDoCancelamento;
-import br.edu.cesar.filafood.app.application.estoque.InsumoDoPreparo;
-import br.edu.cesar.filafood.app.application.estoque.ItemDoPreparo;
-import br.edu.cesar.filafood.app.application.estoque.PreparoDetalhe;
+import br.edu.cesar.filafood.aplicacao.estoque.preparo.InsumoDoPreparo;
+import br.edu.cesar.filafood.aplicacao.estoque.preparo.ItemDoPreparo;
+import br.edu.cesar.filafood.aplicacao.estoque.preparo.PreparoDetalhe;
+import br.edu.cesar.filafood.aplicacao.estoque.preparo.PreparoServicoAplicacao;
 import br.edu.cesar.filafood.app.config.PedidoDeDemonstracao;
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
@@ -36,24 +31,17 @@ public class PreparoView extends Div {
             + "baixa é tudo ou nada: se faltar saldo de qualquer insumo, nenhuma movimentação é gravada. "
             + "Cancelar o preparo devolve exatamente o que foi consumido.";
 
-    private final DetalharPreparo detalhar;
-    private final BaixaDoPreparo baixar;
-    private final DevolucaoDoCancelamento devolver;
-    private final ConcluirPreparo concluir;
+    private final PreparoServicoAplicacao preparo;
     private final Paragraph aviso = new Paragraph();
 
-    public PreparoView(DetalharPreparo detalhar, BaixaDoPreparo baixar, DevolucaoDoCancelamento devolver,
-            ConcluirPreparo concluir) {
-        this.detalhar = detalhar;
-        this.baixar = baixar;
-        this.devolver = devolver;
-        this.concluir = concluir;
+    public PreparoView(PreparoServicoAplicacao preparo) {
+        this.preparo = preparo;
         aviso.setVisible(false);
         montar();
     }
 
     private void montar() {
-        PreparoDetalhe detalhe = detalhar.executar(PedidoDeDemonstracao.ID);
+        PreparoDetalhe detalhe = preparo.detalhar(PedidoDeDemonstracao.ID);
         removeAll();
         aviso.setVisible(false);
 
@@ -219,16 +207,16 @@ public class PreparoView extends Div {
     }
 
     private void darBaixa() {
-        executar(() -> baixar.executar(new BaixaDePreparo(PedidoDeDemonstracao.ID)),
+        executar(() -> preparo.iniciar(PedidoDeDemonstracao.ID),
                 "Preparo iniciado e insumos baixados.");
     }
 
     private void concluirPreparo() {
-        executar(() -> concluir.executar(PedidoDeDemonstracao.ID), "Preparo concluído.");
+        executar(() -> preparo.concluir(PedidoDeDemonstracao.ID), "Preparo concluído.");
     }
 
     private void cancelarPreparo() {
-        executar(() -> devolver.executar(new CancelamentoDoPreparo(PedidoDeDemonstracao.ID)),
+        executar(() -> preparo.cancelar(PedidoDeDemonstracao.ID),
                 "Preparo cancelado e insumos devolvidos ao estoque.");
     }
 

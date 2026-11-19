@@ -21,13 +21,10 @@ import br.edu.cesar.filafood.app.adapter.in.web.layout.Campo;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Entradas;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.MainLayout;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Tabela;
-import br.edu.cesar.filafood.app.application.estoque.AlteracaoDeInsumo;
-import br.edu.cesar.filafood.app.application.estoque.AlterarEstadoDoInsumo;
-import br.edu.cesar.filafood.app.application.estoque.CadastrarInsumo;
-import br.edu.cesar.filafood.app.application.estoque.EditarInsumo;
-import br.edu.cesar.filafood.app.application.estoque.InsumoResumo;
-import br.edu.cesar.filafood.app.application.estoque.ListarInsumos;
-import br.edu.cesar.filafood.app.application.estoque.NovoInsumo;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.AlteracaoDeInsumo;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.InsumoResumo;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.InsumoServicoAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.NovoInsumo;
 import br.edu.cesar.filafood.app.config.UnidadeDeDemonstracao;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 
@@ -40,10 +37,7 @@ public class InsumosView extends Div {
             + "pedido, que é o consumo médio diário vezes o prazo de entrega mais o estoque mínimo. "
             + "Insumo inativo não é monitorado: não há consumo a repor.";
 
-    private final ListarInsumos listar;
-    private final CadastrarInsumo cadastrar;
-    private final AlterarEstadoDoInsumo alterarEstado;
-    private final EditarInsumo editar;
+    private final InsumoServicoAplicacao servico;
 
     private final Cabecalho cabecalho = new Cabecalho("Insumos",
             "Estoque da unidade, com saldo, estoque mínimo e ponto de pedido.");
@@ -53,12 +47,8 @@ public class InsumosView extends Div {
     private final Paragraph aviso = new Paragraph();
     private List<InsumoResumo> insumos = List.of();
 
-    public InsumosView(ListarInsumos listar, CadastrarInsumo cadastrar, AlterarEstadoDoInsumo alterarEstado,
-            EditarInsumo editar) {
-        this.listar = listar;
-        this.cadastrar = cadastrar;
-        this.alterarEstado = alterarEstado;
-        this.editar = editar;
+    public InsumosView(InsumoServicoAplicacao servico) {
+        this.servico = servico;
 
         busca.campo().addValueChangeListener(evento -> render());
         filtro.setItems("Estado: todos", "Estado: normal", "Estado: a repor", "Estado: inativo");
@@ -81,7 +71,7 @@ public class InsumosView extends Div {
     }
 
     private void recarregar() {
-        insumos = listar.executar(UnidadeDeDemonstracao.ID);
+        insumos = servico.pesquisarResumos(UnidadeDeDemonstracao.ID);
         render();
     }
 
@@ -156,9 +146,9 @@ public class InsumosView extends Div {
     private void alterar(InsumoResumo insumo, boolean ativo) {
         try {
             if (ativo) {
-                alterarEstado.reativar(insumo.id().toString());
+                servico.reativar(insumo.id().toString());
             } else {
-                alterarEstado.desativar(insumo.id().toString());
+                servico.desativar(insumo.id().toString());
             }
             aviso(ativo ? "Insumo reativado." : "Insumo desativado.", true);
             recarregar();
@@ -220,7 +210,7 @@ public class InsumosView extends Div {
 
     private void salvarCadastro(Dialog dialogo, Input nome, Input unidade, Input minimo, Input prazo) {
         try {
-            cadastrar.executar(new NovoInsumo(UnidadeDeDemonstracao.ID, nome.getValue(), unidade.getValue(),
+            servico.cadastrar(new NovoInsumo(UnidadeDeDemonstracao.ID, nome.getValue(), unidade.getValue(),
                     numero(minimo.getValue()), inteiro(prazo.getValue())));
             dialogo.close();
             aviso("Insumo cadastrado.", true);
@@ -233,7 +223,7 @@ public class InsumosView extends Div {
     private void salvarEdicao(Dialog dialogo, InsumoResumo insumo, Input nome, Input unidade, Input minimo,
             Input prazo) {
         try {
-            editar.executar(new AlteracaoDeInsumo(insumo.id().toString(), nome.getValue(), unidade.getValue(),
+            servico.alterar(new AlteracaoDeInsumo(insumo.id().toString(), nome.getValue(), unidade.getValue(),
                     numero(minimo.getValue()), inteiro(prazo.getValue())));
             dialogo.close();
             aviso("Insumo atualizado.", true);

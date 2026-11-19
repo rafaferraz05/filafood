@@ -22,11 +22,11 @@ import br.edu.cesar.filafood.app.adapter.in.web.layout.Campo;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Entradas;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.MainLayout;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Tabela;
-import br.edu.cesar.filafood.app.application.estoque.DetalharInsumo;
-import br.edu.cesar.filafood.app.application.estoque.EntradaDeInsumo;
-import br.edu.cesar.filafood.app.application.estoque.InsumoDetalhe;
-import br.edu.cesar.filafood.app.application.estoque.MovimentacaoResumo;
-import br.edu.cesar.filafood.app.application.estoque.RegistrarEntradaDeInsumo;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.InsumoDetalhe;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.InsumoServicoAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.MovimentacaoResumo;
+import br.edu.cesar.filafood.aplicacao.estoque.movimentacao.EntradaDeInsumo;
+import br.edu.cesar.filafood.aplicacao.estoque.movimentacao.EntradaDeInsumoServicoAplicacao;
 import br.edu.cesar.filafood.app.config.UnidadeDeDemonstracao;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 
@@ -38,14 +38,14 @@ public class DetalheInsumoView extends Div implements BeforeEnterObserver {
     private static final DateTimeFormatter DATA_HORA = DateTimeFormatter.ofPattern("dd/MM HH:mm");
     private static final Locale PT_BR = Locale.forLanguageTag("pt-BR");
 
-    private final DetalharInsumo detalhar;
-    private final RegistrarEntradaDeInsumo registrarEntrada;
+    private final InsumoServicoAplicacao insumos;
+    private final EntradaDeInsumoServicoAplicacao entrada;
     private final Paragraph aviso = new Paragraph();
     private String insumoId;
 
-    public DetalheInsumoView(DetalharInsumo detalhar, RegistrarEntradaDeInsumo registrarEntrada) {
-        this.detalhar = detalhar;
-        this.registrarEntrada = registrarEntrada;
+    public DetalheInsumoView(InsumoServicoAplicacao insumos, EntradaDeInsumoServicoAplicacao entrada) {
+        this.insumos = insumos;
+        this.entrada = entrada;
         aviso.setVisible(false);
     }
 
@@ -56,7 +56,7 @@ public class DetalheInsumoView extends Div implements BeforeEnterObserver {
     }
 
     private void montar() {
-        InsumoDetalhe detalhe = detalhar.executar(insumoId);
+        InsumoDetalhe detalhe = insumos.obterResumoExpandido(insumoId);
         removeAll();
         aviso.setVisible(false);
 
@@ -166,7 +166,7 @@ public class DetalheInsumoView extends Div implements BeforeEnterObserver {
 
     private void registrar(InsumoDetalhe detalhe, Input quantidade, Input custo) {
         try {
-            registrarEntrada.executar(new EntradaDeInsumo(detalhe.id().toString(),
+            entrada.registrar(new EntradaDeInsumo(detalhe.id().toString(),
                     numero(quantidade.getValue()), numero(custo.getValue())));
             montar();
             aviso("Entrada registrada.", true);

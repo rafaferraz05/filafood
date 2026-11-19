@@ -22,15 +22,13 @@ import br.edu.cesar.filafood.app.adapter.in.web.layout.Campo;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Entradas;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.MainLayout;
 import br.edu.cesar.filafood.app.adapter.in.web.layout.Tabela;
-import br.edu.cesar.filafood.app.application.estoque.AdicionarItemNaFicha;
-import br.edu.cesar.filafood.app.application.estoque.FichaDetalhe;
-import br.edu.cesar.filafood.app.application.estoque.FichasDaUnidade;
-import br.edu.cesar.filafood.app.application.estoque.InsumoResumo;
-import br.edu.cesar.filafood.app.application.estoque.ItemDaFichaResumo;
-import br.edu.cesar.filafood.app.application.estoque.ListarFichasDaUnidade;
-import br.edu.cesar.filafood.app.application.estoque.ListarInsumos;
-import br.edu.cesar.filafood.app.application.estoque.ProdutoComFicha;
-import br.edu.cesar.filafood.app.application.estoque.RemoverItemDaFicha;
+import br.edu.cesar.filafood.aplicacao.estoque.ficha.FichaDetalhe;
+import br.edu.cesar.filafood.aplicacao.estoque.ficha.FichaServicoAplicacao;
+import br.edu.cesar.filafood.aplicacao.estoque.ficha.FichasDaUnidade;
+import br.edu.cesar.filafood.aplicacao.estoque.ficha.ItemDaFichaResumo;
+import br.edu.cesar.filafood.aplicacao.estoque.ficha.ProdutoComFicha;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.InsumoResumo;
+import br.edu.cesar.filafood.aplicacao.estoque.insumo.InsumoServicoAplicacao;
 import br.edu.cesar.filafood.app.config.UnidadeDeDemonstracao;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
 
@@ -43,26 +41,21 @@ public class FichaTecnicaView extends Div {
             + "mesmo insumo não pode aparecer duas vezes no produto nesta unidade. A ficha vale por "
             + "unidade, e produto sem ficha não pode ser vendido.";
 
-    private final ListarFichasDaUnidade listar;
-    private final AdicionarItemNaFicha adicionar;
-    private final RemoverItemDaFicha remover;
-    private final ListarInsumos listarInsumos;
+    private final FichaServicoAplicacao fichas;
+    private final InsumoServicoAplicacao insumos;
     private final Paragraph aviso = new Paragraph();
 
     private String produtoSelecionado;
 
-    public FichaTecnicaView(ListarFichasDaUnidade listar, AdicionarItemNaFicha adicionar,
-            RemoverItemDaFicha remover, ListarInsumos listarInsumos) {
-        this.listar = listar;
-        this.adicionar = adicionar;
-        this.remover = remover;
-        this.listarInsumos = listarInsumos;
+    public FichaTecnicaView(FichaServicoAplicacao fichas, InsumoServicoAplicacao insumos) {
+        this.fichas = fichas;
+        this.insumos = insumos;
         aviso.setVisible(false);
         montar();
     }
 
     private void montar() {
-        FichasDaUnidade dados = listar.executar(UnidadeDeDemonstracao.ID, produtoSelecionado);
+        FichasDaUnidade dados = fichas.pesquisarResumos(UnidadeDeDemonstracao.ID, produtoSelecionado);
         FichaDetalhe ficha = dados.ficha().orElse(null);
         if (ficha != null) {
             produtoSelecionado = ficha.produtoId();
@@ -178,7 +171,7 @@ public class FichaTecnicaView extends Div {
         }
 
         Map<String, String> idPorRotulo = new LinkedHashMap<>();
-        for (InsumoResumo insumo : listarInsumos.executar(UnidadeDeDemonstracao.ID)) {
+        for (InsumoResumo insumo : insumos.pesquisarResumos(UnidadeDeDemonstracao.ID)) {
             if (insumo.ativo()) {
                 idPorRotulo.put(insumo.nome() + " · " + insumo.unidadeDeMedida(), insumo.id().toString());
             }
@@ -221,7 +214,7 @@ public class FichaTecnicaView extends Div {
             if (insumoId == null) {
                 throw new RegraDeNegocioException("selecione o insumo");
             }
-            adicionar.executar(UnidadeDeDemonstracao.ID, produtoId, insumoId,
+            fichas.adicionarItem(UnidadeDeDemonstracao.ID, produtoId, insumoId,
                     numero(quantidade.getValue()).setScale(3, RoundingMode.HALF_UP));
             montar();
             aviso("Item adicionado à ficha.", true);
@@ -232,7 +225,7 @@ public class FichaTecnicaView extends Div {
 
     private void removerItem(String produtoId, String insumoId) {
         try {
-            remover.executar(UnidadeDeDemonstracao.ID, produtoId, insumoId);
+            fichas.removerItem(UnidadeDeDemonstracao.ID, produtoId, insumoId);
             montar();
             aviso("Item removido da ficha.", true);
         } catch (RegraDeNegocioException excecao) {
