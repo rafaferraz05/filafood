@@ -112,7 +112,101 @@ VERIFICACAO OK: cancelamento do pedido #1337 devolveu Pão 3, Carne 0,6, Queijo 
 
 Suíte local: 35 testes no `dominio-estoque` (29 de BDD + 6 da política de reposição) e 28 no `app`.
 
-## 5. Limitações conhecidas
+## 5. A F1 contra o Spec
+
+O [`docs/Spec.md`](../Spec.md) lista os requisitos do trabalho. Esta seção compara cada um com o que
+a F1 entrega hoje e aponta o arquivo onde ele é atendido — inclusive o que ainda está parcial.
+
+### 5.1 Requisitos do Spec
+
+| Requisito | Situação na F1 | Onde está |
+| --- | --- | --- |
+| Funcionalidade **completa**, não só leitura | Atende: a F1 (complexidade alta) tem escrita em todos os caminhos — cadastro, edição, entrada, baixa e devolução —, além das leituras | `app/.../application/estoque/` (casos de uso de escrita) e `adapter/in/web/` (telas) |
+| Repositório público no GitHub | Atende | `https://github.com/rafaferraz05/filafood` |
+| Java + Spring Boot + JPA + Angular ou Vaadin | Atende com Spring Boot 4.1.2, JPA/Hibernate 7 e Vaadin 25 | `pom.xml`, `app/pom.xml` |
+| Descrição do domínio com linguagem onipresente | Atende: vocabulário, sinônimos proibidos e fluxos; os nomes do documento são os das classes, telas e mensagens | [`docs/dominio.md`](../dominio.md) §3 e §4 |
+| Mapa da história do usuário | Atende | [`docs/historia-do-usuario.md`](../historia-do-usuario.md) |
+| Protótipos de alta fidelidade | Atende: telas de Insumos, Detalhe, Ficha e Preparo em todos os estados; o CSS do protótipo é o CSS da aplicação | [`docs/prototipos/estoque/fluxo-a/`](../prototipos/estoque/fluxo-a/) e `app/src/main/resources/META-INF/resources/filafood-app.css` |
+| Modelo CML (Context Mapper) | Atende no **tático** de F1/F2 | [`filafood.cml`](../../filafood.cml); escopo no [ADR 0008](../adr/0008-cml-escopo-tatico-f1-f2.md) |
+| Cenários de teste BDD | Atende: 6 features e 28 cenários de F1 | `dominio-estoque/src/test/resources/br/edu/cesar/filafood/dominio/estoque/{insumo,entrada,ficha,consumo,devolucao,reposicao}/*.feature` |
+| Automação BDD com Cucumber | Atende: suíte JUnit Platform que roda o Cucumber e gera relatório | `dominio-estoque/src/test/java/.../RunCucumberTest.java` e `target/cucumber-report.html` |
+| Níveis preliminar, estratégico, tático e operacional do DDD | **Parcial**: três níveis fechados; o estratégico não tem ContextMap | tabela 5.2 |
+| Arquitetura limpa | Atende: dependências apontam para dentro, cobradas por ArchUnit | `app/src/test/java/.../ArquiteturaTest.java`; tabela 5.4 |
+| 4 ou mais padrões de projeto | **Parcial**: a F1 entrega 3 (Iterator, Template Method e Strategy); o quarto entra na integração ou na auditoria | tabela 5.3 |
+| Camada de persistência com mapeamento objeto-relacional | Atende: entidades JPA separadas do domínio, mappers, repositórios, Flyway e `ddl-auto: validate` | `app/.../adapter/out/persistence/estoque/`; tabela 5.5 |
+| Camada de apresentação web | Atende: cinco telas navegáveis com o layout do protótipo | `app/.../adapter/in/web/`; tabela 5.6 |
+
+### 5.2 Níveis de DDD
+
+| Nível | O que a F1 tem | Onde |
+| --- | --- | --- |
+| **Preliminar** | linguagem onipresente, mapa da história, protótipos de alta fidelidade | [`dominio.md`](../dominio.md), [`historia-do-usuario.md`](../historia-do-usuario.md), [`prototipos/`](../prototipos/) |
+| **Estratégico** | contextos delimitados como módulos; integração por portas (`PedidoDoPreparo`, `CatalogoDeProdutos`) em vez de chamada direta; contexto de estoque isolado | `dominio-*` (nenhum importa outro), `app/application/estoque/`, [ADR 0005](../adr/0005-integracao-entre-contextos.md) e [ADR 0011](../adr/0011-pedido-de-referencia-na-f1.md). **Falta o ContextMap** ([ADR 0008](../adr/0008-cml-escopo-tatico-f1-f2.md)) |
+| **Tático** | agregados (`Insumo` com `MovimentacaoEstoque`; `FichaTecnica` com `ItemDaFicha`), value objects (`InsumoId`, `MovimentacaoId`, `FichaTecnicaId`, `ProdutoId`), serviços (`NecessidadeDoPedido`, `PoliticaDeReposicao`), repositórios como portas | `dominio-estoque/src/main/java/br/edu/cesar/filafood/dominio/estoque/{insumo,ficha,consumo,reposicao}/` e [`filafood.cml`](../../filafood.cml) |
+| **Operacional** | casos de uso com limite transacional, adaptadores de persistência e de web, migrações e dados de demonstração | `app/application/estoque/`, `app/adapter/out/persistence/estoque/`, `app/adapter/in/web/`, `app/src/main/resources/db/{migration,seed}/` |
+
+### 5.3 Padrões de projeto
+
+| Padrão | Implementação na F1 | Colaboração real |
+| --- | --- | --- |
+| **Iterator** | `ficha/FichaTecnica.java` implementa `Iterable<ItemDaFicha>`; `consumo/NecessidadeDoPedido.java` percorre pelos iteradores | a explosão da ficha e a tela percorrem os itens sem receber a coleção interna |
+| **Template Method** | `app/application/estoque/MovimentacaoNoEstoque.java`, com `RegistrarEntradaDeInsumo`, `BaixaDoPreparo` e `DevolucaoDoCancelamento` | o fluxo (validar tudo → aplicar → gravar → concluir) é único e transacional; cada subclasse define só o que varia |
+| **Strategy** | `dominio/estoque/reposicao/PoliticaDeReposicao.java`, com `ConsumoMedioSobrePrazoEEstoqueMinimo` e `SemReposicao`; bean em `app/config/ReposicaoConfig.java` | a fórmula do ponto de pedido muda sem tocar em `ListarInsumos`/`DetalharInsumo` |
+| Quarto padrão | **ainda não** | Observer entra na integração entre contextos (P5) e Decorator na auditoria (P6); Proxy só com ganho medido — decisão no [ADR 0010](../adr/0010-padroes-de-projeto-em-f1.md) |
+
+### 5.4 Arquitetura limpa
+
+As regras são executáveis, não convenção de revisão — `ArquiteturaTest` falha o build quando alguém
+viola:
+
+| Regra | O que impede |
+| --- | --- |
+| Vaadin só em `adapter.in.web..` | caso de uso ou persistência importando componente de tela |
+| `application` não depende de `adapter` | caso de uso chamando repositório JPA direto |
+| `adapter.in.web` não acessa `adapter.out.persistence` | view consultando banco sem caso de uso |
+| `dominio-estoque` sem Spring/JPA/Vaadin | domínio virando entidade anêmica com anotação |
+
+Portas e adaptadores: `Insumos` e `FichasTecnicas` (domínio) e `CatalogoDeProdutos`/`PedidoDoPreparo`
+(aplicação) são interfaces; quem implementa são `InsumosJpaAdapter`, `FichasJpaAdapter`,
+`CatalogoJpaAdapter` e `PedidoJpaAdapter`.
+
+### 5.5 Persistência objeto-relacional
+
+- **Entidades separadas do domínio:** `InsumoJpa`, `MovimentacaoEstoqueJpa`, `ProdutoJpa`,
+  `FichaTecnicaJpa`, `ItemFichaTecnicaJpa`, `PedidoJpa`, `ItemPedidoJpa`, em
+  `app/.../adapter/out/persistence/estoque/`. Nenhuma classe do domínio tem `@Entity`.
+- **Mappers:** `InsumoMapper` e `FichaTecnicaMapper` convertem nos dois sentidos; `ItemPedidoJpa` e
+  `PedidoJpa` são lidos pelo `PedidoJpaAdapter`.
+- **Identidade e agregados:** `InsumoId`/`MovimentacaoId`/`FichaTecnicaId`/`ProdutoId` são value
+  objects; a movimentação é append-only (o mapper só acrescenta o que ainda não existe).
+- **Schema versionado:** `V001` (insumo/movimentação), `V002` (produto/ficha), `V003` (pedido);
+  `spring.jpa.hibernate.ddl-auto: validate` faz o boot falhar se o mapeamento divergir do schema.
+- **Teste de integração:** `EsquemaDoEstoqueIT` roda Flyway + Hibernate contra Postgres real
+  (Testcontainers) no perfil `integracao`.
+
+### 5.6 Camada de apresentação web
+
+| Tela | Rota | Classe |
+| --- | --- | --- |
+| Início | `/` | `InicioView` |
+| Insumos | `/insumos` | `InsumosView` |
+| Detalhe do insumo | `/insumos/{id}` | `DetalheInsumoView` |
+| Ficha técnica | `/ficha-tecnica` | `FichaTecnicaView` |
+| Preparo do pedido | `/preparo` | `PreparoView` |
+
+Todas usam a casca `MainLayout` + `Topbar` (navegação vinda de `TelaDoMenu`) e os componentes de
+`adapter/in/web/layout/`. O CSS é o do protótipo: `docs/prototipos/estilo.css` é copiado no build para
+`META-INF/resources` e carregado pelo `AppShell`; `filafood-app.css` guarda só o delta.
+
+### 5.7 O que ainda não fecha com o Spec
+
+1. **Quarto padrão de projeto** — Observer ou Decorator, conforme ADR 0010.
+2. **ContextMap** no CML (nível estratégico completo) — depende dos donos de F3–F11 (ADR 0008).
+3. **Concorrência** (G-11): não há lock otimista nem teste concorrente contra o banco.
+4. **Build de produção do Vaadin** não está configurado: a aplicação roda em dev mode.
+5. **F2** (entrega) ainda não existe; o Spec pede duas funcionalidades de complexidade alta por
+   integrante.
+## 6. Limitações conhecidas
 
 - **F2 (entrega) ainda não existe**: entregadores, zonas, taxa e despacho estão mapeados no plano, não
   implementados.
