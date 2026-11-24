@@ -65,7 +65,8 @@ class ArquiteturaTest {
 
     @Test
     void dominioNaoConheceFramework() {
-        JavaClasses dominio = new ClassFileImporter().importPackages("br.edu.cesar.filafood.dominio.estoque");
+        // Estoque, cardápio e compras: as portas e regras de domínio seguem sem Spring, JPA ou Vaadin.
+        JavaClasses dominio = new ClassFileImporter().importPackages("br.edu.cesar.filafood.dominio");
         noClasses()
                 .should().dependOnClassesThat()
                 .resideInAnyPackage("org.springframework..", "jakarta.persistence..", "com.vaadin..")

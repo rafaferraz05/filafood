@@ -71,6 +71,11 @@
       </dependency>
       <dependency>
         <groupId>br.edu.cesar.filafood</groupId>
+        <artifactId>dominio-compras</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>br.edu.cesar.filafood</groupId>
         <artifactId>aplicacao</artifactId>
         <version>${project.version}</version>
       </dependency>

@@ -24,6 +24,12 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import jakarta.persistence.PersistenceException;
 
+import br.edu.cesar.filafood.dominio.compras.Fornecedor;
+import br.edu.cesar.filafood.dominio.compras.FornecedorId;
+import br.edu.cesar.filafood.infraestrutura.persistencia.jpa.compras.FornecedorJpa;
+import br.edu.cesar.filafood.infraestrutura.persistencia.jpa.compras.FornecedorMapper;
+import br.edu.cesar.filafood.infraestrutura.persistencia.jpa.compras.ItemCatalogoFornecedorJpa;
+
 /**
  * Migração, mapeamento e constraints contra um Postgres real (D-13). Usa Flyway + Hibernate direto
  * porque o Spring Boot 4 exige JUnit 6 no suporte de testes, e o reactor fica no JUnit 5.11.4.
@@ -53,6 +59,8 @@ class EsquemaDoEstoqueIT {
         configuracao.addAnnotatedClass(ProdutoJpa.class);
         configuracao.addAnnotatedClass(FichaTecnicaJpa.class);
         configuracao.addAnnotatedClass(ItemFichaTecnicaJpa.class);
+        configuracao.addAnnotatedClass(FornecedorJpa.class);
+        configuracao.addAnnotatedClass(ItemCatalogoFornecedorJpa.class);
         configuracao.setProperty("hibernate.connection.url", POSTGRES.getJdbcUrl());
         configuracao.setProperty("hibernate.connection.username", POSTGRES.getUsername());
         configuracao.setProperty("hibernate.connection.password", POSTGRES.getPassword());
@@ -171,6 +179,63 @@ class EsquemaDoEstoqueIT {
                 comando.setObject(2, fichaId);
                 comando.setObject(3, insumoId);
                 comando.setBigDecimal(4, BigDecimal.ZERO);
+                assertThrows(SQLException.class, comando::executeUpdate);
+            }
+        }
+    }
+
+    @Test
+    void persisteFornecedorComCatalogoELeDeVolta() {
+        UUID insumoId = UUID.randomUUID();
+        Fornecedor dominio = new Fornecedor(FornecedorId.novo(), "Mercado Central", "11222333000181",
+                "8133330002", "");
+        dominio.incluirItem(insumoId, true, new BigDecimal("0.45"), new BigDecimal("20"), 4);
+        try (Session sessao = fabrica.openSession()) {
+            sessao.beginTransaction();
+            sessao.persist(new InsumoJpa(insumoId, UUID.fromString(UNIDADE), "Pão de catálogo", "un",
+                    new BigDecimal("20.000"), 3, "ATIVO"));
+            sessao.persist(FornecedorMapper.paraJpa(dominio));
+            sessao.getTransaction().commit();
+        }
+
+        try (Session sessao = fabrica.openSession()) {
+            FornecedorJpa carregado = sessao.find(FornecedorJpa.class, dominio.id().valor());
+            assertNotNull(carregado);
+            Fornecedor volta = FornecedorMapper.paraDominio(carregado);
+            assertEquals(dominio.catalogo(), volta.catalogo());
+        }
+    }
+
+    @Test
+    void recusaSegundoItemDoMesmoInsumoNoCatalogo() throws SQLException {
+        UUID fornecedorId = UUID.randomUUID();
+        UUID insumoId = UUID.randomUUID();
+        try (Connection conexao = DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(),
+                POSTGRES.getPassword())) {
+            try (var comando = conexao.prepareStatement("insert into insumo (id, unidade_id, nome, "
+                    + "unidade_de_medida, estoque_minimo, prazo_de_entrega_em_dias, estado) values (?, ?, "
+                    + "'Cebola', 'kg', 5, 3, 'ATIVO')")) {
+                comando.setObject(1, insumoId);
+                comando.setObject(2, UUID.fromString(UNIDADE));
+                comando.executeUpdate();
+            }
+            try (var comando = conexao.prepareStatement("insert into fornecedor (id, nome, cnpj, telefone, estado) "
+                    + "values (?, 'Atacado Norte', '56789012000100', '8133330005', 'ATIVO')")) {
+                comando.setObject(1, fornecedorId);
+                comando.executeUpdate();
+            }
+            String sql = "insert into item_catalogo_fornecedor (id, fornecedor_id, insumo_id, preco_unitario, "
+                    + "quantidade_minima, prazo_de_entrega_em_dias) values (?, ?, ?, 20.00, 10, 7)";
+            try (var comando = conexao.prepareStatement(sql)) {
+                comando.setObject(1, UUID.randomUUID());
+                comando.setObject(2, fornecedorId);
+                comando.setObject(3, insumoId);
+                comando.executeUpdate();
+            }
+            try (var comando = conexao.prepareStatement(sql)) {
+                comando.setObject(1, UUID.randomUUID());
+                comando.setObject(2, fornecedorId);
+                comando.setObject(3, insumoId);
                 assertThrows(SQLException.class, comando::executeUpdate);
             }
         }

@@ -19,7 +19,7 @@ filafood (pom agregador: só <modules>)
 ├── dominio-entrega/         F2
 ├── dominio-atendimento/     F3–F5
 ├── dominio-cardapio/        F6 — cardápio (Produto, PeriodoPreco; main desde a F6)
-├── dominio-compras/         F7 (regras em dublês de teste)
+├── dominio-compras/         F7 (Fornecedor, catálogo, sugestão e escolha)
 ├── aplicacao/               serviços de aplicação, DTOs de leitura e portas de consulta
 ├── infraestrutura/          JPA, mapeadores, adaptadores e Flyway
 └── apresentacao-vaadin/     rotas Vaadin + composition root (VaadinAplicacao)

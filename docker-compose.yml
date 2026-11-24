@@ -8,7 +8,8 @@ services:
       POSTGRES_USER: ${DB_USER:-filafood}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD no ambiente}
     ports:
-      - "5432:5432"
+      # DB_PORT muda a porta do host quando a 5432 já tem um Postgres nativo (ex.: DB_PORT=5433).
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - filafood-db:/var/lib/postgresql/data
     healthcheck:

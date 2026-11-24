@@ -3,6 +3,8 @@ package br.edu.cesar.filafood.apresentacao.layout;
 import com.vaadin.flow.component.Component;
 
 import br.edu.cesar.filafood.apresentacao.cardapio.CardapioRota;
+import br.edu.cesar.filafood.apresentacao.compras.FornecedoresRota;
+import br.edu.cesar.filafood.apresentacao.compras.SugestoesDeCompraRota;
 import br.edu.cesar.filafood.apresentacao.estoque.ficha.FichaTecnicaRota;
 import br.edu.cesar.filafood.apresentacao.estoque.inicio.InicioRota;
 import br.edu.cesar.filafood.apresentacao.estoque.insumo.InsumosPesquisarRota;
@@ -21,6 +23,8 @@ public enum TelaDoMenu {
     INSUMOS("Insumos", "insumos", InsumosPesquisarRota.class),
     FICHA_TECNICA("Ficha técnica", "ficha-tecnica", FichaTecnicaRota.class),
     CARDAPIO("Cardápio", "cardapio", CardapioRota.class),
+    FORNECEDORES("Fornecedores", "fornecedores", FornecedoresRota.class),
+    COMPRAS("Compras", "compras", SugestoesDeCompraRota.class),
     PREPARO("Preparo do pedido", "preparo", PreparoRota.class);
 
     private final String titulo;

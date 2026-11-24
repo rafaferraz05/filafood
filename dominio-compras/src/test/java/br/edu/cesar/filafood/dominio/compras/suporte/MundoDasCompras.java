@@ -2,41 +2,64 @@ package br.edu.cesar.filafood.dominio.compras.suporte;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-/** Dublês locais para saldo, consumo, ponto de pedido e estado "a repor"; não acopla ao estoque. */
+import br.edu.cesar.filafood.dominio.compras.EscolhaDoFornecedor;
+import br.edu.cesar.filafood.dominio.compras.Fornecedor;
+import br.edu.cesar.filafood.dominio.compras.RegraDeNegocioException;
+import br.edu.cesar.filafood.dominio.compras.SugestaoDeCompra;
+
+/**
+ * Estado compartilhado dos cenários da F7. As regras são as do domínio ({@link SugestaoDeCompra},
+ * {@link EscolhaDoFornecedor} e {@link Fornecedor}); aqui ficam só os números de entrada e os dublês
+ * do estoque (insumos por nome, com o estado), para não acoplar ao módulo de estoque.
+ */
 public class MundoDasCompras {
-    public record Fornecedor(String nome, BigDecimal preco, int minimo, int prazo, boolean ativo) {}
-    public Fornecedor escolhido;
-    public final List<Fornecedor> fornecedores = new ArrayList<>();
-    public int pontoPedido, consumoDiario, cobertura, saldo, abertas, quantidadeBruta, quantidadeSugerida, prazoLimite;
-    public boolean aRepor, atraso;
-    public String resultado;
+
+    public record InsumoDoEstoque(UUID id, boolean ativo) {}
+
+    // RN 3
+    public int pontoPedido, consumoDiario, cobertura, saldo, abertas;
+    public BigDecimal quantidadeBruta, quantidadeSugerida;
+
+    // RN 4
+    public final List<EscolhaDoFornecedor.Oferta> ofertas = new ArrayList<>();
+    public int prazoLimite;
+    public EscolhaDoFornecedor.Resultado escolha;
+
+    // RN 1 e RN 2
+    public final Map<String, InsumoDoEstoque> insumos = new LinkedHashMap<>();
+    public Fornecedor fornecedor;
+    public String erro;
+
     public void sugerir() {
-        quantidadeBruta = pontoPedido + consumoDiario * cobertura - saldo - abertas;
-        quantidadeSugerida = quantidadeBruta <= 0 ? 0 : quantidadeBruta;
+        SugestaoDeCompra.Resultado resultado = SugestaoDeCompra.calcular(
+                BigDecimal.valueOf(pontoPedido), BigDecimal.valueOf(consumoDiario), cobertura,
+                BigDecimal.valueOf(saldo), BigDecimal.valueOf(abertas));
+        quantidadeBruta = resultado.quantidadeBruta();
+        quantidadeSugerida = resultado.quantidadeSugerida();
     }
+
     public void escolher() {
-        List<Fornecedor> todos = fornecedores.stream().filter(Fornecedor::ativo).toList();
-        if (todos.isEmpty()) { resultado = "não há fornecedor para o insumo"; escolhido = null; return; }
-        List<Fornecedor> noPrazo = todos.stream().filter(f -> f.prazo() <= prazoLimite).toList();
-        List<Fornecedor> candidatos = noPrazo.isEmpty() ? todos : noPrazo;
-        atraso = noPrazo.isEmpty();
-        escolhido = noPrazo.isEmpty()
-            ? candidatos.stream().min(Comparator.comparingInt(Fornecedor::prazo)
-                .thenComparing(Fornecedor::nome, String.CASE_INSENSITIVE_ORDER)).orElse(null)
-            : candidatos.stream().min(Comparator
-                .comparing((Fornecedor f) -> f.preco().multiply(BigDecimal.valueOf(arredondar(quantidadeSugerida, f.minimo()))))
-                .thenComparingInt(Fornecedor::prazo).thenComparing(Fornecedor::nome, String.CASE_INSENSITIVE_ORDER)).orElse(null);
-        if (escolhido == null) resultado = "não há fornecedor para o insumo";
-        else {
-            quantidadeSugerida = arredondar(quantidadeSugerida, escolhido.minimo());
-            resultado = escolhido.nome();
+        escolha = EscolhaDoFornecedor.escolher(quantidadeSugerida, prazoLimite, ofertas);
+        if (escolha.escolhida().isPresent()) {
+            quantidadeSugerida = escolha.quantidadeFinal();
         }
     }
-    private int arredondar(int qtd, int multiplo) {
-        if (qtd <= 0) return 0;
-        return ((qtd + multiplo - 1) / multiplo) * multiplo;
+
+    public InsumoDoEstoque insumo(String nome) {
+        return insumos.computeIfAbsent(nome, n -> new InsumoDoEstoque(UUID.randomUUID(), true));
+    }
+
+    public void tentar(Runnable acao) {
+        try {
+            acao.run();
+            erro = null;
+        } catch (RegraDeNegocioException e) {
+            erro = e.getMessage();
+        }
     }
 }

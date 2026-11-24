@@ -1,6 +1,9 @@
 package br.edu.cesar.filafood.dominio.compras;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.math.BigDecimal;
+
 import br.edu.cesar.filafood.dominio.compras.suporte.MundoDasCompras;
 import io.cucumber.java.pt.*;
 import io.cucumber.java.Before;
@@ -14,7 +17,7 @@ public class SugestaoSteps {
         mundo.pontoPedido=pp; mundo.consumoDiario=consumo; mundo.cobertura=cobertura; mundo.saldo=saldo; mundo.abertas=abertas;
     }
     @Quando("calculo a sugestão de compra") public void calcular() { mundo.sugerir(); }
-    @Então("a quantidade bruta sugerida é {int}") public void bruta(int n) { assertEquals(n, mundo.quantidadeBruta); }
-    @Então("a quantidade sugerida é {int}") public void sugerida(int n) { assertEquals(n, mundo.quantidadeSugerida); }
-    @Então("nenhuma compra é sugerida") public void nenhuma() { assertTrue(mundo.quantidadeBruta <= 0); assertEquals(0, mundo.quantidadeSugerida); }
+    @Então("a quantidade bruta sugerida é {int}") public void bruta(int n) { assertEquals(0, BigDecimal.valueOf(n).compareTo(mundo.quantidadeBruta)); }
+    @Então("a quantidade sugerida é {int}") public void sugerida(int n) { assertEquals(0, BigDecimal.valueOf(n).compareTo(mundo.quantidadeSugerida)); }
+    @Então("nenhuma compra é sugerida") public void nenhuma() { assertTrue(mundo.quantidadeBruta.signum() <= 0); assertEquals(0, mundo.quantidadeSugerida.signum()); }
 }

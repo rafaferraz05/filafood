@@ -60,20 +60,22 @@ body p.subtitulo {
   font-size: 13.5px;
 }
 
-/* Ações são button nativo no app; o protótipo estiliza links. */
-.acoes .link-acao {
+/* Ações são button nativo no app; o protótipo estiliza links. Vale também para o nome clicável
+   numa célula da tabela (produto, fornecedor, insumo), não só para a coluna de ações. */
+button.link-acao {
   background: none;
   border: 0;
   padding: 0;
-  margin-left: 14px;
   color: var(--vermelho);
   font: inherit;
   font-weight: 600;
+  text-align: left;
   cursor: pointer;
 }
 
-.acoes .link-acao:hover { text-decoration: underline; }
-.acoes .link-acao.apagada { color: var(--tinta-fraca); font-weight: 500; }
+.acoes .link-acao { margin-left: 14px; }
+button.link-acao:hover { text-decoration: underline; }
+button.link-acao.apagada { color: var(--tinta-fraca); font-weight: 500; }
 
 button.btn { border: 0; cursor: pointer; font: inherit; }
 
