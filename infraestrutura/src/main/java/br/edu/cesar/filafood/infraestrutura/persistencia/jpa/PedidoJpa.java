@@ -1,5 +1,6 @@
 package br.edu.cesar.filafood.infraestrutura.persistencia.jpa;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,18 @@ public class PedidoJpa {
     @Column(nullable = false, length = 20)
     private String estado;
 
+    @Column(precision = 12, scale = 2)
+    private BigDecimal valor;
+
+    @Column(name = "endereco_latitude", precision = 9, scale = 6)
+    private BigDecimal enderecoLatitude;
+
+    @Column(name = "endereco_longitude", precision = 9, scale = 6)
+    private BigDecimal enderecoLongitude;
+
+    @Column(length = 255)
+    private String endereco;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedidoJpa> itens = new ArrayList<>();
 
@@ -40,7 +53,7 @@ public class PedidoJpa {
         this.estado = estado;
     }
 
-    void mudarEstado(String estado) {
+    public void mudarEstado(String estado) {
         this.estado = estado;
     }
 
@@ -54,6 +67,22 @@ public class PedidoJpa {
 
     public String estado() {
         return estado;
+    }
+
+    public BigDecimal valor() {
+        return valor;
+    }
+
+    public BigDecimal enderecoLatitude() {
+        return enderecoLatitude;
+    }
+
+    public BigDecimal enderecoLongitude() {
+        return enderecoLongitude;
+    }
+
+    public String endereco() {
+        return endereco;
     }
 
     public List<ItemPedidoJpa> itens() {

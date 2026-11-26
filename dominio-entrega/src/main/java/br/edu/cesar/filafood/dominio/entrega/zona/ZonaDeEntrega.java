@@ -12,26 +12,75 @@ import br.edu.cesar.filafood.dominio.entrega.RegraDeNegocioException;
 /**
  * Zona de entrega: área definida por centro e raio, que delimita a taxa de entrega.
  *
- * <p>A taxa é o valor base mais o valor por quilômetro que excede o raio gratuito, limitada ao teto,
- * e é zerada quando o valor do pedido passa do valor mínimo de pedido da zona.
- *
- * <p>Dinheiro é {@link BigDecimal} com escala 2, como manda docs/padroes-do-projeto.md; distância
- * continua {@code double}.
+ * <p>A taxa é calculada por {@link PoliticaDeTaxa}; a zona guarda os parâmetros e a identidade.
+ * Dinheiro é {@link BigDecimal} com escala 2; distância continua {@code double}.
  */
 public class ZonaDeEntrega {
 
-    private final String nome;
-    private final Coordenada centro;
-    private final double raioKm;
+    private final ZonaId id;
+    private final String unidadeId;
+    private String nome;
+    private Coordenada centro;
+    private double raioKm;
     private BigDecimal valorBase;
-    private final double raioGratuitoKm;
-    private final BigDecimal valorPorKmExcedente;
-    private final BigDecimal teto;
-    private final BigDecimal valorMinimoDePedido;
+    private double raioGratuitoKm;
+    private BigDecimal valorPorKmExcedente;
+    private BigDecimal teto;
+    private BigDecimal valorMinimoDePedido;
     private boolean ativa = true;
 
-    public ZonaDeEntrega(String nome, Coordenada centro, double raioKm, BigDecimal valorBase, double raioGratuitoKm,
-            BigDecimal valorPorKmExcedente, BigDecimal teto, BigDecimal valorMinimoDePedido) {
+    public ZonaDeEntrega(ZonaId id, String unidadeId, String nome, Coordenada centro, double raioKm,
+            BigDecimal valorBase, double raioGratuitoKm, BigDecimal valorPorKmExcedente, BigDecimal teto,
+            BigDecimal valorMinimoDePedido) {
+        if (id == null) {
+            throw new IllegalArgumentException("o id da zona é obrigatório");
+        }
+        if (unidadeId == null || unidadeId.isBlank()) {
+            throw new RegraDeNegocioException("informe a unidade da zona");
+        }
+        this.id = id;
+        this.unidadeId = unidadeId;
+        alterarDados(nome, centro, raioKm, valorBase, raioGratuitoKm, valorPorKmExcedente, teto,
+                valorMinimoDePedido);
+    }
+
+    /** Reconstitui a zona a partir da persistência, preservando o estado. */
+    public static ZonaDeEntrega reconstituir(ZonaId id, String unidadeId, String nome, Coordenada centro,
+            double raioKm, BigDecimal valorBase, double raioGratuitoKm, BigDecimal valorPorKmExcedente,
+            BigDecimal teto, BigDecimal valorMinimoDePedido, boolean ativa) {
+        ZonaDeEntrega zona = new ZonaDeEntrega(id, unidadeId, nome, centro, raioKm, valorBase, raioGratuitoKm,
+                valorPorKmExcedente, teto, valorMinimoDePedido);
+        zona.ativa = ativa;
+        return zona;
+    }
+
+    public void alterarDados(String nome, Coordenada centro, double raioKm, BigDecimal valorBase,
+            double raioGratuitoKm, BigDecimal valorPorKmExcedente, BigDecimal teto,
+            BigDecimal valorMinimoDePedido) {
+        if (nome == null || nome.isBlank()) {
+            throw new RegraDeNegocioException("informe o nome da zona");
+        }
+        if (centro == null) {
+            throw new RegraDeNegocioException("informe o centro da zona");
+        }
+        if (raioKm <= 0) {
+            throw new RegraDeNegocioException("o raio da zona deve ser maior que zero");
+        }
+        if (raioGratuitoKm < 0) {
+            throw new RegraDeNegocioException("o raio grátis não pode ser negativo");
+        }
+        if (valorBase == null || valorBase.signum() < 0) {
+            throw new RegraDeNegocioException("o valor base não pode ser negativo");
+        }
+        if (valorPorKmExcedente == null || valorPorKmExcedente.signum() < 0) {
+            throw new RegraDeNegocioException("o valor por quilômetro não pode ser negativo");
+        }
+        if (teto == null || teto.signum() < 0) {
+            throw new RegraDeNegocioException("o teto não pode ser negativo");
+        }
+        if (valorMinimoDePedido == null || valorMinimoDePedido.signum() < 0) {
+            throw new RegraDeNegocioException("o valor mínimo de pedido não pode ser negativo");
+        }
         this.nome = nome;
         this.centro = centro;
         this.raioKm = raioKm;
@@ -47,29 +96,35 @@ public class ZonaDeEntrega {
     }
 
     public BigDecimal taxaPara(Coordenada endereco, BigDecimal valorDoPedido) {
-        return taxaParaDistancia(centro.distanciaEmKm(endereco), valorDoPedido);
+        return new PoliticaDeTaxaPorZona().calcular(this, centro.distanciaEmKm(endereco), valorDoPedido);
     }
 
     public BigDecimal taxaParaDistancia(double distanciaKm, BigDecimal valorDoPedido) {
-        if (valorDoPedido.compareTo(valorMinimoDePedido) > 0) {
-            return BigDecimal.ZERO.setScale(2);
-        }
-        double quilometrosExcedentes = Math.max(0, distanciaKm - raioGratuitoKm);
-        BigDecimal excedente = valorPorKmExcedente.multiply(BigDecimal.valueOf(quilometrosExcedentes));
-        return valorBase.add(excedente).min(teto).setScale(2, RoundingMode.HALF_UP);
+        return new PoliticaDeTaxaPorZona().calcular(this, distanciaKm, valorDoPedido);
     }
 
     public void desativar() {
         ativa = false;
     }
 
-    /** Edita o valor base pelo cadastro da zona. */
+    /** Edita só o valor base, pelo cadastro da zona (RN 2). */
     public void alterarValorBase(BigDecimal valorBase) {
+        if (valorBase == null || valorBase.signum() < 0) {
+            throw new RegraDeNegocioException("o valor base não pode ser negativo");
+        }
         this.valorBase = valorBase;
     }
 
     public void reativar() {
         ativa = true;
+    }
+
+    public ZonaId id() {
+        return id;
+    }
+
+    public String unidadeId() {
+        return unidadeId;
     }
 
     public String nome() {
@@ -84,8 +139,38 @@ public class ZonaDeEntrega {
         return raioKm;
     }
 
+    public BigDecimal valorBase() {
+        return valorBase;
+    }
+
+    public double raioGratuitoKm() {
+        return raioGratuitoKm;
+    }
+
+    public BigDecimal valorPorKmExcedente() {
+        return valorPorKmExcedente;
+    }
+
+    public BigDecimal teto() {
+        return teto;
+    }
+
+    public BigDecimal valorMinimoDePedido() {
+        return valorMinimoDePedido;
+    }
+
     public boolean isAtiva() {
         return ativa;
+    }
+
+    @Override
+    public boolean equals(Object outro) {
+        return outro instanceof ZonaDeEntrega zona && id.equals(zona.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
     /**

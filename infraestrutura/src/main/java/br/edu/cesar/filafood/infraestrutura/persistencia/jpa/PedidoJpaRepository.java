@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-interface PedidoJpaRepository extends JpaRepository<PedidoJpa, UUID> {
+public interface PedidoJpaRepository extends JpaRepository<PedidoJpa, UUID> {
 
     @EntityGraph(attributePaths = { "itens", "itens.produto" })
     @Override

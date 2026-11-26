@@ -14,14 +14,40 @@ import br.edu.cesar.filafood.dominio.entrega.RegraDeNegocioException;
  */
 public class Entregador {
 
-    private final String nome;
-    private final Set<String> zonasAtendidas;
-    private final int cargaMaxima;
+    private final EntregadorId id;
+    private final String unidadeId;
+    private String nome;
+    private Set<String> zonasAtendidas;
+    private int cargaMaxima;
     private boolean ativo = true;
     private int cargaEmAndamento;
     private LocalDateTime ultimaEntregaEm;
 
-    public Entregador(String nome, Set<String> zonasAtendidas, int cargaMaxima) {
+    public Entregador(EntregadorId id, String unidadeId, String nome, Set<String> zonasAtendidas, int cargaMaxima) {
+        if (id == null) {
+            throw new IllegalArgumentException("o id do entregador é obrigatório");
+        }
+        if (unidadeId == null || unidadeId.isBlank()) {
+            throw new RegraDeNegocioException("informe a unidade do entregador");
+        }
+        this.id = id;
+        this.unidadeId = unidadeId;
+        this.zonasAtendidas = new LinkedHashSet<>();
+        alterarDados(nome, zonasAtendidas, cargaMaxima);
+    }
+
+    /** Reconstitui o entregador a partir da persistência, preservando carga, estado e histórico. */
+    public static Entregador reconstituir(EntregadorId id, String unidadeId, String nome,
+            Set<String> zonasAtendidas, int cargaMaxima, boolean ativo, int cargaEmAndamento,
+            LocalDateTime ultimaEntregaEm) {
+        Entregador entregador = new Entregador(id, unidadeId, nome, zonasAtendidas, cargaMaxima);
+        entregador.ativo = ativo;
+        entregador.cargaEmAndamento = cargaEmAndamento;
+        entregador.ultimaEntregaEm = ultimaEntregaEm;
+        return entregador;
+    }
+
+    public void alterarDados(String nome, Set<String> zonasAtendidas, int cargaMaxima) {
         if (nome == null || nome.isBlank()) {
             throw new RegraDeNegocioException("informe o nome do entregador");
         }
@@ -29,7 +55,7 @@ public class Entregador {
             throw new RegraDeNegocioException("a carga máxima deve ser maior que zero");
         }
         this.nome = nome;
-        this.zonasAtendidas = new LinkedHashSet<>(zonasAtendidas);
+        this.zonasAtendidas = zonasAtendidas == null ? new LinkedHashSet<>() : new LinkedHashSet<>(zonasAtendidas);
         this.cargaMaxima = cargaMaxima;
     }
 
@@ -70,8 +96,20 @@ public class Entregador {
         ativo = true;
     }
 
+    public EntregadorId id() {
+        return id;
+    }
+
+    public String unidadeId() {
+        return unidadeId;
+    }
+
     public String nome() {
         return nome;
+    }
+
+    public Set<String> zonasAtendidas() {
+        return Set.copyOf(zonasAtendidas);
     }
 
     public int cargaMaxima() {
@@ -88,5 +126,15 @@ public class Entregador {
 
     public boolean isAtivo() {
         return ativo;
+    }
+
+    @Override
+    public boolean equals(Object outro) {
+        return outro instanceof Entregador entregador && id.equals(entregador.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

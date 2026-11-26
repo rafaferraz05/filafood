@@ -45,7 +45,7 @@ public class ZonaSteps {
 
     private ZonaDeEntrega novaZona(String nome, String latitude, String longitude, int raioKm, double valorBase,
             int raioGratuitoKm, double valorPorKmExcedente, double teto, double valorMinimoDePedido) {
-        return new ZonaDeEntrega(nome,
+        return new ZonaDeEntrega(ZonaId.novo(), MundoDaEntrega.UNIDADE_ID, nome,
                 new Coordenada(Double.parseDouble(latitude), Double.parseDouble(longitude)),
                 raioKm, BigDecimal.valueOf(valorBase), raioGratuitoKm, BigDecimal.valueOf(valorPorKmExcedente),
                 BigDecimal.valueOf(teto), BigDecimal.valueOf(valorMinimoDePedido));

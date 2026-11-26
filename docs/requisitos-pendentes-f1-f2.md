@@ -191,31 +191,31 @@
 
 ### 2.5 F2 — Entrega (funcional e web)
 
-- [ ] **G-29 — Entregadores: CRUD e estado.**
+- [x] **G-29 — Entregadores: CRUD e estado.**
   Nome, zonas atendidas, carga máxima, ativo/inativo; inativar não cancela entregas em andamento; reativar.
   **Pronto quando:** cadastro/edição/inativação funcionam e a carga é consistente com as entregas ativas.
 
-- [ ] **G-30 — Zonas e taxas: CRUD e estado.**
+- [x] **G-30 — Zonas e taxas: CRUD e estado.**
   Centro, raio, valor base, raio gratuito, valor por km excedente, teto e valor mínimo de pedido; desativar/reativar.
   **Pronto quando:** cadastro/edição/inativação funcionam e os exemplos de cálculo batem.
 
-- [ ] **G-31 — Cálculo e gravação da taxa.**
+- [x] **G-31 — Cálculo e gravação da taxa.**
   Escolher a zona de menor raio que contém o endereço; calcular base + excedente, limitar ao teto, zerar acima do mínimo; gravar na entrega no despacho e nunca recalcular.
   **Pronto quando:** a taxa persistida não muda quando a zona é editada depois.
 
-- [ ] **G-32 — Fila de despacho e escolha do entregador.**
+- [x] **G-32 — Fila de despacho e escolha do entregador.**
   Fila por unidade com zona, tempo de espera e motivo; escolher entregador ativo, que atende a zona e tem carga < máxima; menor carga; desempate pela última entrega mais antiga; sem elegível, permanece na fila.
   **Pronto quando:** a fila reflete o banco e o despacho automático respeita todas as regras.
 
-- [ ] **G-33 — Estados da entrega.**
+- [x] **G-33 — Estados da entrega.**
   `aguardando → despachada → em rota → entregue|falha`, sem pular etapa; despachada exige entregador, entregue exige recebedor, falha exige motivo e observação; cada transição grava data/hora.
   **Pronto quando:** transições inválidas são recusadas e a timeline é exibida.
 
-- [ ] **G-34 — Falha, nova tentativa e cancelamento.**
+- [x] **G-34 — Falha, nova tentativa e cancelamento.**
   Falha libera a carga e devolve o pedido à fila com nova entrega em `aguardando`; apenas uma nova tentativa; segunda falha cancela o pedido; recusa do cliente cancela na primeira.
   **Pronto quando:** os dois desfechos (nova tentativa e cancelamento) estão persistidos e visíveis no despacho.
 
-- [ ] **G-35 — Telas de F2.**
+- [x] **G-35 — Telas de F2.**
   Implementar Entregadores, Zonas e taxas, Despacho e entregas e Minhas entregas com os estados dos protótipos.
   **Pronto quando:** é possível percorrer os Fluxos B e C na aplicação real, incluindo falha e nova tentativa.
 
@@ -225,7 +225,7 @@
   O início do preparo no contexto de atendimento dispara a baixa no estoque; o cancelamento durante o preparo dispara a devolução. A operação deve ser atômica ou compensável.
   **Pronto quando:** um pedido enviado e iniciado baixa os insumos; cancelado em preparo devolve; nenhum caminho grava baixa parcial.
 
-- [ ] **G-37 — F2 ↔ F4 (pedido concluído/falha).**
+- [x] **G-37 — F2 ↔ F4 (pedido concluído/falha).**
   Pedido concluído entra na fila com entrega `aguardando`; falha devolve à fila ou cancela o pedido conforme a RN 6. Hoje `ConsequenciasDaFalha` só devolve um enum, sem atualizar o pedido.
   **Pronto quando:** o ciclo completo (concluído → despacho → falha → nova tentativa/cancelamento) atualiza o pedido e a entrega.
 
@@ -233,7 +233,7 @@
   F1 referencia produto/ficha do cardápio (F6); F2 referencia unidade e zonas da unidade (F3). Definir contratos e dados de teste quando esses contextos ainda não estiverem prontos.
   **Pronto quando:** não há nomes de produto/unidade hardcoded na produção; as consultas usam os contratos.
 
-- [ ] **G-39 — Consistência, idempotência e eventos.**
+- [x] **G-39 — Consistência, idempotência e eventos.**
   Definir se a integração é síncrona (modular monólito) ou por eventos/outbox. Garantir idempotência de cancelamento, devolução, despacho e falha; não perder evento se a transação falhar.
   **Pronto quando:** requisições repetidas não duplicam efeitos e há teste de falha no meio do fluxo.
 
@@ -321,3 +321,5 @@
 - **Concorrência:** baixa de estoque e despacho precisam de transação e lock; os testes atuais são de uma thread só.
 - **Build:** o POM raiz agrega tudo (ADR 0001); a Parte 1 saiu para `parte1/` e continua executável por `java -cp parte1/target/classes`.
 - **Escopo de segurança:** autenticação não está no Spec; decidir cedo se a demonstração terá login ou seleção de perfil para não retrabalhar as telas.
+
+> **Status F2 (2026-11-26):** G-29..G-35, G-37 e G-39 entregues com schema, aplicação, telas e Observer; G-38 segue por referência (unidade/produto fixos) até F3/F4; G-36 já era da F1. Roteiro em [entrega/entregaf2.md](entrega/entregaf2.md).

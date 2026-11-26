@@ -5,6 +5,10 @@ import com.vaadin.flow.component.Component;
 import br.edu.cesar.filafood.apresentacao.cardapio.CardapioRota;
 import br.edu.cesar.filafood.apresentacao.compras.FornecedoresRota;
 import br.edu.cesar.filafood.apresentacao.compras.SugestoesDeCompraRota;
+import br.edu.cesar.filafood.apresentacao.entrega.despacho.DespachoRota;
+import br.edu.cesar.filafood.apresentacao.entrega.entregador.EntregadoresRota;
+import br.edu.cesar.filafood.apresentacao.entrega.entrega.MinhasEntregasRota;
+import br.edu.cesar.filafood.apresentacao.entrega.zona.ZonasTaxasRota;
 import br.edu.cesar.filafood.apresentacao.estoque.ficha.FichaTecnicaRota;
 import br.edu.cesar.filafood.apresentacao.estoque.inicio.InicioRota;
 import br.edu.cesar.filafood.apresentacao.estoque.insumo.InsumosPesquisarRota;
@@ -25,7 +29,11 @@ public enum TelaDoMenu {
     CARDAPIO("Cardápio", "cardapio", CardapioRota.class),
     FORNECEDORES("Fornecedores", "fornecedores", FornecedoresRota.class),
     COMPRAS("Compras", "compras", SugestoesDeCompraRota.class),
-    PREPARO("Preparo do pedido", "preparo", PreparoRota.class);
+    PREPARO("Preparo do pedido", "preparo", PreparoRota.class),
+    ENTREGADORES("Entregadores", "entregadores", EntregadoresRota.class),
+    ZONAS_TAXAS("Zonas e taxas", "zonas-taxas", ZonasTaxasRota.class),
+    DESPACHO("Despacho e entregas", "despacho", DespachoRota.class),
+    MINHAS_ENTREGAS("Minhas entregas", "minhas-entregas", MinhasEntregasRota.class);
 
     private final String titulo;
     private final String rota;

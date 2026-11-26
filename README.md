@@ -55,6 +55,22 @@ de dev traz os insumos, as fichas e o pedido #1337 dos protótipos.
   [`docs/entrega/entregaf1.md`](docs/entrega/entregaf1.md).
 - O que a F1 entrega e o que falta: [`docs/requisitos-pendentes-f1-f2.md`](docs/requisitos-pendentes-f1-f2.md).
 
+## Aplicação (F2 — entrega)
+
+A F2 está completa: cadastro de entregadores e zonas, taxa calculada pela zona e gravada no
+despacho, fila de despacho, escolha do entregador elegível de menor carga, estados da entrega e
+falha com nova tentativa/cancelamento. Os dados de demonstração vêm do seed `V904`.
+
+| Tela | Rota |
+| --- | --- |
+| Entregadores | `/entregadores` |
+| Zonas e taxas | `/zonas-taxas` |
+| Despacho e entregas | `/despacho` |
+| Minhas entregas | `/minhas-entregas` |
+
+- Roteiro e verificação: [`docs/entrega/entregaf2.md`](docs/entrega/entregaf2.md).
+- Padrões: Iterator, Template Method, Strategy e Observer (ADR 0010 e ADR 0013).
+
 As seções abaixo descrevem a Parte 1 do trabalho — o protótipo local de concorrência em Java puro.
 
 ## Objetivo da Parte 1

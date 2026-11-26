@@ -1,30 +1,31 @@
 package br.edu.cesar.filafood.dominio.entrega.despacho;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 import br.edu.cesar.filafood.dominio.entrega.entregador.Entregador;
 import br.edu.cesar.filafood.dominio.entrega.entrega.Entrega;
+import br.edu.cesar.filafood.dominio.entrega.zona.PoliticaDeTaxa;
 
 /**
  * Escolha do entregador para um pedido pronto.
  *
- * <p>É elegível o entregador ativo, que atende a zona do endereço e cuja carga em andamento é menor
- * que a carga máxima. Entre os elegíveis, escolhe-se o de menor carga e, em empate, o que está há
- * mais tempo sem receber entrega. Sem elegível, o pedido permanece na fila de despacho.
+ * <p>A elegibilidade e o desempate são da {@link PoliticaDeEscolhaDeEntregador}; a taxa é da
+ * {@link PoliticaDeTaxa}. O despacho só coordena: escolhe, grava a taxa, retira da fila e assume a
+ * carga.
  */
 public class Despacho {
 
+    private final PoliticaDeEscolhaDeEntregador escolha;
+    private final PoliticaDeTaxa taxa;
+
+    public Despacho(PoliticaDeEscolhaDeEntregador escolha, PoliticaDeTaxa taxa) {
+        this.escolha = escolha;
+        this.taxa = taxa;
+    }
+
     public Optional<Entregador> escolher(String zona, List<Entregador> entregadores) {
-        return entregadores.stream()
-                .filter(Entregador::isAtivo)
-                .filter(entregador -> entregador.atende(zona))
-                .filter(Entregador::temCargaDisponivel)
-                .min(Comparator.comparingInt(Entregador::cargaEmAndamento)
-                        .thenComparing(Entregador::ultimaEntregaEm,
-                                Comparator.nullsFirst(Comparator.naturalOrder())));
+        return escolha.escolher(zona, entregadores);
     }
 
     /**
@@ -38,8 +39,9 @@ public class Despacho {
             return false;
         }
         Entregador entregador = escolhido.get();
-        entrega.despachar(entregador);
-        entregador.assumirEntrega(LocalDateTime.now());
+        entrega.despachar(entregador,
+                taxa.calcular(entrega.zona(), entrega.distanciaKm(), entrega.valorDoPedido()));
+        entregador.assumirEntrega(java.time.LocalDateTime.now());
         fila.remover(entrega);
         return true;
     }

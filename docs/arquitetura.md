@@ -16,13 +16,13 @@ filafood (pom agregador: só <modules>)
 ├── pai/                     pai do build: properties, BOMs (JUnit → Vaadin → Boot), plugins
 ├── parte1/                  protótipo de concorrência da Parte 1 (Java puro, executável)
 ├── dominio-estoque/         F1 — modelo tático, BDD Cucumber, zero framework
-├── dominio-entrega/         F2
+├── dominio-entrega/         F2 — entrega (Entregador, ZonaDeEntrega, Entrega; main desde a F2)
 ├── dominio-atendimento/     F3–F5
 ├── dominio-cardapio/        F6 — cardápio (Produto, PeriodoPreco; main desde a F6)
 ├── dominio-compras/         F7 (Fornecedor, catálogo, sugestão e escolha)
-├── aplicacao/               serviços de aplicação, DTOs de leitura e portas de consulta
-├── infraestrutura/          JPA, mapeadores, adaptadores e Flyway
-└── apresentacao-vaadin/     rotas Vaadin + composition root (VaadinAplicacao)
+├── aplicacao/               serviços de aplicação (estoque, cardápio, entrega e compras) e portas
+├── infraestrutura/          JPA (estoque, cardápio e entrega), mapeadores, adaptadores e Flyway
+└── apresentacao-vaadin/     rotas Vaadin (estoque, cardápio, entrega e compras) + composition root
 ```
 
 A direção da dependência é sempre para dentro: `apresentacao-vaadin → aplicacao → dominio-*` e
@@ -55,6 +55,20 @@ infraestrutura/src/main/java/br/edu/cesar/filafood/infraestrutura/persistencia/j
 ├── InsumoJpaRepository, FichaTecnicaJpaRepository, ProdutoJpaRepository, PedidoJpaRepository
 └── InsumoRepositorioJpa, FichaTecnicaRepositorioJpa, ProdutoRepositorioAplicacaoJpa,
     PedidoRepositorioAplicacaoJpa
+aplicacao/src/main/java/br/edu/cesar/filafood/aplicacao/entrega/
+├── entregador/      EntregadorServicoAplicacao, EntregadorResumo, NovoEntregador, ...
+├── zona/            ZonaServicoAplicacao, ZonaResumo, ExemploDeTaxa, ...
+├── despacho/        DespachoServicoAplicacao, FilaDaUnidadeResumo, ...
+├── entrega/         EntregaServicoAplicacao, EntregaResumo, ResultadoDaFalha, ...
+├── pedido/          PedidoDaEntregaRepositorioAplicacao
+└── evento/          PublicadorDeEventos, OuvinteDeEventosDeEntrega, PedidoDaEntregaListener
+
+infraestrutura/src/main/java/br/edu/cesar/filafood/infraestrutura/persistencia/jpa/entrega/
+├── EntregadorJpa, ZonaEntregaJpa, EntregaJpa, TransicaoEntregaJpa
+├── EntregaJpaMapeador
+├── *JpaRepository
+└── *RepositorioJpa
+
 infraestrutura/src/main/resources/db/{migration,seed}/
 
 apresentacao-vaadin/src/main/java/br/edu/cesar/filafood/
@@ -65,8 +79,13 @@ apresentacao-vaadin/src/main/java/br/edu/cesar/filafood/
     ├── estoque/insumo/        InsumosPesquisarRota, InsumoDetalheRota
     ├── estoque/ficha/         FichaTecnicaRota
     ├── estoque/preparo/       PreparoRota
+    ├── cardapio/              CardapioRota
+    ├── entrega/entregador/    EntregadoresRota
+    ├── entrega/zona/          ZonasTaxasRota
+    ├── entrega/despacho/      DespachoRota
+    ├── entrega/entrega/       MinhasEntregasRota
     ├── config/                UnidadeDeDemonstracao, PedidoDeDemonstracao
-    └── verificacao/           VerificacaoDeOperacoes (perfil `verificacao`)
+    └── verificacao/           VerificacaoDeOperacoes e VerificacaoDeEntregas
 ```
 
 | Regra (ArchUnit) | O que impede |
@@ -117,19 +136,19 @@ A fiação inteira — repositório → serviço de domínio → serviço de apl
 
 ## 5. Padrões de projeto
 
-Três com colaboração real em F1 (ADR 0010):
+Quatro padrões com colaboração real (ADR 0010 e ADR 0013):
 
 | Padrão | Onde | Para quê |
 | --- | --- | --- |
 | Iterator | `FichaTecnica implements Iterable<ItemDaFicha>` | a explosão e a tela percorrem os itens sem receber a coleção interna |
 | Template Method | `MovimentacaoServicoAplicacao<C>` | entrada, baixa e devolução no mesmo fluxo transacional |
-| Strategy | `PoliticaDeReposicao` | trocar a fórmula do ponto de pedido sem tocar nos serviços; bean em `VaadinAplicacao` |
+| Strategy | `PoliticaDeReposicao` (F1), `PoliticaDeTaxa` e `PoliticaDeEscolhaDeEntregador` (F2) | trocar fórmula/política sem tocar nos serviços; beans em `VaadinAplicacao` |
+| Observer | `PublicadorDeEventos` + `PedidoDaEntregaListener` | a falha da entrega cancela o pedido sem o serviço de entrega conhecer essa consequência |
 
 As subclasses do Template Method são `EntradaDeInsumoServicoAplicacao`,
 `BaixaDoPreparoServicoAplicacao` e `DevolucaoDoPreparoServicoAplicacao`.
 
-Observer (integração entre contextos) e Decorator (auditoria) entram quando tiverem colaborador
-real; Proxy só com ganho medido.
+Decorator (auditoria) entra quando houver ator real; Proxy só com ganho medido.
 
 ## 6. Persistência
 
@@ -138,7 +157,9 @@ real; Proxy só com ganho medido.
 | `V001` | `insumo`, `movimentacao_estoque` (checks de tipo, motivo, quantidade e custo) |
 | `V002` | `produto`, `ficha_tecnica`, `item_ficha_tecnica` |
 | `V003` | `pedido`, `item_pedido` (referência enquanto a F4 não existe) |
-| `V900..V902` | seed de dev: insumos, produtos/fichas e pedido #1337 |
+| `V005` | `entregador`, `entregador_zona`, `zona_entrega`, `entrega`, `transicao_entrega`; valor/endereço no `pedido` |
+| `V006` | tabelas de compras (F7) |
+| `V900..V905` | seed de dev: insumos, produtos/fichas, pedido #1337, cardápio e entregas |
 
 `ddl-auto: validate`: o schema vem só do Flyway e o Hibernate falha no boot se o mapeamento divergir.
 `movimentacao_estoque` é append-only: nenhum caminho de código altera ou apaga movimentação.

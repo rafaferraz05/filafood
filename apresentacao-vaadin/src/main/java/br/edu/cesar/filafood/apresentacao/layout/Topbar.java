@@ -13,6 +13,7 @@ import br.edu.cesar.filafood.apresentacao.config.UnidadeDeDemonstracao;
 public class Topbar extends Div {
 
     private final Map<TelaDoMenu, RouterLink> links = new LinkedHashMap<>();
+    private final Span perfil = new Span("Gestor da unidade");
 
     public Topbar() {
         addClassName("topbar");
@@ -39,7 +40,6 @@ public class Topbar extends Div {
         Span unidade = new Span("Unidade: " + UnidadeDeDemonstracao.NOME);
         unidade.addClassNames("pill", "pill-clara");
 
-        Span perfil = new Span("Gestor da unidade");
         perfil.addClassNames("pill", "pill-amarela");
 
         Div pills = new Div();
@@ -61,8 +61,9 @@ public class Topbar extends Div {
         return navegacao;
     }
 
-    /** Marca na navegação a tela atual; chamado pelo layout a cada navegação. */
+    /** Marca na navegação a tela atual e troca a pill de perfil no fluxo do entregador. */
     public void marcarAtual(String caminho) {
+        perfil.setText(caminho.startsWith("minhas-entregas") ? "Entregador: Ana Paula Lima" : "Gestor da unidade");
         links.forEach((tela, link) -> {
             if (tela.correspondeA(caminho)) {
                 link.addClassName("topbar-nav-atual");

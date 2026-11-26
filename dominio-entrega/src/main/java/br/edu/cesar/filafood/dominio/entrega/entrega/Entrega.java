@@ -18,6 +18,8 @@ import br.edu.cesar.filafood.dominio.entrega.zona.ZonaDeEntrega;
  */
 public class Entrega {
 
+    private final EntregaId id;
+    private final String unidadeId;
     private final String pedido;
     private final ZonaDeEntrega zona;
     private final double distanciaKm;
@@ -32,20 +34,51 @@ public class Entrega {
     private MotivoDaFalha motivoDaFalha;
     private String observacaoDaFalha;
 
-    public Entrega(String pedido, ZonaDeEntrega zona, double distanciaKm, BigDecimal valorDoPedido) {
-        this(pedido, zona, distanciaKm, valorDoPedido, 1);
+    public Entrega(EntregaId id, String unidadeId, String pedido, ZonaDeEntrega zona, double distanciaKm,
+            BigDecimal valorDoPedido) {
+        this(id, unidadeId, pedido, zona, distanciaKm, valorDoPedido, 1);
     }
 
-    private Entrega(String pedido, ZonaDeEntrega zona, double distanciaKm, BigDecimal valorDoPedido, int tentativa) {
+    private Entrega(EntregaId id, String unidadeId, String pedido, ZonaDeEntrega zona, double distanciaKm,
+            BigDecimal valorDoPedido, int tentativa) {
+        if (id == null) {
+            throw new IllegalArgumentException("o id da entrega é obrigatório");
+        }
+        if (pedido == null || pedido.isBlank()) {
+            throw new RegraDeNegocioException("informe o pedido da entrega");
+        }
+        if (zona == null) {
+            throw new RegraDeNegocioException("informe a zona da entrega");
+        }
+        this.id = id;
+        this.unidadeId = unidadeId;
         this.pedido = pedido;
         this.zona = zona;
         this.distanciaKm = distanciaKm;
         this.valorDoPedido = valorDoPedido;
         this.tentativa = tentativa;
+        transitarPara(EstadoDaEntrega.AGUARDANDO);
     }
 
-    /** Despacha para o entregador e grava a taxa. A taxa não é recalculada depois. */
-    public void despachar(Entregador entregador) {
+    /** Reconstitui a entrega a partir da persistência, com estado, taxa, desfecho e transições. */
+    public static Entrega reconstituir(EntregaId id, String unidadeId, String pedido, ZonaDeEntrega zona,
+            double distanciaKm, BigDecimal valorDoPedido, int tentativa, EstadoDaEntrega estado,
+            Entregador entregador, BigDecimal taxa, String recebedor, MotivoDaFalha motivoDaFalha,
+            String observacaoDaFalha, List<TransicaoDaEntrega> transicoes) {
+        Entrega entrega = new Entrega(id, unidadeId, pedido, zona, distanciaKm, valorDoPedido, tentativa);
+        entrega.transicoes.clear();
+        entrega.transicoes.addAll(transicoes);
+        entrega.estado = estado;
+        entrega.entregador = entregador;
+        entrega.taxa = taxa;
+        entrega.recebedor = recebedor;
+        entrega.motivoDaFalha = motivoDaFalha;
+        entrega.observacaoDaFalha = observacaoDaFalha;
+        return entrega;
+    }
+
+    /** Despacha para o entregador e grava a taxa calculada pela política. */
+    public void despachar(Entregador entregador, BigDecimal taxa) {
         exigirNaoFinalizada();
         if (estado != EstadoDaEntrega.AGUARDANDO) {
             throw new RegraDeNegocioException("a entrega precisa estar aguardando");
@@ -53,9 +86,17 @@ public class Entrega {
         if (entregador == null) {
             throw new RegraDeNegocioException("a entrega despachada exige um entregador");
         }
+        if (taxa == null) {
+            throw new RegraDeNegocioException("informe a taxa da entrega");
+        }
         this.entregador = entregador;
-        this.taxa = zona.taxaParaDistancia(distanciaKm, valorDoPedido);
+        this.taxa = taxa;
         transitarPara(EstadoDaEntrega.DESPACHADA);
+    }
+
+    /** Atalho usado pelo BDD e por chamadas antigas: calcula a taxa pela própria zona. */
+    public void despachar(Entregador entregador) {
+        despachar(entregador, zona.taxaParaDistancia(distanciaKm, valorDoPedido));
     }
 
     public void registrarRetirada() {
@@ -101,7 +142,7 @@ public class Entrega {
 
     /** Nova tentativa para o mesmo pedido, com uma entrega nova em aguardando. */
     public Entrega novaTentativa() {
-        return new Entrega(pedido, zona, distanciaKm, valorDoPedido, tentativa + 1);
+        return new Entrega(EntregaId.novo(), unidadeId, pedido, zona, distanciaKm, valorDoPedido, tentativa + 1);
     }
 
     private void transitarPara(EstadoDaEntrega novoEstado) {
@@ -113,6 +154,14 @@ public class Entrega {
         if (estado == EstadoDaEntrega.ENTREGUE || estado == EstadoDaEntrega.FALHA) {
             throw new RegraDeNegocioException("a entrega já foi finalizada");
         }
+    }
+
+    public EntregaId id() {
+        return id;
+    }
+
+    public String unidadeId() {
+        return unidadeId;
     }
 
     public String pedido() {
@@ -161,5 +210,15 @@ public class Entrega {
 
     public List<TransicaoDaEntrega> transicoes() {
         return List.copyOf(transicoes);
+    }
+
+    @Override
+    public boolean equals(Object outro) {
+        return outro instanceof Entrega entrega && id.equals(entrega.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

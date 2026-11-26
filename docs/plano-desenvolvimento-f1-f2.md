@@ -348,3 +348,5 @@ quando o pedido é cancelado durante o preparo. Sem isso, o P5 vira retrabalho.
 4. Colocar o ArchUnit (PR 3) — é o guarda que impede o resto do plano de virar dívida.
 5. Abrir a migração de `insumo` e a entrada por compra (PR 4), que é a primeira fatia que já dá o
    que mostrar.
+
+**Status F2 (2026-11-26):** P3, P4 e P5/D-34 entregues — entregadores, zonas, taxa, despacho, estados, falha/retentativa e Observer; 4 padrões com colaboração real (Iterator, Template Method, Strategy, Observer). Decorator segue adiado (sem ator) e a integração real com F3/F4 continua por contrato.

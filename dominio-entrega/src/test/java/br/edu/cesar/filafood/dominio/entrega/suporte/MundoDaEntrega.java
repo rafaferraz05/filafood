@@ -12,11 +12,16 @@ import br.edu.cesar.filafood.dominio.entrega.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.entrega.RegraDeNegocioException;
 import br.edu.cesar.filafood.dominio.entrega.despacho.Despacho;
 import br.edu.cesar.filafood.dominio.entrega.despacho.FilaDeDespacho;
+import br.edu.cesar.filafood.dominio.entrega.despacho.MenorCargaMaisAntiga;
 import br.edu.cesar.filafood.dominio.entrega.entregador.Entregador;
+import br.edu.cesar.filafood.dominio.entrega.entregador.EntregadorId;
 import br.edu.cesar.filafood.dominio.entrega.entrega.ConsequenciasDaFalha;
 import br.edu.cesar.filafood.dominio.entrega.entrega.Entrega;
+import br.edu.cesar.filafood.dominio.entrega.entrega.EntregaId;
 import br.edu.cesar.filafood.dominio.entrega.entrega.MotivoDaFalha;
+import br.edu.cesar.filafood.dominio.entrega.zona.PoliticaDeTaxaPorZona;
 import br.edu.cesar.filafood.dominio.entrega.zona.ZonaDeEntrega;
+import br.edu.cesar.filafood.dominio.entrega.zona.ZonaId;
 
 /**
  * Estado compartilhado pelos passos de um cenário, injetado pelo construtor das classes de passos.
@@ -29,9 +34,12 @@ public class MundoDaEntrega {
     /** Centro usado pelas zonas padrão dos cenários. */
     public static final Coordenada CENTRO_PADRAO = new Coordenada(-8.0533, -34.8813);
 
+    /** Unidade fixa dos cenários, enquanto a F3 não fornece as unidades. */
+    public static final String UNIDADE_ID = "00000000-0000-0000-0000-000000000001";
+
     public final ZonaDeEntrega.ZonasDaUnidade zonas = new ZonaDeEntrega.ZonasDaUnidade();
     public final FilaDeDespacho fila = new FilaDeDespacho();
-    public final Despacho despacho = new Despacho();
+    public final Despacho despacho = new Despacho(new MenorCargaMaisAntiga(), new PoliticaDeTaxaPorZona());
     public final ConsequenciasDaFalha consequencias = new ConsequenciasDaFalha(fila);
     public final List<Entregador> entregadores = new ArrayList<>();
 
@@ -66,9 +74,9 @@ public class MundoDaEntrega {
         if (zonas.zonas().stream().anyMatch(zona -> zona.nome().equals(nome))) {
             return zona(nome);
         }
-        return zonas.cadastrar(new ZonaDeEntrega(nome, CENTRO_PADRAO, raioKm, BigDecimal.valueOf(valorBase),
-                raioGratuitoKm, BigDecimal.valueOf(valorPorKmExcedente), BigDecimal.valueOf(teto),
-                BigDecimal.valueOf(valorMinimoDePedido)));
+        return zonas.cadastrar(new ZonaDeEntrega(ZonaId.novo(), UNIDADE_ID, nome, CENTRO_PADRAO, raioKm,
+                BigDecimal.valueOf(valorBase), raioGratuitoKm, BigDecimal.valueOf(valorPorKmExcedente),
+                BigDecimal.valueOf(teto), BigDecimal.valueOf(valorMinimoDePedido)));
     }
 
     public ZonaDeEntrega zona(String nome) {
@@ -79,7 +87,7 @@ public class MundoDaEntrega {
     }
 
     public Entregador cadastrarEntregador(String nome, Set<String> zonasAtendidas, int cargaMaxima) {
-        Entregador entregador = new Entregador(nome, zonasAtendidas, cargaMaxima);
+        Entregador entregador = new Entregador(EntregadorId.novo(), UNIDADE_ID, nome, zonasAtendidas, cargaMaxima);
         entregadores.add(entregador);
         return entregador;
     }
@@ -128,7 +136,7 @@ public class MundoDaEntrega {
         pedido.marcarConcluido();
         ZonaDeEntrega zona = zonas.zonaDoEndereco(endereco);
         double distancia = zona.centro().distanciaEmKm(endereco);
-        entrega = new Entrega(id, zona, distancia, valor);
+        entrega = new Entrega(EntregaId.novo(), UNIDADE_ID, id, zona, distancia, valor);
         fila.colocar(entrega);
         return entrega;
     }
