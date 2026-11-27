@@ -51,4 +51,8 @@ public class ItemFichaTecnicaJpa {
     public BigDecimal quantidade() {
         return quantidade;
     }
+
+    void alterarQuantidade(BigDecimal quantidade) {
+        this.quantidade = quantidade;
+    }
 }

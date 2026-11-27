@@ -26,6 +26,8 @@ import jakarta.persistence.PersistenceException;
 
 import br.edu.cesar.filafood.dominio.compras.Fornecedor;
 import br.edu.cesar.filafood.dominio.compras.FornecedorId;
+import br.edu.cesar.filafood.dominio.estoque.ficha.FichaTecnica;
+import br.edu.cesar.filafood.dominio.estoque.insumo.Insumo;
 import br.edu.cesar.filafood.infraestrutura.persistencia.jpa.compras.FornecedorJpa;
 import br.edu.cesar.filafood.infraestrutura.persistencia.jpa.compras.FornecedorMapper;
 import br.edu.cesar.filafood.infraestrutura.persistencia.jpa.compras.ItemCatalogoFornecedorJpa;
@@ -251,6 +253,53 @@ class EsquemaDoEstoqueIT {
                 sessao.persist(invalido);
                 sessao.flush();
             });
+        }
+    }
+
+    @Test
+    void removerItemDaFichaPersisteSemViolarUnicidade() {
+        UUID produtoId = UUID.randomUUID();
+        UUID insumoPaoId = UUID.randomUUID();
+        UUID insumoQueijoId = UUID.randomUUID();
+        UUID fichaId = UUID.randomUUID();
+
+        try (Session sessao = fabrica.openSession()) {
+            sessao.beginTransaction();
+            ProdutoJpa produto = new ProdutoJpa(produtoId, UUID.fromString(UNIDADE), "Produto remoção",
+                    new BigDecimal("29.90"), "ATIVO");
+            InsumoJpa pao = new InsumoJpa(insumoPaoId, UUID.fromString(UNIDADE), "Pão remoção", "un",
+                    new BigDecimal("20.000"), 2, "ATIVO");
+            InsumoJpa queijo = new InsumoJpa(insumoQueijoId, UUID.fromString(UNIDADE), "Queijo remoção", "kg",
+                    new BigDecimal("10.000"), 2, "ATIVO");
+            FichaTecnicaJpa ficha = new FichaTecnicaJpa(fichaId, UUID.fromString(UNIDADE), produto);
+            ficha.adicionarItem(new ItemFichaTecnicaJpa(UUID.randomUUID(), ficha, pao, new BigDecimal("1.000")));
+            ficha.adicionarItem(new ItemFichaTecnicaJpa(UUID.randomUUID(), ficha, queijo, new BigDecimal("0.100")));
+            sessao.persist(produto);
+            sessao.persist(pao);
+            sessao.persist(queijo);
+            sessao.persist(ficha);
+            sessao.getTransaction().commit();
+        }
+
+        JpaMapeador mapper = new JpaMapeador();
+        try (Session sessao = fabrica.openSession()) {
+            sessao.beginTransaction();
+            FichaTecnicaJpa ficha = sessao.find(FichaTecnicaJpa.class, fichaId);
+            FichaTecnica dominio = mapper.paraDominio(ficha);
+            Insumo removido = dominio.itens().stream()
+                    .filter(item -> item.insumo().nome().equals("Queijo remoção"))
+                    .findFirst()
+                    .orElseThrow()
+                    .insumo();
+            dominio.removerItem(removido);
+            mapper.atualizar(ficha, dominio, id -> sessao.find(InsumoJpa.class, id));
+            sessao.getTransaction().commit();
+        }
+
+        try (Session sessao = fabrica.openSession()) {
+            FichaTecnicaJpa ficha = sessao.find(FichaTecnicaJpa.class, fichaId);
+            assertEquals(1, ficha.itens().size());
+            assertEquals("Pão remoção", ficha.itens().get(0).insumo().nome());
         }
     }
 }

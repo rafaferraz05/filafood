@@ -52,6 +52,10 @@ public class FichaTecnicaJpa {
         itens.add(item);
     }
 
+    void removerItem(ItemFichaTecnicaJpa item) {
+        itens.remove(item);
+    }
+
     public UUID id() {
         return id;
     }

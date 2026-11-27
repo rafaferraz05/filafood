@@ -255,6 +255,13 @@ class PreparoServicoAplicacaoTest {
         }
 
         @Override
+        public List<PedidoParaPreparo> daUnidade(String unidadeId) {
+            return porId.values().stream()
+                    .filter(pedido -> pedido.unidadeId().equals(unidadeId))
+                    .toList();
+        }
+
+        @Override
         public void marcarConcluido(String pedidoId) {
             mudar(pedidoId, EstadoDoPedido.CONCLUIDO);
         }

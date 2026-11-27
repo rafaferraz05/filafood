@@ -1,6 +1,8 @@
 package br.edu.cesar.filafood.infraestrutura.persistencia.jpa;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -23,7 +25,20 @@ class PedidoJpaAdapter implements PedidoRepositorioAplicacao {
 
     @Override
     public PedidoParaPreparo porId(String pedidoId) {
-        PedidoJpa pedido = pedido(pedidoId);
+        return paraPreparo(pedido(pedidoId));
+    }
+
+    @Override
+    public List<PedidoParaPreparo> daUnidade(String unidadeId) {
+        Map<UUID, PedidoJpa> porId = new LinkedHashMap<>();
+        pedidos.findByUnidadeId(UUID.fromString(unidadeId)).forEach(pedido -> porId.put(pedido.id(), pedido));
+        return porId.values().stream()
+                .filter(pedido -> !pedido.itens().isEmpty())
+                .map(this::paraPreparo)
+                .toList();
+    }
+
+    private PedidoParaPreparo paraPreparo(PedidoJpa pedido) {
         List<ItemDoPedido> itens = pedido.itens().stream()
                 .map(item -> new ItemDoPedido(item.produto().id().toString(), item.quantidade()))
                 .toList();

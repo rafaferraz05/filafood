@@ -63,6 +63,7 @@ public class ZonasTaxasRota extends Div {
         lista.removeAll();
         Div badges = new Div();
         badges.addClassName("badges");
+        badges.addClassName("pills-tabela");
         badges.add(Badge.neutro(zonas.size() + " zonas"), Badge.ok(ativas + " ativas"));
         lista.add(badges);
 

@@ -92,6 +92,7 @@ public class EntregadoresRota extends Div {
         lista.removeAll();
         Div resumo = new Div();
         resumo.addClassName("badges");
+        resumo.addClassName("pills-tabela");
         resumo.add(Badge.neutro(entregadores.size() + " entregadores"), Badge.ok(ativos + " ativos"));
         lista.add(resumo);
 

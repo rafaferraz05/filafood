@@ -2,8 +2,10 @@ package br.edu.cesar.filafood.infraestrutura.persistencia.jpa;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
@@ -107,12 +109,30 @@ class JpaMapeador {
 
     /** Substitui os itens da ficha: a edição é sempre a ficha inteira (RN 2). */
     void atualizar(FichaTecnicaJpa entidade, FichaTecnica ficha, Function<UUID, InsumoJpa> insumoPorId) {
-        entidade.limparItens();
-        for (ItemDaFicha item : ficha) {
-            InsumoJpa insumo = insumoPorId.apply(item.insumo().id().valor());
-            entidade.adicionarItem(new ItemFichaTecnicaJpa(UUID.randomUUID(), entidade, insumo,
-                    item.quantidade()));
+        Map<UUID, ItemFichaTecnicaJpa> existentes = new HashMap<>();
+        for (ItemFichaTecnicaJpa item : entidade.itens()) {
+            existentes.put(item.insumo().id(), item);
         }
+
+        Set<UUID> desejados = new HashSet<>();
+        for (ItemDaFicha item : ficha) {
+            UUID insumoId = item.insumo().id().valor();
+            desejados.add(insumoId);
+            ItemFichaTecnicaJpa existente = existentes.get(insumoId);
+            if (existente == null) {
+                InsumoJpa insumo = insumoPorId.apply(insumoId);
+                entidade.adicionarItem(new ItemFichaTecnicaJpa(UUID.randomUUID(), entidade, insumo,
+                        item.quantidade()));
+            } else {
+                existente.alterarQuantidade(item.quantidade());
+            }
+        }
+
+        // Remove só o que saiu; recriar todos os itens violaria uk_item_ficha_insumo.
+        existentes.values().stream()
+                .filter(item -> !desejados.contains(item.insumo().id()))
+                .toList()
+                .forEach(entidade::removerItem);
     }
 
     FichaTecnica paraDominio(FichaTecnicaJpa entidade) {

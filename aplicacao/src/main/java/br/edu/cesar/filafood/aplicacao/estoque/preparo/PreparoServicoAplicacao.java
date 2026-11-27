@@ -41,6 +41,11 @@ public class PreparoServicoAplicacao {
     }
 
     @Transactional(readOnly = true)
+    public List<PedidoParaPreparo> listar(String unidadeId) {
+        return pedidos.daUnidade(unidadeId);
+    }
+
+    @Transactional(readOnly = true)
     public PreparoDetalhe detalhar(String pedidoId) {
         PedidoParaPreparo pedido = pedidos.porId(pedidoId);
 

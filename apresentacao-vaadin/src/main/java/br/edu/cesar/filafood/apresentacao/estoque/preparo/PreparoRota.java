@@ -1,6 +1,7 @@
 package br.edu.cesar.filafood.apresentacao.estoque.preparo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
@@ -9,20 +10,23 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import br.edu.cesar.filafood.apresentacao.layout.Acao;
-import br.edu.cesar.filafood.apresentacao.layout.Badge;
-import br.edu.cesar.filafood.apresentacao.layout.Cabecalho;
-import br.edu.cesar.filafood.apresentacao.layout.MainLayout;
-import br.edu.cesar.filafood.apresentacao.layout.Tabela;
+import br.edu.cesar.filafood.aplicacao.estoque.pedido.PedidoParaPreparo;
 import br.edu.cesar.filafood.aplicacao.estoque.preparo.InsumoDoPreparo;
 import br.edu.cesar.filafood.aplicacao.estoque.preparo.ItemDoPreparo;
 import br.edu.cesar.filafood.aplicacao.estoque.preparo.PreparoDetalhe;
 import br.edu.cesar.filafood.aplicacao.estoque.preparo.PreparoServicoAplicacao;
-import br.edu.cesar.filafood.apresentacao.config.PedidoDeDemonstracao;
+import br.edu.cesar.filafood.apresentacao.config.UnidadeDeDemonstracao;
+import br.edu.cesar.filafood.apresentacao.layout.Acao;
+import br.edu.cesar.filafood.apresentacao.layout.Badge;
+import br.edu.cesar.filafood.apresentacao.layout.Cabecalho;
+import br.edu.cesar.filafood.apresentacao.layout.Identificadores;
+import br.edu.cesar.filafood.apresentacao.layout.MainLayout;
+import br.edu.cesar.filafood.apresentacao.layout.Tabela;
 import br.edu.cesar.filafood.dominio.estoque.EstadoDoPedido;
 import br.edu.cesar.filafood.dominio.estoque.RegraDeNegocioException;
+import br.edu.cesar.filafood.dominio.estoque.consumo.ItemDoPedido;
 
-/** Preparo do pedido no layout e no CSS do protótipo (F1 RN 4 e RN 5). */
+/** Preparo dos pedidos no layout e no CSS do protótipo (F1 RN 4 e RN 5). */
 @Route(value = "preparo", layout = MainLayout.class)
 @PageTitle("FilaFood · Preparo do pedido")
 public class PreparoRota extends Div {
@@ -33,6 +37,7 @@ public class PreparoRota extends Div {
 
     private final PreparoServicoAplicacao preparo;
     private final Paragraph aviso = new Paragraph();
+    private String pedidoSelecionado;
 
     public PreparoRota(PreparoServicoAplicacao preparo) {
         this.preparo = preparo;
@@ -41,28 +46,77 @@ public class PreparoRota extends Div {
     }
 
     private void montar() {
-        PreparoDetalhe detalhe = preparo.detalhar(PedidoDeDemonstracao.ID);
+        List<PedidoParaPreparo> pedidos = preparo.listar(UnidadeDeDemonstracao.ID);
+        if (pedidoSelecionado == null || pedidos.stream().noneMatch(pedido -> pedido.id().equals(pedidoSelecionado))) {
+            pedidoSelecionado = pedidos.stream()
+                    .filter(pedido -> pedido.estado() == EstadoDoPedido.ENVIADO)
+                    .map(PedidoParaPreparo::id)
+                    .findFirst()
+                    .orElse(pedidos.isEmpty() ? null : pedidos.get(0).id());
+        }
+
         removeAll();
         aviso.setVisible(false);
 
+        long enviados = pedidos.stream().filter(pedido -> pedido.estado() == EstadoDoPedido.ENVIADO).count();
+        long emPreparo = pedidos.stream().filter(pedido -> pedido.estado() == EstadoDoPedido.EM_PREPARO).count();
+        Cabecalho cabecalho = new Cabecalho("Preparo do pedido",
+                "Fila de pedidos da unidade; abra um pedido para ver itens e insumos.");
+        cabecalho.badges(Badge.neutro(pedidos.size() + " pedidos"),
+                Badge.repor(enviados + " enviados"), Badge.alerta(emPreparo + " em preparo"));
+
+        Paragraph rodape = new Paragraph(RODAPE);
+        rodape.addClassName("rodape");
+
+        add(cabecalho, aviso, cardPedidos(pedidos), rodape);
+        if (pedidoSelecionado == null) {
+            return;
+        }
+
+        PreparoDetalhe detalhe = preparo.detalhar(pedidoSelecionado);
         Div esquerda = new Div();
         esquerda.add(cardItens(detalhe), cardDeAcao(detalhe));
 
         Div grid = new Div();
         grid.addClassName("grid-2");
         grid.add(esquerda, cardInsumos(detalhe));
-
-        Paragraph rodape = new Paragraph(RODAPE);
-        rodape.addClassName("rodape");
-
-        add(cabecalho(detalhe), aviso, grid, rodape);
+        add(grid);
     }
 
-    private Cabecalho cabecalho(PreparoDetalhe detalhe) {
-        Cabecalho cabecalho = new Cabecalho("Pedido #" + PedidoDeDemonstracao.NUMERO,
-                "Ao iniciar o preparo, o sistema dá baixa nos insumos pela ficha técnica.");
-        cabecalho.badges(badgeDoEstado(detalhe.estado()), Badge.neutro(detalhe.porcoes() + " porções"));
-        return cabecalho;
+    private Div cardPedidos(List<PedidoParaPreparo> pedidos) {
+        Div card = new Div();
+        card.addClassName("card");
+        card.add(tituloDoCard("Pedidos da unidade", "clique em Abrir"));
+
+        if (pedidos.isEmpty()) {
+            Paragraph vazio = new Paragraph("Nenhum pedido com itens para preparar nesta unidade.");
+            vazio.addClassName("vazio");
+            card.add(vazio);
+            return card;
+        }
+
+        Tabela tabela = new Tabela("Pedido", "Estado", "Itens", "Porções", "Ações");
+        for (PedidoParaPreparo pedido : pedidos) {
+            Div acoes = new Div();
+            acoes.addClassName("acoes");
+            if (pedido.id().equals(pedidoSelecionado)) {
+                acoes.add(new Span("selecionado"));
+            } else {
+                acoes.add(Acao.link("Abrir", () -> {
+                    pedidoSelecionado = pedido.id();
+                    montar();
+                }));
+            }
+            tabela.linha(new Span(Identificadores.pedido(pedido.id())), badgeDoEstado(pedido.estado()),
+                    new Span(String.valueOf(pedido.itens().size())), new Span(String.valueOf(porcoes(pedido))),
+                    acoes);
+        }
+        card.add(tabela);
+        return card;
+    }
+
+    private static int porcoes(PedidoParaPreparo pedido) {
+        return pedido.itens().stream().mapToInt(ItemDoPedido::quantidade).sum();
     }
 
     private Component badgeDoEstado(EstadoDoPedido estado) {
@@ -71,7 +125,8 @@ public class PreparoRota extends Div {
             case CONCLUIDO -> Badge.ok("concluído");
             case CANCELADO -> Badge.neutro("cancelado");
             case RECUSADO -> Badge.alerta("recusado");
-            case ENVIADO, RASCUNHO -> Badge.neutro(estado.name().toLowerCase().replace('_', ' '));
+            case ENVIADO -> Badge.neutro("aguardando preparo");
+            case RASCUNHO -> Badge.neutro("rascunho");
         };
     }
 
@@ -82,7 +137,8 @@ public class PreparoRota extends Div {
         }
         Div card = new Div();
         card.addClassName("card");
-        card.add(tituloDoCard("Itens do pedido", detalhe.itens().size() + " produtos"), tabela);
+        card.add(tituloDoCard("Itens do pedido " + Identificadores.pedido(detalhe.pedidoId()),
+                detalhe.itens().size() + " produtos"), tabela);
         return card;
     }
 
@@ -144,9 +200,7 @@ public class PreparoRota extends Div {
                 card.add(corpo);
             }
             case EM_PREPARO -> {
-                // dois cards: concluir e cancelar
-                card = cardConcluir();
-                return card;
+                return cardConcluir();
             }
             case CONCLUIDO -> {
                 card.add(tituloDoCard("Preparo concluído", "sem ações"));
@@ -207,16 +261,15 @@ public class PreparoRota extends Div {
     }
 
     private void darBaixa() {
-        executar(() -> preparo.iniciar(PedidoDeDemonstracao.ID),
-                "Preparo iniciado e insumos baixados.");
+        executar(() -> preparo.iniciar(pedidoSelecionado), "Preparo iniciado e insumos baixados.");
     }
 
     private void concluirPreparo() {
-        executar(() -> preparo.concluir(PedidoDeDemonstracao.ID), "Preparo concluído.");
+        executar(() -> preparo.concluir(pedidoSelecionado), "Preparo concluído.");
     }
 
     private void cancelarPreparo() {
-        executar(() -> preparo.cancelar(PedidoDeDemonstracao.ID),
+        executar(() -> preparo.cancelar(pedidoSelecionado),
                 "Preparo cancelado e insumos devolvidos ao estoque.");
     }
 

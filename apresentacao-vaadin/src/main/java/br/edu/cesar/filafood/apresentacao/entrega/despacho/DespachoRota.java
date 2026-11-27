@@ -75,6 +75,7 @@ public class DespachoRota extends Div {
 
         Div badges = new Div();
         badges.addClassName("badges");
+        badges.addClassName("pills-tabela");
         badges.add(Badge.repor(painel.fila().size() + " na fila"),
                 Badge.ok(painel.emAndamento().size() + " em andamento"));
         lista.add(badges);
@@ -93,6 +94,12 @@ public class DespachoRota extends Div {
         Div card = new Div();
         card.addClassName("card");
         card.add(titulo("Fila de despacho"));
+        if (fila.isEmpty()) {
+            Paragraph vazio = new Paragraph("Nenhum pedido na fila; todos os pedidos prontos já foram despachados.");
+            vazio.addClassName("vazio");
+            card.add(vazio);
+            return card;
+        }
         Tabela tabela = new Tabela("Pedido", "Zona", "Espera", "Por que não foi despachado");
         for (ItemDaFilaResumo item : fila) {
             tabela.linha(new Span(Identificadores.pedido(item.pedido())), new Span(item.zona()),
@@ -106,6 +113,12 @@ public class DespachoRota extends Div {
         Div card = new Div();
         card.addClassName("card");
         card.add(titulo("Entregas em andamento"));
+        if (emAndamento.isEmpty()) {
+            Paragraph vazio = new Paragraph("Nenhuma entrega em andamento.");
+            vazio.addClassName("vazio");
+            card.add(vazio);
+            return card;
+        }
         Tabela tabela = new Tabela("Entrega", "Entregador", "Estado", "Taxa");
         for (EntregaEmAndamentoResumo entrega : emAndamento) {
             tabela.linha(new Span(Identificadores.pedido(entrega.pedido())), new Span(entrega.entregador()),
