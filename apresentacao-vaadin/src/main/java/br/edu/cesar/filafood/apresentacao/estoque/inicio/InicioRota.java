@@ -7,7 +7,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import br.edu.cesar.filafood.apresentacao.layout.Acao;
-import br.edu.cesar.filafood.apresentacao.layout.Badge;
 import br.edu.cesar.filafood.apresentacao.layout.Cabecalho;
 import br.edu.cesar.filafood.apresentacao.layout.MainLayout;
 
@@ -19,7 +18,6 @@ public class InicioRota extends Div {
     public InicioRota() {
         Cabecalho cabecalho = new Cabecalho("FilaFood",
                 "Pedidos entre unidades de uma rede de restaurantes.");
-        cabecalho.badges(Badge.neutro("protótipo acadêmico"));
 
         Div grid = new Div();
         grid.addClassName("grid-2");

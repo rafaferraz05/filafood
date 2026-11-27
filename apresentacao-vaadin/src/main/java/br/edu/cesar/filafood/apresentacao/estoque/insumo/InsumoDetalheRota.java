@@ -20,6 +20,7 @@ import br.edu.cesar.filafood.apresentacao.layout.Badge;
 import br.edu.cesar.filafood.apresentacao.layout.Cabecalho;
 import br.edu.cesar.filafood.apresentacao.layout.Campo;
 import br.edu.cesar.filafood.apresentacao.layout.Entradas;
+import br.edu.cesar.filafood.apresentacao.layout.Identificadores;
 import br.edu.cesar.filafood.apresentacao.layout.MainLayout;
 import br.edu.cesar.filafood.apresentacao.layout.Tabela;
 import br.edu.cesar.filafood.aplicacao.estoque.insumo.InsumoDetalhe;
@@ -177,13 +178,13 @@ public class InsumoDetalheRota extends Div implements BeforeEnterObserver {
 
     private Div cardMovimentacoes(InsumoDetalhe detalhe) {
         Tabela tabela = new Tabela("Data e hora", "Tipo", "Quantidade", "Origem");
-        detalhe.movimentacoes().forEach(movimentacao -> tabela.linha(
-                new Span(DATA_HORA.format(movimentacao.dataHora())),
-                new Span(tipo(movimentacao)),
-                new Span(texto(movimentacao.quantidade()) + " " + detalhe.unidadeDeMedida()),
-                new Span(movimentacao.origem() == null || movimentacao.origem().isBlank()
-                        ? "—"
-                        : movimentacao.origem())));
+        detalhe.movimentacoes().forEach(movimentacao -> {
+            tabela.linha(
+                    new Span(DATA_HORA.format(movimentacao.dataHora())),
+                    new Span(tipo(movimentacao)),
+                    new Span(texto(movimentacao.quantidade()) + " " + detalhe.unidadeDeMedida()),
+                    new Span(Identificadores.origem(movimentacao.origem())));
+        });
 
         Div card = new Div();
         card.addClassName("card");

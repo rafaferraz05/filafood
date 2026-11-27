@@ -26,6 +26,7 @@ import br.edu.cesar.filafood.apresentacao.layout.Badge;
 import br.edu.cesar.filafood.apresentacao.layout.Cabecalho;
 import br.edu.cesar.filafood.apresentacao.layout.Campo;
 import br.edu.cesar.filafood.apresentacao.layout.Entradas;
+import br.edu.cesar.filafood.apresentacao.layout.Identificadores;
 import br.edu.cesar.filafood.apresentacao.layout.MainLayout;
 import br.edu.cesar.filafood.apresentacao.layout.Tabela;
 import br.edu.cesar.filafood.dominio.entrega.RegraDeNegocioException;
@@ -117,7 +118,7 @@ public class MinhasEntregasRota extends Div {
             } else {
                 acoes.add(new Span("—"));
             }
-            tabela.linha(new Span(entrega.pedido()), new Span(entrega.endereco()),
+            tabela.linha(new Span(Identificadores.pedido(entrega.pedido())), new Span(entrega.endereco()),
                     badge(entrega.estado()), acoes);
         }
         card.add(tabela);
@@ -134,7 +135,7 @@ public class MinhasEntregasRota extends Div {
         card.addClassName("card");
         Div titulo = new Div();
         titulo.addClassName("card-titulo");
-        titulo.add(new Span("Entrega " + entrega.pedido()));
+        titulo.add(new Span("Entrega " + Identificadores.pedido(entrega.pedido())));
         card.add(titulo);
         Element ul = new Element("ul");
         ul.getClassList().add("linha-tempo");
@@ -158,7 +159,7 @@ public class MinhasEntregasRota extends Div {
         card.addClassName("card");
         Div titulo = new Div();
         titulo.addClassName("card-titulo");
-        titulo.add(new Span("Registrar na entrega " + entrega.pedido()));
+        titulo.add(new Span("Registrar na entrega " + Identificadores.pedido(entrega.pedido())));
         card.add(titulo);
 
         Input recebedor = Entradas.texto();
@@ -192,8 +193,8 @@ public class MinhasEntregasRota extends Div {
             ResultadoDaFalha resultado = entregas.registrarFalha(entrega.id(), motivo.getValue(),
                     observacao.getValue());
             aviso.setText(resultado.desfecho() == br.edu.cesar.filafood.dominio.entrega.entrega.DesfechoDaFalha.NOVA_TENTATIVA
-                    ? "Falha registrada. Uma nova tentativa foi criada para o pedido " + resultado.pedido() + "."
-                    : "Falha registrada. O pedido " + resultado.pedido() + " foi cancelado.");
+                    ? "Falha registrada. Uma nova tentativa foi criada para o pedido " + Identificadores.pedido(resultado.pedido()) + "."
+                    : "Falha registrada. O pedido " + Identificadores.pedido(resultado.pedido()) + " foi cancelado.");
             aviso.setVisible(true);
         });
     }

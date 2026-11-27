@@ -22,6 +22,7 @@ import br.edu.cesar.filafood.apresentacao.config.UnidadeDeDemonstracao;
 import br.edu.cesar.filafood.apresentacao.layout.Acao;
 import br.edu.cesar.filafood.apresentacao.layout.Badge;
 import br.edu.cesar.filafood.apresentacao.layout.Cabecalho;
+import br.edu.cesar.filafood.apresentacao.layout.Identificadores;
 import br.edu.cesar.filafood.apresentacao.layout.MainLayout;
 import br.edu.cesar.filafood.apresentacao.layout.Tabela;
 import br.edu.cesar.filafood.dominio.entrega.RegraDeNegocioException;
@@ -94,7 +95,7 @@ public class DespachoRota extends Div {
         card.add(titulo("Fila de despacho"));
         Tabela tabela = new Tabela("Pedido", "Zona", "Espera", "Por que não foi despachado");
         for (ItemDaFilaResumo item : fila) {
-            tabela.linha(new Span(item.pedido()), new Span(item.zona()),
+            tabela.linha(new Span(Identificadores.pedido(item.pedido())), new Span(item.zona()),
                     new Span(item.esperaMinutos() + " min"), new Span(item.motivo()));
         }
         card.add(tabela);
@@ -107,7 +108,7 @@ public class DespachoRota extends Div {
         card.add(titulo("Entregas em andamento"));
         Tabela tabela = new Tabela("Entrega", "Entregador", "Estado", "Taxa");
         for (EntregaEmAndamentoResumo entrega : emAndamento) {
-            tabela.linha(new Span(entrega.pedido()), new Span(entrega.entregador()),
+            tabela.linha(new Span(Identificadores.pedido(entrega.pedido())), new Span(entrega.entregador()),
                     new Span(entrega.estado().name().toLowerCase().replace('_', ' ')), new Span(dinheiro(entrega.taxa())));
         }
         card.add(tabela);
@@ -117,7 +118,7 @@ public class DespachoRota extends Div {
     private Div timeline(EntregaEmAndamentoResumo entrega) {
         Div card = new Div();
         card.addClassName("card");
-        card.add(titulo("Entrega " + entrega.pedido() + " · " + entrega.endereco() + " · " + dinheiro(entrega.taxa())));
+        card.add(titulo("Entrega " + Identificadores.pedido(entrega.pedido()) + " · " + entrega.endereco() + " · " + dinheiro(entrega.taxa())));
         Element ul = new Element("ul");
         ul.getClassList().add("linha-tempo");
         List<ItemDaTimeline> transicoes = entrega.timeline();
